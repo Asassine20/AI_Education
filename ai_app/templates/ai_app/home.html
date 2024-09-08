@@ -1,14 +1,109 @@
-<form method="POST" action="{% url 'ask_question' %}">
-    {% csrf_token %}
-    <label for="topic">Enter a topic you'd like to learn about:</label>
-    <input type="text" id="topic" name="topic" required>
-    <button type="submit">Ask AI</button>
-    <p><a href="{% url 'logout' %}">Logout</a></p>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Education Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f7f9fc;
+        }
 
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
 
-<!-- Display the AI response if available -->
-{% if response %}
-    <h3>AI Response:</h3>
-    <p>{{ response }}</p>
-{% endif %}
+        h1 {
+            color: #333333;
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 0.8rem 2rem;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .response {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .response h3 {
+            color: #007bff;
+        }
+
+        p.logout {
+            margin-top: 2rem;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Education Assistant</h1>
+        <form method="POST" action="{% url 'ask_question' %}">
+            {% csrf_token %}
+            <label for="topic">Enter a topic you'd like to learn about:</label>
+            <input type="text" id="topic" name="topic" required placeholder="E.g. What is machine learning?">
+            <button type="submit">Ask AI</button>
+        </form>
+
+        {% if response %}
+            <div class="response">
+                <h3>AI Response:</h3>
+                <p>{{ response }}</p>
+            </div>
+        {% endif %}
+
+        <p class="logout"><a href="{% url 'logout' %}">Logout</a></p>
+    </div>
+</body>
+</html>

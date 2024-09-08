@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Education Platform</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #004080;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .hero-section {
+            height: 100vh;
+            background-image: url('https://example.com/university-campus.jpg'); /* Replace with actual image */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin: 0;
+        }
+
+        .hero-section p {
+            font-size: 1.5rem;
+            margin: 1rem 0 2rem;
+        }
+
+        .hero-section .cta-button {
+            padding: 1rem 2rem;
+            background-color: #ff8000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: #ff9933;
+        }
+
+        .features-section {
+            padding: 4rem 2rem;
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .features-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #004080;
+        }
+
+        .features-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .feature-box {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            width: 300px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-box h3 {
+            color: #004080;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-box p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .footer {
+            background-color: #004080;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        .footer a {
+            color: #ff8000;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section p {
+                font-size: 1.2rem;
+            }
+
+            .features-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-box {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <h2>AI Education Platform</h2>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'signup' %}">Sign Up</a>
+            <a href="{% url 'login' %}">Log In</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1>Revolutionize Learning with AI</h1>
+        <p>Empowering universities and schools with cutting-edge AI tools for education</p>
+        <a href="{% url 'signup' %}"><button class="cta-button">Get Started Today</button></a>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2>Why Choose Our AI Platform?</h2>
+        <div class="features-container">
+            <div class="feature-box">
+                <h3>AI-Powered Learning</h3>
+                <p>Utilize AI to provide personalized learning experiences tailored to every student’s needs.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Personalized Experience</h3>
+                <p>Teachers can fine-tune the AI to their curriculum, providing better insights into student engagement.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Automated Grading</h3>
+                <p>Students can submit assignments and get graded by AI, providing accurate grading and helpful feedback.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Analytics & Insights</h3>
+                <p>Track student progress and identify key areas for improvement with advanced analytics.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 AI Education Platform. All rights reserved.</p>
+        <p>For more information, contact us at <a href="mailto:support@aiedu.com">support@aiedu.com</a></p>
+    </footer>
+
+</body>
+</html>
