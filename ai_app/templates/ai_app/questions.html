@@ -1,0 +1,7 @@
+<h2>Student Questions</h2>
+<ul>
+    {% for question in questions %}
+        <li>{{ question.user.username }} asked: "{{ question.topic }}" on {{ question.timestamp }}</li>
+        <li>AI Response: {{ question.response }}</li>
+    {% endfor %}
+</ul>

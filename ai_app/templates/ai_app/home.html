@@ -1,0 +1,14 @@
+<form method="POST" action="{% url 'ask_question' %}">
+    {% csrf_token %}
+    <label for="topic">Enter a topic you'd like to learn about:</label>
+    <input type="text" id="topic" name="topic" required>
+    <button type="submit">Ask AI</button>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+</form>
+
+
+<!-- Display the AI response if available -->
+{% if response %}
+    <h3>AI Response:</h3>
+    <p>{{ response }}</p>
+{% endif %}
