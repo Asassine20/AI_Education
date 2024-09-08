@@ -1,0 +1,20 @@
+<h1>Teacher Dashboard</h1>
+
+<h2>Your Classes</h2>
+<ul>
+    {% for class in classes_teaching %}
+        <li>{{ class.room_name }} - {{ class.room_code }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Create a New Class</h3>
+<form method="POST">
+    {% csrf_token %}
+    <label for="room_name">Class Name:</label>
+    <input type="text" name="room_name" required>
+    
+    <label for="room_code">Class Code:</label>
+    <input type="text" name="room_code" required>
+    
+    <button type="submit">Create Class</button>
+</form>

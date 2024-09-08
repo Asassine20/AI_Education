@@ -1,4 +1,4 @@
-from .views import landing_page, ask_question, upload_materials, view_questions, signup_view, login_view, logout_view, home, contact_view, school_signup_view, individual_signup_view
+from .views import landing_page, ask_question, upload_materials, view_questions, signup_view, login_view, logout_view, home, contact_view, school_signup_view, individual_signup_view, student_dashboard, teacher_dashboard
 from django.urls import path
 
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('contact/', contact_view, name='contact'),
+    path('student-dashboard/', student_dashboard, name='student_dashboard'),
+    path('teacher-dashboard/', teacher_dashboard, name='teacher_dashboard'),
 ]
