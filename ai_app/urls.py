@@ -1,6 +1,9 @@
-from .views import landing_page, ask_question, upload_materials, view_questions, signup_view, login_view, logout_view, home, contact_view, school_signup_view, individual_signup_view, student_dashboard, teacher_dashboard
 from django.urls import path
 
+from .views.auth_views import login_view, logout_view, signup_view, school_signup_view, individual_signup_view
+from .views.dashboard_views import teacher_dashboard, student_dashboard, individual_dashboard
+from .views.other_views import home, landing_page, contact_view
+from .views.question_views import ask_question, upload_materials, view_questions
 urlpatterns = [
     path("", landing_page, name="landing_page"),  # Landing page route
     path("home/", home, name="home"),  # Home page route after login/signup
@@ -15,4 +18,5 @@ urlpatterns = [
     path('contact/', contact_view, name='contact'),
     path('student-dashboard/', student_dashboard, name='student_dashboard'),
     path('teacher-dashboard/', teacher_dashboard, name='teacher_dashboard'),
+    path('individual-dashboard/', individual_dashboard, name='individual_dashboard'),  # Individual user dashboard
 ]

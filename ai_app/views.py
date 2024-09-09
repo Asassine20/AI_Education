@@ -1,6 +1,6 @@
 from openai import OpenAI
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Question, CourseMaterial, University, SchoolUserProfile, ClassRoom
@@ -9,6 +9,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import SignUpForm
 
 # Initialize the OpenAI client
@@ -100,6 +101,7 @@ def signup_view(request):
         return render(request, 'ai_app/individual_signup.html')
     return render(request, 'ai_app/signup.html')
 
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -109,17 +111,21 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                
-                # Redirect based on user role
-                profile = SchoolUserProfile.objects.get(user=user)
-                if profile.role == 'teacher':
-                    return redirect('teacher_dashboard')
-                elif profile.role == 'student':
-                    return redirect('student_dashboard')
-    
+
+                try:
+                    # Check if the user has a SchoolUserProfile
+                    profile = SchoolUserProfile.objects.get(user=user)
+                    if profile.role == 'teacher':
+                        return redirect('teacher_dashboard')
+                    elif profile.role == 'student':
+                        return redirect('student_dashboard')
+                except SchoolUserProfile.DoesNotExist:
+                    return redirect('individual_dashboard')
+
     else:
         form = AuthenticationForm()
     return render(request, 'ai_app/login.html', {'form': form})
+
 
 def logout_view(request):
     logout(request)
@@ -224,3 +230,8 @@ def student_dashboard(request):
     # Display classes the student is enrolled in
     classes = profile.classes.all()
     return render(request, 'ai_app/student_dashboard.html', {'classes': classes})
+
+@login_required
+def individual_dashboard(request):
+    # You can customize this view to display individual-specific content
+    return render(request, 'ai_app/individual_dashboard.html')
