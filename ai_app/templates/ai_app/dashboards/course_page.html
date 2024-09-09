@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ classroom.room_name }} - Course Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .class-code {
+            font-size: 1rem;
+            color: #22cc9d;
+            margin-top: 0.5rem;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+        }
+
+        .dashboard-nav a {
+            text-decoration: none;
+            padding: 1rem 2rem;
+            background-color: #22cc9d;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dashboard-nav a:hover {
+            background-color: #27e1ac;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>{{ classroom.room_name }}</h1>
+        <p>{{ classroom.description }}</p>
+        <p class="class-code">Class Code: {{ classroom.room_code }}</p>
+    </div>
+
+    <!-- Dashboard Navigation -->
+    <div class="dashboard-nav">
+        <a href="{% url 'students_enrolled' classroom.room_code %}">Students Enrolled</a>
+        <a href="{% url 'student_questions' classroom.room_code %}">Student Questions</a>
+        <a href="{% url 'upload_materials' classroom.room_code %}">Upload Course Materials</a>
+    </div>
+</div>
+
+</body>
+</html>

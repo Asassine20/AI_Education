@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Questions - {{ classroom.room_name }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Student Questions for {{ classroom.room_name }}</h2>
+    <ul>
+        {% for question in questions %}
+        <li>{{ question.topic }}</li>
+        {% empty %}
+        <li class="no-data">No questions yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>

@@ -2,6 +2,21 @@
 <ul>
     {% for question in questions %}
         <li>{{ question.user.username }} asked: "{{ question.topic }}" on {{ question.timestamp }}</li>
-        <li>AI Response: {{ question.response }}</li>
+        <!-- Since AI response is not stored, you can remove the response part from here -->
     {% endfor %}
 </ul>
+
+<!-- Form for asking a new question -->
+<form method="POST" action="{% url 'ask_question' %}">
+    {% csrf_token %}
+    <input type="hidden" name="classroom_id" value="{{ classroom.id }}">  <!-- Hidden classroom ID -->
+    <label for="topic">Ask a question:</label>
+    <input type="text" id="topic" name="topic" required>
+    <button type="submit">Ask AI</button>
+</form>
+
+<!-- Display the AI response if available -->
+{% if response %}
+    <h3>AI Response:</h3>
+    <p>{{ response }}</p>
+{% endif %}

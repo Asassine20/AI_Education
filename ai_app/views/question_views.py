@@ -11,8 +11,14 @@ client = OpenAI(api_key=settings.OPENAI_API_KEY)
 def ask_question(request):
     if request.method == 'POST':
         topic = request.POST.get('topic')
+        classroom_id = request.POST.get('classroom_id')  # Get the classroom ID from the form
         user = request.user
+        
+        # Ensure the classroom exists
+        classroom = get_object_or_404(ClassRoom, id=classroom_id)
+
         try:
+            # Use the ChatCompletion API for the AI response (not saving it in the DB)
             response = client.chat.completions.create(
                 model="gpt-3.5",  
                 messages=[
@@ -22,13 +28,19 @@ def ask_question(request):
                 max_tokens=500,
                 temperature=0.7
             )
-            ai_response = response.choices[0].message.content
-            Question.objects.create(user=user, topic=topic, response=ai_response)
-            return JsonResponse({'response': ai_response})
+
+            ai_response = response.choices[0].message.content  # Extract the AI's response
+
+            # Save only the question (topic) in the DB
+            Question.objects.create(user=user, topic=topic, classroom=classroom)
+
+            return JsonResponse({'response': ai_response})  # Return AI response, but don't save it
+
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
     return render(request, 'ai_app/questions/ask_question.html')
+
 
 
 @login_required
