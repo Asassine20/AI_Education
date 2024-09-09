@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Individual User Sign Up</title>
+    <title>Add a Class</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f7f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 2rem;
         }
 
         .container {
-            max-width: 500px;
-            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
             padding: 2rem;
             background-color: white;
             border-radius: 10px;
@@ -27,7 +23,6 @@
         h1 {
             text-align: center;
             color: #333;
-            margin-bottom: 1.5rem;
         }
 
         form {
@@ -40,9 +35,9 @@
             font-weight: bold;
         }
 
-        input {
+        input, textarea {
             padding: 0.8rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 1rem;
@@ -50,7 +45,7 @@
 
         button {
             padding: 1rem;
-            background-color: #22cc9d;
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 8px;
@@ -59,34 +54,23 @@
         }
 
         button:hover {
-            background-color: #27e4af;
-        }
-
-        .error {
-            color: red;
-            font-size: 0.9rem;
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Individual User Sign Up</h1>
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
+    <h1>Add a Class</h1>
     <form method="POST">
         {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <label for="room_name">Class Name:</label>
+        <input type="text" id="room_name" name="room_name" required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="description">Class Description:</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <button type="submit">Sign Up</button>
+        <button type="submit">Create Class</button>
     </form>
 </div>
 

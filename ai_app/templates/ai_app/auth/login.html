@@ -50,7 +50,7 @@
 
         button {
             padding: 1rem;
-            background-color: #007bff;
+            background-color: #22cc9d;
             color: white;
             border: none;
             border-radius: 8px;
@@ -59,21 +59,12 @@
         }
 
         button:hover {
-            background-color: #0056b3;
-        }
-
-        .contact-box {
-            background-color: #ffcc00;
-            padding: 1.5rem;
-            text-align: center;
-            border-radius: 8px;
-            margin-top: 2rem;
+            background-color: #27e3ad;
         }
 
         .contact-box a {
-            color: #004080;
-            font-weight: bold;
             text-decoration: none;
+            color: #22cc9d
         }
 
         .contact-box a:hover {
@@ -84,7 +75,7 @@
             display: inline-block;
             margin-top: 1.5rem;
             padding: 0.8rem 1.5rem;
-            background-color: #007bff;
+            background-color: #22cc9d;
             color: white;
             text-transform: uppercase;
             text-decoration: none;
@@ -94,7 +85,7 @@
         }
 
         .cta-button:hover {
-            background-color: #0056b3;
+            background-color: #27e2ad;
         }
     </style>
 </head>
@@ -111,7 +102,6 @@
 
     <div class="contact-box">
         <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
-        <a href="{% url 'signup' %}" class="cta-button">Sign Up</a>
     </div>
 </div>
 

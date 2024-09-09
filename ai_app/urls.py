@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views.auth_views import login_view, logout_view, signup_view, school_signup_view, individual_signup_view
-from .views.dashboard_views import teacher_dashboard, student_dashboard, individual_dashboard
+from .views.dashboard_views import teacher_dashboard, student_dashboard, individual_dashboard, add_class
 from .views.other_views import home, landing_page, contact_view
 from .views.question_views import ask_question, upload_materials, view_questions
 urlpatterns = [
@@ -19,4 +19,5 @@ urlpatterns = [
     path('student-dashboard/', student_dashboard, name='student_dashboard'),
     path('teacher-dashboard/', teacher_dashboard, name='teacher_dashboard'),
     path('individual-dashboard/', individual_dashboard, name='individual_dashboard'),  # Individual user dashboard
+    path('teacher-dashboard/add-class/', add_class, name='add_class'),
 ]

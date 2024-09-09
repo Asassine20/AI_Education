@@ -74,9 +74,9 @@ def school_signup_view(request):
         school_role = request.POST['school_role']
 
         if User.objects.filter(username=username).exists():
-            return render(request, 'ai_app/school_signup.html', {'error_username': 'This username is already taken'})
+            return render(request, 'ai_app/auth/school_signup.html', {'error_username': 'This username is already taken'})
         if User.objects.filter(email=email).exists():
-            return render(request, 'ai_app/school_signup.html', {'error_email': 'An account with this email already exists'})
+            return render(request, 'ai_app/auth/school_signup.html', {'error_email': 'An account with this email already exists'})
 
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
@@ -86,9 +86,9 @@ def school_signup_view(request):
             return redirect('home')
 
         except IntegrityError:
-            return render(request, 'ai_app/school_signup.html', {'error': 'An error occurred. Please try again.'})
+            return render(request, 'ai_app/auth/school_signup.html', {'error': 'An error occurred. Please try again.'})
         except University.DoesNotExist:
-            return render(request, 'ai_app/school_signup.html', {'error_university_code': 'Invalid University Code'})
+            return render(request, 'ai_app/auth/school_signup.html', {'error_university_code': 'Invalid University Code'})
 
     return render(request, 'ai_app/auth/school_signup.html')
 
