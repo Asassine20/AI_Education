@@ -1,0 +1,19 @@
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.logo {
+    width: 150px; /* Adjust the width of the logo */
+    height: auto; /* Keeps the aspect ratio */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+}

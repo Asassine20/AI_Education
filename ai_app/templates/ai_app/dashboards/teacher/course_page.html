@@ -1,9 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ classroom.room_name }} - Course Page</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -62,22 +65,35 @@
         }
     </style>
 </head>
+
 <body>
-
-<div class="container">
-    <div class="header">
-        <h1>{{ classroom.room_name }}</h1>
-        <p>{{ classroom.description }}</p>
-        <p class="class-code">Class Code: {{ classroom.room_code }}</p>
+    <!-- Logo and Navbar -->
+<header>
+    <div class="logo-container">
+        <a href="{% url 'landing_page' %}">
+            <img src="{% static 'images/logo.png' %}" alt="My Logo" class="logo">
+        </a>
     </div>
+    <nav>
+        <!-- Add other nav items if needed -->
+    </nav>
+</header>
 
-    <!-- Dashboard Navigation -->
-    <div class="dashboard-nav">
-        <a href="{% url 'students_enrolled' classroom.room_code %}">Students Enrolled</a>
-        <a href="{% url 'student_questions' classroom.room_code %}">Student Questions</a>
-        <a href="{% url 'upload_materials' classroom.room_code %}">Upload Course Materials</a>
+    <div class="container">
+        <div class="header">
+            <h1>{{ classroom.room_name }}</h1>
+            <p>{{ classroom.description }}</p>
+            <p class="class-code">Class Code: {{ classroom.room_code }}</p>
+        </div>
+
+        <!-- Dashboard Navigation -->
+        <div class="dashboard-nav">
+            <a href="{% url 'students_enrolled' classroom.room_code %}">Students Enrolled</a>
+            <a href="{% url 'student_questions' classroom.room_code %}">Student Questions</a>
+            <a href="{% url 'upload_materials' classroom.room_code %}">Upload Course Materials</a>
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>

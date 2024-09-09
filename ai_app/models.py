@@ -14,13 +14,13 @@ class University(models.Model):
     def __str__(self):
         return self.name
 
-
 class ClassRoom(models.Model):
     room_name = models.CharField(max_length=255)
     room_code = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)  # Add this field
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='classes_teaching')
+    students = models.ManyToManyField(User, related_name='enrolled_classrooms', blank=True)  # Change related_name to avoid conflict
 
     def __str__(self):
         return self.room_name
@@ -29,7 +29,7 @@ class Question(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     topic = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)  
+    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
 
 class SchoolUserProfile(models.Model):
     STUDENT = 'student'
@@ -42,7 +42,16 @@ class SchoolUserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-    classes = models.ManyToManyField(ClassRoom, related_name='students', blank=True)
+    classes = models.ManyToManyField(ClassRoom, related_name='school_profiles', blank=True)  # Updated related_name to avoid conflict
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
+
+class Assignment(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    due_date = models.DateField()
+    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='assignments')
+
+    def __str__(self):
+        return self.title

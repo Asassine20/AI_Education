@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .class-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .class-card h2 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .class-card p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .class-code {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .class-card a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Your Classes</h1>
+    </div>
+
+    <div class="class-grid">
+        {% for class in classes %}
+        <a href="{% url 'student_class_page' class.room_code %}">
+            <div class="class-card">
+                <h2>{{ class.room_name }}</h2>
+                <p>{{ class.description }}</p>
+                <p class="class-code">Class Code: {{ class.room_code }}</p>
+            </div>
+        </a>
+        {% empty %}
+        <p>No classes yet. Join a class with a class code.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
