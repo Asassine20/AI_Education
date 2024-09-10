@@ -14,15 +14,11 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-
-                try:
-                    profile = SchoolUserProfile.objects.get(user=user)
-                    if profile.role == 'teacher':
-                        return redirect('teacher_dashboard')
-                    elif profile.role == 'student':
-                        return redirect('student_dashboard')
-                except SchoolUserProfile.DoesNotExist:
-                    return redirect('individual_dashboard')
+                profile = SchoolUserProfile.objects.get(user=user)
+                if profile.role == 'teacher':
+                    return redirect('teacher_dashboard')
+                elif profile.role == 'student':
+                    return redirect('student_dashboard')
 
     else:
         form = AuthenticationForm()
@@ -59,9 +55,6 @@ def signup_view(request):
         else:
             login(request, user)
             return redirect('home')
-
-    if request.GET.get('user_type') == 'individual':
-        return render(request, 'ai_app/auth/individual_signup.html')
     return render(request, 'ai_app/auth/signup.html')
 
 
@@ -92,14 +85,3 @@ def school_signup_view(request):
 
     return render(request, 'ai_app/auth/school_signup.html')
 
-
-def individual_signup_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        user = User.objects.create_user(username=username, email=email, password=password)
-        login(request, user)
-        return redirect('home')
-
-    return render(request, 'ai_app/auth/individual_signup.html')

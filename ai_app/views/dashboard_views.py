@@ -44,11 +44,6 @@ def student_dashboard(request):
 
 
 @login_required
-def individual_dashboard(request):
-    return render(request, 'ai_app/dashboards/individual_dashboard.html')
-
-
-@login_required
 def add_class(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
     

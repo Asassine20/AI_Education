@@ -32,7 +32,7 @@
 
         .option-box {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             margin-bottom: 2rem;
         }
 
@@ -76,10 +76,6 @@
             text-decoration: none;
         }
 
-        .contact-box a:hover {
-            text-decoration: underline;
-        }
-
         .cta-button {
             display: inline-block;
             margin-top: 1.5rem;
@@ -102,16 +98,11 @@
             content: "\1F3EB"; /* School building icon */
         }
 
-        .individual-icon::before {
-            content: "\1F393"; /* Graduation cap icon */
-        }
     </style>
     <script>
         function selectUserType(type) {
             if (type === 'school') {
                 window.location.href = "{% url 'school_signup' %}";  // Redirect to the school sign-up
-            } else if (type === 'individual') {
-                window.location.href = "{% url 'individual_signup' %}";  // Redirect to individual sign-up
             }
         }
     </script>
@@ -127,11 +118,6 @@
         <div class="box" onclick="selectUserType('school')">
             <i class="school-icon"></i>
             <h2>School / University</h2>
-        </div>
-
-        <div class="box" onclick="selectUserType('individual')">
-            <i class="individual-icon"></i>
-            <h2>Individual User</h2>
         </div>
     </div>
 
