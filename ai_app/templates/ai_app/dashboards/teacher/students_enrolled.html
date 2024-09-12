@@ -49,7 +49,7 @@
     <h2>Students Enrolled in {{ classroom.room_name }}</h2>
     <ul>
         {% for student in students %}
-        <li>{{ student.user.username }}</li>
+        <li>{{ student.user.first_name }} {{ student.user.last_name }}</li>
         {% empty %}
         <li class="no-data">No students enrolled yet.</li>
         {% endfor %}
