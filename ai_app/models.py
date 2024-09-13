@@ -6,6 +6,11 @@ class CourseMaterial(models.Model):
     course_name = models.CharField(max_length=255)
     material = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(upload_to='uploads/', null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.file.name if self.file else "No File"
 
 class University(models.Model):
     name = models.CharField(max_length=255)

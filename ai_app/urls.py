@@ -4,6 +4,7 @@ from .views.auth_views import login_view, logout_view, signup_view, school_signu
 from .views.dashboard_views import teacher_dashboard, student_dashboard, add_class, course_page, students_enrolled, student_questions, students_in_class, assignments_in_class, grades_in_class, syllabus_in_class, subjects_in_class
 from .views.other_views import home, landing_page, contact_view
 from .views.question_views import ask_question, upload_materials, view_questions
+from .views.file_views import file_preview_view, file_download_view, file_list_view, file_upload_view
 
 urlpatterns = [
     path("", landing_page, name="landing_page"),  # Landing page route
@@ -27,4 +28,8 @@ urlpatterns = [
     path('student-dashboard/course/<str:room_code>/grades/', grades_in_class, name='grades_in_class'),
     path('student-dashboard/course/<str:room_code>/syllabus/', syllabus_in_class, name='syllabus_in_class'),
     path('student-dashboard/course/<str:room_code>/subjects/', subjects_in_class, name='subjects_in_class'),
+    path('upload/', file_upload_view, name='file_upload'),
+    path('files/', file_list_view, name='file_list'),
+    path('files/download/<int:file_id>/', file_download_view, name='file_download'),
+    path('files/preview/<int:file_id>/', file_preview_view, name='file_preview'),
 ]

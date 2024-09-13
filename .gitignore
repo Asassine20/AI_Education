@@ -16,3 +16,6 @@ __pycache__/
 
 # Ignore environment variables file
 .env
+
+# Ignore settings file
+ai_education/ai_education/settings.py
