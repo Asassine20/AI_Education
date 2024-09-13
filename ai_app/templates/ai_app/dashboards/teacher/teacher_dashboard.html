@@ -53,6 +53,7 @@
 
         .class-card-link {
             text-decoration: none;
+            color: inherit;
         }
 
         .class-card {
@@ -63,6 +64,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
         .class-card h2 {
@@ -78,20 +80,20 @@
             font-weight: bold;
             margin-top: 0.5rem;
             color: #22cc9d;
-        }
-        [id^="room_code_"]{
-            cursor:pointer;
+            display: flex;
+            align-items: center;
         }
 
-        .copy-text {
+        .copy-icon-container {
             position: relative;
-            cursor: pointer;
             display: inline-block;
+            margin-left: 8px;
+            cursor: pointer;
         }
-        
-        .copy-text .tooltip-text {
+
+        .tooltip-text {
             visibility: hidden;
-            width: 40px;
+            width: 60px;
             background-color: #22cc9d;
             font-size: 14px;
             color: #fff;
@@ -100,18 +102,33 @@
             padding: 5px 0;
             position: absolute;
             z-index: 1;
-            bottom: 125%; /* Position the tooltip above the text */
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        
-        .copy-text:hover .tooltip-text {
+
+        .copy-icon-container:hover .tooltip-text {
             visibility: visible;
-            opacity: 1;
         }
 
         .copy-icon {
             color: #22cc9d;
+            font-size: 1rem;
         }
-        
+
+        .clickable-card {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .copy-text {
+            z-index: 1;
+            position: relative;
+        }
     </style>
 
     <div class="header">
@@ -123,25 +140,27 @@
     <div class="class-grid">
         {% for class in classes_teaching %}
         <div class="class-card">
-            <a href="{% url 'course_page' class.room_code %}" class="class-card-link">
-                <h2>{{ class.room_name }}</h2>
-                <p>{{ class.description }}</p>
-            </a>
-            <p id="room_code_{{ class.room_code }}" class="copy-text" onclick="copyCode('{{ class.room_code }}')">
-                {{ class.room_code }} <i class="fa fa-copy copy-icon"></i>
-                <span class="tooltip-text">Copy</span>
+            <a href="{% url 'course_page' class.room_code %}" class="clickable-card"></a>
+            <h2>{{ class.room_name }}</h2>
+            <p>{{ class.description|slice:":200" }}...</p>
+            <p class="class-code">
+                {{ class.room_code }} 
+                <span class="copy-icon-container" onclick="copyCode('{{ class.room_code }}')">
+                    <i class="fa fa-copy copy-icon"></i>
+                    <span class="tooltip-text">Copy</span>
+                </span>
             </p>
-            </div>
+        </div>
         {% empty %}
         <p>No classes yet. Click "Add a class" to create one.</p>
         {% endfor %}
     </div>
 
     <script>
-        function copyCode(roomCode){
-            navigator.clipboard.writeText(roomCode).then(function(){
-                alert("copied: " + roomCode);
-            }).catch(function(error){
+        function copyCode(roomCode) {
+            navigator.clipboard.writeText(roomCode).then(function() {
+                alert("Copied: " + roomCode);
+            }).catch(function(error) {
                 console.error("Error copying text: ", error);
             });
         }
