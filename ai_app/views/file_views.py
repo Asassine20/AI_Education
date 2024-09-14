@@ -1,33 +1,43 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from ai_app.forms import FileUploadForm
-from ai_app.models import CourseMaterial
+from ai_app.models import CourseMaterial, ClassRoom
+from django.urls import reverse
 import os
 from django.conf import settings
 from django.http import FileResponse
 
-def file_upload_view(request):
+def file_upload_view(request, room_code):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('file_list')
+            material = form.save(commit=False)
+            material.classroom = classroom
+            material.professor = request.user
+            material.course_name = classroom.room_code
+            material.material = request.FILES['file']
+            material.save()
+            return redirect(reverse('file_list', kwargs={'room_code': room_code}))
     else:
         form = FileUploadForm()
-    return render(request, 'ai_app/files/file_upload.html', {'form': form})
+    return render(request, 'ai_app/dashboards/teacher/files/file_upload.html', {'form': form, 'classroom': classroom})
 
-def file_list_view(request):
-    files = CourseMaterial.objects.all()
-    return render(request, 'ai_app/files/file_list.html', {'files': files})
+def file_list_view(request, room_code):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
+    files = CourseMaterial.objects.filter(classroom=classroom)
+    return render(request, 'ai_app/dashboards/teacher/files/file_list.html', {'files': files, 'classroom': classroom})
 
-def file_download_view(request, file_id):
-    file = CourseMaterial.objects.get(id=file_id)
+def file_download_view(request, room_code, file_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
+    file = get_object_or_404(CourseMaterial, id=file_id, classroom=classroom)
     file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
     return FileResponse(open(file_path, 'rb'), as_attachment=True)
 
-def file_preview_view(request, file_id):
-    file = CourseMaterial.objects.get(id=file_id)
+def file_preview_view(request, room_code, file_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
+    file = get_object_or_404(CourseMaterial, id=file_id, classroom=classroom)
     file_path = os.path.join(settings.MEDIA_ROOT,file.file.name)
     if file.file.name.endswith(('.png', '.jpg', '.jpeg')):
-        return render(request, 'ai_app/files/file_preview.html', {'file': file})
+        return render(request, 'ai_app/dashboards/teacher/files/file_preview.html', {'file': file, 'classroom': classroom})
     return HttpResponse("Preview not available for this file type")

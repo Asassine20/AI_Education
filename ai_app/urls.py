@@ -28,8 +28,8 @@ urlpatterns = [
     path('student-dashboard/course/<str:room_code>/grades/', grades_in_class, name='grades_in_class'),
     path('student-dashboard/course/<str:room_code>/syllabus/', syllabus_in_class, name='syllabus_in_class'),
     path('student-dashboard/course/<str:room_code>/subjects/', subjects_in_class, name='subjects_in_class'),
-    path('upload/', file_upload_view, name='file_upload'),
-    path('files/', file_list_view, name='file_list'),
-    path('files/download/<int:file_id>/', file_download_view, name='file_download'),
-    path('files/preview/<int:file_id>/', file_preview_view, name='file_preview'),
+    path('teacher-dashboard/course/<str:room_code>/upload/', file_upload_view, name='file_upload'),
+    path('teacher-dashboard/course/<str:room_code>/files/', file_list_view, name='file_list'),
+    path('teacher-dashboard/course/<str:room_code>/download/<int:file_id>/', file_download_view, name='file_download'),
+    path('teacher-dashboard/course/<str:room_code>/preview/<int:file_id>/', file_preview_view, name='file_preview'),
 ]

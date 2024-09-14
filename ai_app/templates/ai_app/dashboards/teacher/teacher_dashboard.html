@@ -142,9 +142,11 @@
         <div class="class-card">
             <a href="{% url 'course_page' class.room_code %}" class="clickable-card"></a>
             <h2>{{ class.room_name }}</h2>
-            <p>{{ class.description|slice:":200" }}...</p>
+            <p>{{ class.description|slice:":100" }}...</p>
             <p class="class-code">
-                {{ class.room_code }} 
+                {{ class.room_code }} <br>
+                Room Number<br>
+                Class Time
                 <span class="copy-icon-container" onclick="copyCode('{{ class.room_code }}')">
                     <i class="fa fa-copy copy-icon"></i>
                     <span class="tooltip-text">Copy</span>
