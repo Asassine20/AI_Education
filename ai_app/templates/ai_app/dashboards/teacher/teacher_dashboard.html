@@ -1,4 +1,4 @@
-{% extends 'ai_app/dashboards/teacher/teacher_dashboard_base.html' %}
+{% extends 'includes/teacher_dashboard_base.html' %}
 
 {% block title %}
     Teacher Dashboard
@@ -145,6 +145,8 @@
             <p>{{ class.description|slice:":100" }}...</p>
             <p class="class-code">
                 {{ class.room_code }} <br>
+                Professor Name <br>
+                Professor Email <br>
                 Room Number<br>
                 Class Time
                 <span class="copy-icon-container" onclick="copyCode('{{ class.room_code }}')">
