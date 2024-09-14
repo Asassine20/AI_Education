@@ -1,11 +1,15 @@
 <style>
     /* Sidebar styling - minimal and professional */
     .sidebar {
-        width: 200px;
+        width: auto;
         background-color: #f9fafb;
         padding: 1rem;
         border-right: 1px solid #e0e0e0;
         height: 100vh; /* Full height */
+        position: fixed; /* Ensure the sidebar is always fixed on the left */
+        top: 0;
+        left: 0;
+        overflow-y: auto; /* Scrollable if content overflows */
     }
 
     .sidebar a {
@@ -24,9 +28,37 @@
         background-color: #e3f2fd;
         color: #1976d2;
     }
+
+    /* Style the logo */
+    .logo-container {
+        text-align: center; /* Center the logo */
+    }
+
+    .logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Add hover effect for the logo */
+    .logo-container a {
+        display: inline-block;
+        cursor: pointer; /* Show pointer cursor on hover */
+    }
+
+    /* Ensure no background color changes on hover */
+    .logo-container a:hover {
+        background-color: transparent; /* Keep background unchanged */
+    }
 </style>
 
 <div class="sidebar dashboard-nav">
+    <!-- Logo wrapped in a link -->
+    <div class="logo-container">
+        <a href="{% url 'teacher_dashboard' %}">
+            <img class="logo" src="/static/images/logo.png" alt="Logo">
+        </a>
+    </div>
+
     <a href="{% url 'course_page' classroom.room_code %}">Home</a>
     <a href="{% url 'file_list' classroom.room_code %}">Files</a>
     <a href="#">Assignments</a>

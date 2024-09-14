@@ -1,9 +1,51 @@
-<h2>Uploaded Files</h2>
-<ul>
-    {% for file in files %}
-    <li>
-        <a href="{% url 'file_preview' classroom.room_code file.id %}"> {{ file.file.name }}</a> |
-        <a href="{% url 'file_download' classroom.room_code file.id %}"> Download</a>
-    </li>
-    {% endfor %}
-</ul>
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+    {{ classroom.room_name }} - Uploaded Files
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .upload-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .upload-button a {
+            text-decoration: none;
+            font-size: 30px;
+            color: #000;
+        }
+
+        .upload-button a:hover {
+            color: #212121;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="upload-header">
+        <h2>Files</h2>
+        <div class="upload-button">
+            <a href="{% url 'file_upload' classroom.room_code %}">
+                <i class="fa-solid fa-plus"></i>
+            </a>
+        </div>
+    </div>
+
+    <ul>
+        {% for file in files %}
+        <li>
+            <span>
+                <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.file.name }}</a>
+            </span>
+            <a href="{% url 'file_download' classroom.room_code file.id %}">Download</a>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-center">No files uploaded yet.</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

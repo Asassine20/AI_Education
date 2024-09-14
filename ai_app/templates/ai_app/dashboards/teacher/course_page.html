@@ -1,92 +1,23 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'course_base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ classroom.room_name }} - Course Page</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7f9;
-            margin: 0;
-            padding: 0;
-        }
+{% block title %}
+    {{ classroom.room_name }} - Course Page
+{% endblock %}
 
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 2rem auto;
-        }
+{% block header %}
+    {{ classroom.room_name }}
+{% endblock %}
 
-        /* Main content styling */
-        .content {
-            flex-grow: 1;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            margin-left: 2rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            color: #333;
-        }
-
-        p {
-            font-size: 1rem;
-            color: #666;
-        }
-
-        .class-code {
-            font-size: 0.9rem;
-            color: #1976d2;
-            margin-top: 0.5rem;
-        }
-
-    </style>
-</head>
-
-<body>
-    <!-- Logo and Navbar -->
-    <header>
-        <div class="logo-container">
-            <a href="{% url 'landing_page' %}">
-                <img src="{% static 'images/logo.png' %}" alt="My Logo" class="logo">
-            </a>
-        </div>
-        <nav>
-            <!-- Add other nav items if needed -->
-        </nav>
-    </header>
-
-    <div class="container">
-        <!-- Include Sidebar Component -->
-        {% include 'includes/sidebar.html' %}
-
-        <!-- Main content -->
-        <div class="content">
-            <div class="header">
-                <h1>{{ classroom.room_name }}</h1>
-                <p>{{ classroom.description }}</p>
-                <p class="class-code">Class Code: {{ classroom.room_code }}</p>
-            </div>
-
-            <!-- Dashboard Actions -->
-            <div class="dashboard-nav">
-                <a href="{% url 'file_upload' classroom.room_code %}">Upload Course Materials</a>
-            </div>
-        </div>
+{% block content %}
+    <div class="header">
+        <p>{{ classroom.description }}</p>
+        <p class="class-code">Class Code: {{ classroom.room_code }}</p>
     </div>
 
-</body>
-
-</html>
+    <!-- Additional course-specific content can go here -->
+    <div class="dashboard-actions">
+        <a href="{% url 'file_list' classroom.room_code %}" class="btn btn-primary">View Files</a>
+        <a href="{% url 'students_enrolled' classroom.room_code %}" class="btn btn-secondary">View Students</a>
+        <!-- Add more actions as needed -->
+    </div>
+{% endblock %}
