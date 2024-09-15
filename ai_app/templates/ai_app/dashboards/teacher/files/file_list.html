@@ -74,6 +74,14 @@
         .edit-btn:hover {
             color: #e6b800; /* Darker yellow-orange */
         }
+
+        /* Category headers */
+        .category-header {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 {% endblock %}
 
@@ -87,29 +95,36 @@
         </div>
     </div>
 
-    <ul>
+    {% if files %}
+        {% with prev_category=None %}
         {% for file in files %}
-        <li>
-            <!-- File name on the left -->
-            <span>
-                {% if file.display_name and file.display_name != file.file.name %}
-                    <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.display_name }}</a>
-                {% else %}
-                    <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.file.name }}</a>
-                {% endif %}
-                {% if file.category %}
-                    - {{ file.category }}
-                {% endif %}
-            </span>
+            <!-- Only show the category header when the category changes -->
+            {% if file.category != prev_category %}
+                <h3 class="category-header">{{ file.category }}</h3>
+                {% with file.category as prev_category %}
+                {% endwith %}
+            {% endif %}
+            <ul>
+                <li>
+                    <!-- File name on the left -->
+                    <span>
+                        {% if file.display_name and file.display_name != file.file.name %}
+                            <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.display_name }}</a>
+                        {% else %}
+                            <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.file.name }}</a>
+                        {% endif %}
+                    </span>
 
-            <!-- Actions on the right: Download and Edit buttons -->
-            <div class="file-actions">
-                <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
-                <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i class="fa-solid fa-download"></i></a>
-            </div>
-        </li>
-        {% empty %}
-        <li class="list-group-item text-center">No files uploaded yet.</li>
+                    <!-- Actions on the right: Download and Edit buttons -->
+                    <div class="file-actions">
+                        <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i class="fa-solid fa-download"></i></a>
+                    </div>
+                </li>
+            </ul>
         {% endfor %}
-    </ul>
+        {% endwith %}
+    {% else %}
+        <p class="list-group-item text-center">No files uploaded yet.</p>
+    {% endif %}
 {% endblock %}
