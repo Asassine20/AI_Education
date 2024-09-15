@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from ai_app.forms import FileUploadForm
-from ai_app.models import CourseMaterial, ClassRoom
+from ai_app.models import CourseMaterial, ClassRoom, SchoolUserProfile
 from django.urls import reverse
 import os
 from django.conf import settings
@@ -38,8 +38,13 @@ def file_edit_view(request, room_code, file_id):
     return render(request, 'ai_app/dashboards/teacher/files/file_edit.html', {'form': form, 'classroom': classroom})
 
 def file_list_view(request, room_code):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
-    files = CourseMaterial.objects.filter(classroom=classroom)
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    user_profile = get_object_or_404(SchoolUserProfile, user=request.user)
+    if user_profile.role == SchoolUserProfile.TEACHER:
+        files = CourseMaterial.objects.filter(classroom=classroom)
+    else:
+        files = CourseMaterial.objects.filter(classroom=classroom, visible_to_students=True)
+
     return render(request, 'ai_app/dashboards/teacher/files/file_list.html', {'files': files, 'classroom': classroom})
 
 def file_download_view(request, room_code, file_id):

@@ -14,4 +14,4 @@ class SignUpForm(UserCreationForm):
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = CourseMaterial
-        fields = ['file', 'display_name', 'category']
+        fields = ['file', 'display_name', 'category', 'visible_to_students']

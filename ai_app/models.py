@@ -11,6 +11,7 @@ class CourseMaterial(models.Model):
     classroom = models.ForeignKey('ClassRoom', on_delete=models.CASCADE)
     display_name = models.CharField(max_length=255, null=True, blank=True)
     category=models.CharField(max_length=255, null=True, blank=True)
+    visible_to_students = models.BooleanField(default=False)  
 
     def __str__(self):
         return self.display_name if self.display_name else self.file.name

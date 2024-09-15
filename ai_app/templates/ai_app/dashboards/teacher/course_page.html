@@ -1,4 +1,4 @@
-{% extends 'course_base.html' %}
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
 
 {% block title %}
     {{ classroom.room_name }} - Course Page
@@ -13,11 +13,5 @@
         <p>{{ classroom.description }}</p>
         <p class="class-code">Class Code: {{ classroom.room_code }}</p>
     </div>
-
-    <!-- Additional course-specific content can go here -->
-    <div class="dashboard-actions">
-        <a href="{% url 'file_list' classroom.room_code %}" class="btn btn-primary">View Files</a>
-        <a href="{% url 'students_enrolled' classroom.room_code %}" class="btn btn-secondary">View Students</a>
-        <!-- Add more actions as needed -->
     </div>
 {% endblock %}

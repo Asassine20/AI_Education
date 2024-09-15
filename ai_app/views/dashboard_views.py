@@ -79,7 +79,7 @@ def course_page(request, room_code):
         'students': students,
     }
 
-    return render(request, 'ai_app/dashboards/teacher/course_base.html', context)
+    return render(request, 'ai_app/dashboards/teacher/course_page.html', context)
 
 
 @login_required

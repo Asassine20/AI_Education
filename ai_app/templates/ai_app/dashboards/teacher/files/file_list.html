@@ -1,130 +1,141 @@
 {% extends 'ai_app/dashboards/teacher/course_base.html' %}
 
 {% block title %}
-    {{ classroom.room_name }} - Uploaded Files
+{{ classroom.room_name }} - Uploaded Files
 {% endblock %}
 
 {% block extra_css %}
-    <style>
-        .upload-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+<style>
+    .upload-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .upload-button a {
-            text-decoration: none;
-            font-size: 30px;
-            color: #000;
-        }
+    .upload-button a {
+        text-decoration: none;
+        font-size: 30px;
+        color: #000;
+    }
 
-        .upload-button a:hover {
-            color: #212121;
-        }
+    .upload-button a:hover {
+        color: #212121;
+    }
 
-        /* Style the list of files */
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+    /* Style the list of files */
+    ul {
+        list-style: none;
+        padding: 0;
+    }
 
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    ul li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        ul li a {
-            text-decoration: none;
-            font-weight: bold;
-            color: #1976d2;
-        }
+    ul li a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #1976d2;
+    }
 
-        /* Buttons styling */
-        .file-actions {
-            display: flex;
-            gap: 10px;
-        }
+    /* Buttons styling */
+    .file-actions {
+        display: flex;
+        gap: 10px;
+    }
 
-        .file-actions a {
-            padding: 5px 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    .file-actions a {
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
 
-        .download-btn {
-            color: #22cc9d;
-        }
+    .download-btn {
+        color: #22cc9d;
+    }
 
-        .download-btn:hover {
-            color: #1ba37b;
-        }
+    .download-btn:hover {
+        color: #1ba37b;
+    }
 
-        .edit-btn {
-            color: #ffcc00; /* Yellow-orange */
-        }
+    .edit-btn {
+        color: #ffcc00;
+        /* Yellow-orange */
+    }
 
-        .edit-btn:hover {
-            color: #e6b800; /* Darker yellow-orange */
-        }
+    .edit-btn:hover {
+        color: #e6b800;
+        /* Darker yellow-orange */
+    }
 
-        /* Category headers */
-        .category-header {
-            font-size: 1.5rem;
-            margin-top: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
+    /* Category headers */
+    .category-header {
+        font-size: 1.5rem;
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-    <div class="upload-header">
-        <h2>Files</h2>
-        <div class="upload-button">
-            <a href="{% url 'file_upload' classroom.room_code %}">
-                <i class="fa-solid fa-plus"></i>
-            </a>
-        </div>
+<div class="upload-header">
+    <h2>Files</h2>
+    <div class="upload-button">
+        <a href="{% url 'file_upload' classroom.room_code %}">
+            <i class="fa-solid fa-plus"></i>
+        </a>
     </div>
+</div>
 
-    {% if files %}
-        {% with prev_category=None %}
-        {% for file in files %}
-            <!-- Only show the category header when the category changes -->
-            {% if file.category != prev_category %}
-                <h3 class="category-header">{{ file.category }}</h3>
-                {% with file.category as prev_category %}
-                {% endwith %}
+{% if files %}
+{% with prev_category=None %}
+{% for file in files %}
+<!-- Only show the category header when the category changes -->
+{% if file.category != prev_category %}
+<h3 class="category-header">{{ file.category }}</h3>
+{% with file.category as prev_category %}
+{% endwith %}
+{% endif %}
+<ul>
+    <li>
+        <!-- File name on the left -->
+        <span>
+            {% if file.display_name and file.display_name != file.file.name %}
+            <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.display_name }}</a>
+            {% else %}
+            <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.file.name }}</a>
             {% endif %}
-            <ul>
-                <li>
-                    <!-- File name on the left -->
-                    <span>
-                        {% if file.display_name and file.display_name != file.file.name %}
-                            <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.display_name }}</a>
-                        {% else %}
-                            <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.file.name }}</a>
-                        {% endif %}
-                    </span>
 
-                    <!-- Actions on the right: Download and Edit buttons -->
-                    <div class="file-actions">
-                        <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i class="fa-solid fa-download"></i></a>
-                    </div>
-                </li>
-            </ul>
-        {% endfor %}
-        {% endwith %}
-    {% else %}
-        <p class="list-group-item text-center">No files uploaded yet.</p>
-    {% endif %}
+        </span>
+
+        <!-- Actions on the right: Download and Edit buttons -->
+        <div class="file-actions">
+            <!-- Indicate visibility status -->
+            {% if file.visible_to_students %}
+            <a style="color:rgb(61, 61, 61);"><i class="fa-solid fa-eye"></i></a>
+            {% else %}
+            <a style="color:red;"><i class="fa-solid fa-eye-slash"></i></a>
+            {% endif %}
+            <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i
+                    class="fa-solid fa-pen-to-square"></i></a>
+            <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i
+                    class="fa-solid fa-download"></i></a>
+        </div>
+    </li>
+</ul>
+{% endfor %}
+{% endwith %}
+{% else %}
+<p class="list-group-item text-center">No files uploaded yet.</p>
+{% endif %}
 {% endblock %}
