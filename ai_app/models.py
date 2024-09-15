@@ -9,9 +9,11 @@ class CourseMaterial(models.Model):
     file = models.FileField(upload_to='uploads/', null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     classroom = models.ForeignKey('ClassRoom', on_delete=models.CASCADE)
+    display_name = models.CharField(max_length=255, null=True, blank=True)
+    category=models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return self.file.name if self.file else "No File"
+        return self.display_name if self.display_name else self.file.name
 
 class University(models.Model):
     name = models.CharField(max_length=255)

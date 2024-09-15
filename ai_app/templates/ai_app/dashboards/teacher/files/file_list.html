@@ -21,11 +21,63 @@
         .upload-button a:hover {
             color: #212121;
         }
+
+        /* Style the list of files */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        ul li a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        /* Buttons styling */
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-actions a {
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .download-btn {
+            color: #22cc9d;
+        }
+
+        .download-btn:hover {
+            color: #1ba37b;
+        }
+
+        .edit-btn {
+            color: #ffcc00; /* Yellow-orange */
+        }
+
+        .edit-btn:hover {
+            color: #e6b800; /* Darker yellow-orange */
+        }
     </style>
 {% endblock %}
 
 {% block content %}
-
     <div class="upload-header">
         <h2>Files</h2>
         <div class="upload-button">
@@ -38,14 +90,26 @@
     <ul>
         {% for file in files %}
         <li>
+            <!-- File name on the left -->
             <span>
-                <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.file.name }}</a>
+                {% if file.display_name and file.display_name != file.file.name %}
+                    <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.display_name }}</a>
+                {% else %}
+                    <a href="{% url 'file_preview' classroom.room_code file.id %}">{{ file.file.name }}</a>
+                {% endif %}
+                {% if file.category %}
+                    - {{ file.category }}
+                {% endif %}
             </span>
-            <a href="{% url 'file_download' classroom.room_code file.id %}">Download</a>
+
+            <!-- Actions on the right: Download and Edit buttons -->
+            <div class="file-actions">
+                <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i class="fa-solid fa-download"></i></a>
+            </div>
         </li>
         {% empty %}
         <li class="list-group-item text-center">No files uploaded yet.</li>
         {% endfor %}
     </ul>
-
 {% endblock %}

@@ -23,6 +23,20 @@ def file_upload_view(request, room_code):
         form = FileUploadForm()
     return render(request, 'ai_app/dashboards/teacher/files/file_upload.html', {'form': form, 'classroom': classroom})
 
+def file_edit_view(request, room_code, file_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
+    material = get_object_or_404(CourseMaterial, id=file_id, classroom=classroom)
+
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES, instance=material)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('file_list', kwargs={'room_code': room_code}))
+    else:
+        form = FileUploadForm(instance=material)
+
+    return render(request, 'ai_app/dashboards/teacher/files/file_edit.html', {'form': form, 'classroom': classroom})
+
 def file_list_view(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
     files = CourseMaterial.objects.filter(classroom=classroom)
