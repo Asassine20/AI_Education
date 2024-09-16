@@ -4,6 +4,10 @@
 {{ classroom.room_name }} - Uploaded Files
 {% endblock %}
 
+{% block header %}
+    {{ classroom.room_name }} - Files
+{% endblock %}
+
 {% block extra_css %}
 <style>
     .upload-header {
@@ -12,14 +16,20 @@
         align-items: center;
     }
 
-    .upload-button a {
-        text-decoration: none;
-        font-size: 30px;
-        color: #000;
+    .upload-button {
+        background-color: #000;
+        border-radius: 4px;
+        padding: 4px;
     }
 
-    .upload-button a:hover {
-        color: #212121;
+    .upload-button a {
+        text-decoration: none;
+        font-size: 20px;
+        color: #fff;
+    }
+
+    .upload-button:hover {
+        background-color: #393939;
     }
 
     /* Style the list of files */
@@ -92,7 +102,7 @@
     <h2>Files</h2>
     <div class="upload-button">
         <a href="{% url 'file_upload' classroom.room_code %}">
-            <i class="fa-solid fa-plus"></i>
+            Upload File
         </a>
     </div>
 </div>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import jsonfield
 
 class CourseMaterial(models.Model):
     professor = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -30,6 +31,7 @@ class ClassRoom(models.Model):
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='classes_teaching')
     students = models.ManyToManyField(User, related_name='enrolled_classrooms', blank=True)  # Change related_name to avoid conflict
+    class_times = jsonfield.JSONField(blank=True, null=True)
 
     def __str__(self):
         return self.room_name

@@ -66,12 +66,65 @@
         {% csrf_token %}
         <label for="room_name">Class Name:</label>
         <input type="text" id="room_name" name="room_name" required>
-
+    
+        <label for="room_code">Room Code:</label>
+        <input type="text" id="room_code" name="room_code" required>
+    
+        <label for="room_number">Room Number:</label>
+        <input type="text" id="room_number" name="room_number">
+    
+        <label for="class_times">Class Times:</label>
+        <div id="class-times-container">
+            <div class="class-time-row">
+                <label for="day_1">Day:</label>
+                <select name="days[]" id="day_1">
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
+                    <option value="sunday">Sunday</option>
+                </select>
+    
+                <label for="time_1">Time:</label>
+                <input type="text" name="times[]" id="time_1" placeholder="e.g., 2:30-3:30">
+            </div>
+        </div>
+        <button type="button" id="add-time-btn">Add another time</button>
+    
         <label for="description">Class Description:</label>
         <textarea id="description" name="description" rows="4" required></textarea>
-
+    
         <button type="submit">Create Class</button>
     </form>
+    
+    <script>
+        let timeCount = 1;
+        document.getElementById('add-time-btn').addEventListener('click', function() {
+            timeCount++;
+            const container = document.getElementById('class-times-container');
+            const newRow = document.createElement('div');
+            newRow.classList.add('class-time-row');
+            newRow.innerHTML = `
+                <label for="day_${timeCount}">Day:</label>
+                <select name="days[]" id="day_${timeCount}">
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
+                    <option value="sunday">Sunday</option>
+                </select>
+    
+                <label for="time_${timeCount}">Time:</label>
+                <input type="text" name="times[]" id="time_${timeCount}" placeholder="e.g., 2:30-3:30">
+            `;
+            container.appendChild(newRow);
+        });
+    </script>
+    
 </div>
 
 </body>

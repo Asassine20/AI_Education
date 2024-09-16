@@ -42,30 +42,35 @@ def student_dashboard(request):
     classes = profile.classes.all()
     return render(request, 'ai_app/dashboards/student/student_dashboard.html', {'classes': classes})
 
-
 @login_required
 def add_class(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
-    
+
     if request.method == 'POST':
         room_name = request.POST['room_name']
         description = request.POST['description']
-        
-        # Generate a unique class code
-        room_code = uuid.uuid4().hex[:8]  # Use first 8 characters of UUID for the code
-        
+        room_code = request.POST['room_code']
+
+        # Get the class times
+        days = request.POST.getlist('days[]')
+        times = request.POST.getlist('times[]')
+        class_times = {day: time for day, time in zip(days, times)}
+
         # Create the new class
         new_class = ClassRoom.objects.create(
             room_name=room_name,
             description=description,
             room_code=room_code,
             university=profile.university,
-            teacher=request.user
+            teacher=request.user,
+            class_times=class_times  # Save the class times as JSON
         )
+
         profile.classes.add(new_class)
         return redirect('teacher_dashboard')
 
     return render(request, 'ai_app/dashboards/teacher/add_class.html')
+
 
 
 @login_required
