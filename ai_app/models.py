@@ -13,6 +13,7 @@ class CourseMaterial(models.Model):
     display_name = models.CharField(max_length=255, null=True, blank=True)
     category=models.CharField(max_length=255, null=True, blank=True)
     visible_to_students = models.BooleanField(default=False)  
+    is_syllabus = models.BooleanField(default=False)  # New column to handle syllabus marking
 
     def __str__(self):
         return self.display_name if self.display_name else self.file.name

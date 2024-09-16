@@ -10,17 +10,27 @@ from django.http import FileResponse
 def file_upload_view(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
     if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
+        form = FileUploadForm(request.POST, request.FILES, classroom=classroom)
         if form.is_valid():
             material = form.save(commit=False)
             material.classroom = classroom
             material.professor = request.user
             material.course_name = classroom.room_code
+            new_category = form.cleaned_data.get('new_category')
+
+            if new_category:
+                material.category = new_category
+            else:
+                material.category =form.cleaned_data.get('category')
+            
+            if 'set_as_syllabus' in request.POST:
+                CourseMaterial.objects.filter(classroom=classroom, professor=request.user, is_syllabus=True).update(is_syllabus=False)
+                material.is_syllabus = True
             material.material = request.FILES['file']
             material.save()
             return redirect(reverse('file_list', kwargs={'room_code': room_code}))
     else:
-        form = FileUploadForm()
+        form = FileUploadForm(classroom=classroom)
     return render(request, 'ai_app/dashboards/teacher/files/file_upload.html', {'form': form, 'classroom': classroom})
 
 def file_edit_view(request, room_code, file_id):
