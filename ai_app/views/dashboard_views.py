@@ -50,6 +50,7 @@ def add_class(request):
         room_name = request.POST['room_name']
         description = request.POST['description']
         room_code = request.POST['room_code']
+        room_number = request.POST['room_number']
 
         # Get the class times
         days = request.POST.getlist('days[]')
@@ -63,7 +64,8 @@ def add_class(request):
             room_code=room_code,
             university=profile.university,
             teacher=request.user,
-            class_times=class_times  # Save the class times as JSON
+            room_number=room_number,
+            class_times=class_times 
         )
 
         profile.classes.add(new_class)

@@ -27,10 +27,11 @@ class University(models.Model):
 class ClassRoom(models.Model):
     room_name = models.CharField(max_length=255)
     room_code = models.CharField(max_length=50, unique=True)
-    description = models.TextField(blank=True)  # Add this field
+    description = models.TextField(blank=True) 
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='classes_teaching')
-    students = models.ManyToManyField(User, related_name='enrolled_classrooms', blank=True)  # Change related_name to avoid conflict
+    students = models.ManyToManyField(User, related_name='enrolled_classrooms', blank=True)  
+    room_number = models.CharField(max_length=10)
     class_times = jsonfield.JSONField(blank=True, null=True)
 
     def __str__(self):

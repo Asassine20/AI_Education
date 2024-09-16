@@ -19,12 +19,12 @@
     .upload-button {
         background-color: #000;
         border-radius: 4px;
-        padding: 4px;
+        padding: 8px;
     }
 
     .upload-button a {
         text-decoration: none;
-        font-size: 20px;
+        font-size: 16px;
         color: #fff;
     }
 
@@ -102,7 +102,7 @@
     <h2>Files</h2>
     <div class="upload-button">
         <a href="{% url 'file_upload' classroom.room_code %}">
-            Upload File
+            Upload File <i class="fa-solid fa-upload" style="font-size: 16px; margin-left: 5px;"></i>
         </a>
     </div>
 </div>

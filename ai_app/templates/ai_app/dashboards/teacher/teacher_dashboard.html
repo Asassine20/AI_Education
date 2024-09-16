@@ -5,11 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>    Teacher Dashboard
-    </title>
+    <title>Teacher Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 
 <body>
@@ -18,6 +16,7 @@
             <img src="{% static 'images/logo.png' %}" alt="My Logo" class="logo">
         </a>
     </header>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,18 +54,14 @@
         }
 
         .add-class-btn:hover {
-            background-color: #22cc9d;
+            background-color: #1ba37b;
         }
 
+        /* Update class-grid to have 2 columns per row */
         .class-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-        }
-
-        .class-card-link {
-            text-decoration: none;
-            color: inherit;
         }
 
         .class-card {
@@ -74,27 +69,46 @@
             padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             position: relative;
         }
 
         .class-card h2 {
             font-size: 1.5rem;
             color: black;
+            margin-bottom: 1rem;
+            margin-top: -5px;
         }
 
-        .class-card p {
-            color: #434443;
-        }
-
-        .class-code {
-            font-weight: bold;
-            margin-top: 0.5rem;
-            color: #22cc9d;
+        /* Flexbox for labels and data */
+        .class-info {
             display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
             align-items: center;
+        }
+
+        .class-info label, .class-times li span:first-child {
+            font-weight: bold;
+            color: #434443;
+            width: 40%; /* Align the labels to be fixed width */
+        }
+
+        .class-info span, .class-times li span:last-child {
+            width: 60%; /* Align the content to the right */
+            text-align: right;
+        }
+
+        /* Clean and professional styling for class times */
+        .class-times ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 0.5rem;
+        }
+
+        .class-times li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
         }
 
         .copy-icon-container {
@@ -153,32 +167,42 @@
     <div class="class-grid">
         {% for class in classes_teaching %}
         <div class="class-card">
+            <!-- Clickable area to navigate to course page -->
             <a href="{% url 'course_page' class.room_code %}" class="clickable-card"></a>
+
+            <!-- Class Information -->
             <h2>{{ class.room_name }}</h2>
-            <p>{{ class.description|slice:":100" }}...</p>
-            <p class="class-code">
-                {{ class.room_code }} <br>
-                Professor Name <br>
-                Professor Email <br>
-                Room Number<br>
-                Class Time
-                <span class="copy-icon-container" onclick="copyCode('{{ class.room_code }}')">
-                    <i class="fa fa-copy copy-icon"></i>
-                    <span class="tooltip-text">Copy</span>
-                </span>
-            </p>
+            <div class="class-info">
+                <label>Professor Name:</label>
+                <span>{{ class.teacher.first_name }} {{ class.teacher.last_name }}</span>
+            </div>
+
+            <div class="class-info">
+                <label>Professor Email:</label>
+                <span>{{ class.teacher.email }}</span>
+            </div>
+
+            <div class="class-info">
+                <label>Room Number:</label>
+                <span>{{ class.room_number }}</span>
+            </div>
+
+            <!-- Class Times -->
+            <div class="class-times">
+                <ul>
+                    {% for day, time in class.class_times.items %}
+                        <li>
+                            <span>{{ day|capfirst }}:</span>
+                            <span>{{ time }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
         {% empty %}
         <p>No classes yet. Click "Add a class" to create one.</p>
         {% endfor %}
     </div>
+</body>
 
-    <script>
-        function copyCode(roomCode) {
-            navigator.clipboard.writeText(roomCode).then(function() {
-                alert("Copied: " + roomCode);
-            }).catch(function(error) {
-                console.error("Error copying text: ", error);
-            });
-        }
-    </script>
+</html>
