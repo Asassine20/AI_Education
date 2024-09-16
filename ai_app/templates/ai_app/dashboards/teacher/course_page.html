@@ -1,17 +1,64 @@
 {% extends 'ai_app/dashboards/teacher/course_base.html' %}
 
 {% block title %}
-    {{ classroom.room_name }} - Home Page
+{{ classroom.room_name }} - Home Page
 {% endblock %}
 
 {% block header %}
-    {{ classroom.room_name }} - Home
+{{ classroom.room_name }} - Home
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    .content-container {
+        width: 75%;
+    }
+    .class-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        align-items: center;
+    }
+
+    .class-info label, .class-times li span:first-child {
+        font-weight: bold;
+        color: #434443;
+        width: 40%; /* Align the labels to be fixed width */
+    }
+
+    .class-info span, .class-times li span:last-child {
+        width: 60%; /* Align the content to the right */
+        text-align: right;
+    }
+</style>
+{% endblock %}
 {% block content %}
-    <div class="header">
-        <p>{{ classroom.description }}</p>
-        <p class="class-code">Class Code: {{ classroom.room_code }}</p>
+    <div class="class-info">
+        <label>Professor Name:</label>
+        <span>{{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</span>
     </div>
+
+    <div class="class-info">
+        <label>Professor Email:</label>
+        <span>{{ classroom.teacher.email }}</span>
     </div>
+
+    <div class="class-info">
+        <label>Room Number:</label>
+        <span>{{ classroom.room_number }}</span>
+    </div>
+
+    <!-- Class Times -->
+    <div class="class-times">
+        <h3>Class Times:</h3>
+        <ul>
+            {% for day, time in classroom.class_times.items %}
+            <li>
+                <span>{{ day|capfirst }}:</span>
+                <span>{{ time }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}
