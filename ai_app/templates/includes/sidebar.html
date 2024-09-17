@@ -64,5 +64,5 @@
     <a href="#">Assignments</a>
     <a href="#">Grades</a>
     <a href="{% url 'students_enrolled' classroom.room_code %}">People</a>
-    <a href="#">Messages</a>
+    <a href="{% url 'messages_list' classroom.room_code %}">Messages</a>
 </div>

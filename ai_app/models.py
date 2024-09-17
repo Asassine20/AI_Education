@@ -68,3 +68,12 @@ class Assignment(models.Model):
 
     def __str__(self):
         return self.title
+
+class Messages(models.Model):
+    title = models.CharField(max_length=255)
+    text = models.TextField()
+    uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='messages')
+    
+    def __str__(self):
+        return self.title

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment
+from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment, Messages
 from django.contrib import messages
 
 @login_required
@@ -147,3 +147,9 @@ def subjects_in_class(request, room_code):
     # Assuming a Subject model exists
     subjects = Subject.objects.filter(classroom=classroom)
     return render(request, 'ai_app/dashboards/students/subjects_in_class.html', {'classroom': classroom, 'subjects': subjects})
+
+@login_required
+def messages_list(request, room_code):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    messages = Messages.objects.filter(classroom=classroom)
+    return render(request, 'ai_app/dashboards/teacher/messages_list.html', {'classroom': classroom, 'messages': messages})

@@ -1,0 +1,27 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+{{ classroom.room_name }} - Messages
+{% endblock %}
+
+{% block header %}
+    {{ classroom.room_name }} - Messages
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Messages</h2>
+    <div>
+        <!-- Iterate through the messages queryset -->
+        {% for message in messages %}
+            <div>
+                <h3>{{ message.title }}</h3>
+                <p>{{ message.text }}</p>
+                <p><small>Uploaded at: {{ message.uploaded_at }}</small></p>
+            </div>
+        {% empty %}
+            <p>No messages available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
