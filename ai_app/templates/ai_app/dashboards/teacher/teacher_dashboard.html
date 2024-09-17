@@ -43,7 +43,7 @@
 
         .add-class-btn {
             padding: 0.8rem 1.5rem;
-            background-color: #22cc9d;
+            background-color: #000;
             color: white;
             border: none;
             border-radius: 8px;
@@ -54,7 +54,7 @@
         }
 
         .add-class-btn:hover {
-            background-color: #1ba37b;
+            background-color: #434443;
         }
 
         /* Update class-grid to have 2 columns per row */
@@ -77,6 +77,11 @@
             color: black;
             margin-bottom: 1rem;
             margin-top: -5px;
+        }
+
+        .room-code {
+            font-size: 1.2rem;
+            color: #434443;
         }
 
         /* Flexbox for labels and data */
@@ -171,7 +176,9 @@
             <a href="{% url 'course_page' class.room_code %}" class="clickable-card"></a>
 
             <!-- Class Information -->
-            <h2>{{ class.room_name }}</h2>
+            <h2>{{ class.room_name }}
+                <span class="room-code"> - {{ class.room_code }}</span>
+            </h2>
             <div class="class-info">
                 <label>Professor Name:</label>
                 <span>{{ class.teacher.first_name }} {{ class.teacher.last_name }}</span>

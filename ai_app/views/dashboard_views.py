@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment, Messages
+from ai_app.forms import MessageUploadForm
+from django.urls import reverse
 from django.contrib import messages
 
 @login_required
@@ -153,3 +155,28 @@ def messages_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     messages = Messages.objects.filter(classroom=classroom)
     return render(request, 'ai_app/dashboards/teacher/messages_list.html', {'classroom': classroom, 'messages': messages})
+
+@login_required
+def delete_message(request, room_code, message_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    message = get_object_or_404(Messages, id=message_id, classroom=classroom)
+    if request.method == 'POST':
+        message.delete()
+        return redirect(reverse('messages_list', kwargs={'room_code': room_code}))
+    return render(request, 'ai_app/dashboards/teacher/confirm_delete.html', {'message': message, 'classroom': classroom})
+
+@login_required
+def create_message(request, room_code):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
+    if request.method == 'POST':
+        form = MessageUploadForm(request.POST, classroom=classroom)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.classroom = classroom
+            message.professor = request.user
+            message.course_name = classroom.room_code
+            message.save()
+            return redirect(reverse('messages_list', kwargs={'room_code': room_code}))
+    else:
+        form = MessageUploadForm(classroom=classroom)
+    return render(request, 'ai_app/dashboards/teacher/create_message.html', {'form': form, 'classroom': classroom})

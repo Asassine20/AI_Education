@@ -1,7 +1,7 @@
 # ai_app/forms.py
 from django import forms
 from django.contrib.auth.models import User
-from .models import CourseMaterial
+from .models import CourseMaterial, Messages
 from django.contrib.auth.forms import UserCreationForm
 
 class SignUpForm(UserCreationForm):
@@ -26,3 +26,14 @@ class FileUploadForm(forms.ModelForm):
         existing_categories = CourseMaterial.objects.filter(classroom=classroom).values_list('category', flat=True).distinct()
         category_choices = [(cat, cat) for cat in existing_categories if cat]
         self.fields['category'].choices = [('', 'Select a category')] + category_choices
+
+class MessageUploadForm(forms.ModelForm):
+
+    class Meta:
+        model = Messages
+        fields = ['title', 'text']
+    
+    def __init__(self, *args, **kwargs):
+        self.classroom = kwargs.pop('classroom', None)
+        super(MessageUploadForm, self).__init__(*args, **kwargs)
+                                    
