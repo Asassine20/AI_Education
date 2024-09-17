@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment
-import uuid  # For generating the class code
-
+from django.contrib import messages
 
 @login_required
 def teacher_dashboard(request):
@@ -54,8 +53,14 @@ def add_class(request):
 
         # Get the class times
         days = request.POST.getlist('days[]')
-        times = request.POST.getlist('times[]')
-        class_times = {day: time for day, time in zip(days, times)}
+        start_times = request.POST.getlist('start_times[]')
+        start_periods = request.POST.getlist('start_periods[]')
+        end_times = request.POST.getlist('end_times[]')
+        end_periods = request.POST.getlist('end_periods[]')
+
+        class_times = {}
+        for day, start_time, start_period, end_time, end_period in zip(days, start_times, start_periods, end_times, end_periods):
+            class_times[day] = f'{start_time} {start_period} - {end_time} {end_period}'
 
         # Create the new class
         new_class = ClassRoom.objects.create(

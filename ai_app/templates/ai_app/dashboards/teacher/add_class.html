@@ -12,7 +12,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 95%;
             margin: 0 auto;
             padding: 2rem;
             background-color: white;
@@ -35,26 +35,84 @@
             font-weight: bold;
         }
 
-        input, textarea {
+        input, textarea, select {
             padding: 0.8rem;
             margin-bottom: 1.5rem;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 1rem;
+            width: 95%;
+        }
+
+        .day-dropdown {
+            width: 33%;
+        }
+
+        .time-input input {
+            width: 20%;
         }
 
         button {
             padding: 1rem;
-            background-color: #007bff;
+            background-color: #000000;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-bottom: 20px;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #2f2f2f;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .class-time-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .time-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .time-input select{
+            width:75px;
+        }
+
+        .am-pm-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.5rem;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .am-pm-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .am-pm {
+            width: 48px;
         }
     </style>
 </head>
@@ -77,7 +135,7 @@
         <div id="class-times-container">
             <div class="class-time-row">
                 <label for="day_1">Day:</label>
-                <select name="days[]" id="day_1">
+                <select name="days[]" id="day_1" class="day-dropdown">
                     <option value="monday">Monday</option>
                     <option value="tuesday">Tuesday</option>
                     <option value="wednesday">Wednesday</option>
@@ -86,14 +144,29 @@
                     <option value="saturday">Saturday</option>
                     <option value="sunday">Sunday</option>
                 </select>
-    
-                <label for="time_1">Time:</label>
-                <input type="text" name="times[]" id="time_1" placeholder="e.g., 2:30-3:30">
+
+                <div class="time-input">
+                    <label for="start_time_1">Start:</label>
+                    <input type="text" name="start_times[]" id="start_time_1" placeholder="2:30">
+
+                    <select name="start_periods[]" class="am-pm">
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+
+                    <label for="end_time_1">End:</label>
+                    <input type="text" name="end_times[]" id="end_time_1" placeholder="3:30">
+
+                    <select name="end_periods[]" class="am-pm">
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
             </div>
         </div>
         <button type="button" id="add-time-btn">Add another time</button>
     
-        <label for="description">Class Description:</label>
+        <label for="description">Class Description (Optional):</label>
         <textarea id="description" name="description" rows="4" required></textarea>
     
         <button type="submit">Create Class</button>
@@ -108,7 +181,7 @@
             newRow.classList.add('class-time-row');
             newRow.innerHTML = `
                 <label for="day_${timeCount}">Day:</label>
-                <select name="days[]" id="day_${timeCount}">
+                <select name="days[]" id="day_${timeCount}" class="day-dropdown">
                     <option value="monday">Monday</option>
                     <option value="tuesday">Tuesday</option>
                     <option value="wednesday">Wednesday</option>
@@ -117,14 +190,34 @@
                     <option value="saturday">Saturday</option>
                     <option value="sunday">Sunday</option>
                 </select>
-    
-                <label for="time_${timeCount}">Time:</label>
-                <input type="text" name="times[]" id="time_${timeCount}" placeholder="e.g., 2:30-3:30">
+
+                <div class="time-input">
+                    <label for="start_time_${timeCount}">Start Time:</label>
+                    <input type="text" name="start_times[]" id="start_time_${timeCount}" placeholder="2:30">
+
+                    <select name="start_periods[]" class="am-pm">
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+
+                    <label for="end_time_${timeCount}">End Time:</label>
+                    <input type="text" name="end_times[]" id="end_time_${timeCount}" placeholder="3:30">
+
+                    <select name="end_periods[]" class="am-pm">
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
+
+                <button type="button" class="delete-btn">Delete</button>
             `;
             container.appendChild(newRow);
+
+            newRow.querySelector('.delete-btn').addEventListener('click', function() {
+                newRow.remove();
+            });
         });
     </script>
-    
 </div>
 
 </body>
