@@ -6,6 +6,7 @@ from django.urls import reverse
 import os
 from django.conf import settings
 from django.http import FileResponse
+from urllib.parse import unquote
 
 def file_upload_view(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
@@ -63,9 +64,10 @@ def file_download_view(request, room_code, file_id):
     file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
     return FileResponse(open(file_path, 'rb'), as_attachment=True)
 
-def file_preview_view(request, room_code, file_id):
+def file_preview_view(request, room_code, display_name):
     classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
-    file = get_object_or_404(CourseMaterial, id=file_id, classroom=classroom)
+    decoded_display_name = unquote(display_name)
+    file = get_object_or_404(CourseMaterial, display_name=decoded_display_name, classroom=classroom)
     file_path = os.path.join(settings.MEDIA_ROOT,file.file.name)
     if file.file.name.endswith(('.png', '.jpg', '.jpeg')):
         return render(request, 'ai_app/dashboards/teacher/files/file_preview.html', {'file': file, 'classroom': classroom})

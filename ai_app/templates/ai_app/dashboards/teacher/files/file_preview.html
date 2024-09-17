@@ -1,2 +1,6 @@
-<h2>Preview File: {{ file.file.name }}</h2>
+<h2>File: {{ file.display_name }}</h2>
+<div class="download">
+    <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i
+            class="fa-solid fa-download"></i></a>
+</div>
 <img src="{{ file.file.url }}" alt="{{ file.file.name }}">

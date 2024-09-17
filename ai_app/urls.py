@@ -32,5 +32,5 @@ urlpatterns = [
     path('teacher-dashboard/course/<str:room_code>/files/', file_list_view, name='file_list'),
     path('teacher-dashboard/course/<str:room_code>/edit/<int:file_id>/', file_edit_view, name='file_edit'),
     path('teacher-dashboard/course/<str:room_code>/download/<int:file_id>/', file_download_view, name='file_download'),
-    path('teacher-dashboard/course/<str:room_code>/preview/<int:file_id>/', file_preview_view, name='file_preview'),
+    path('teacher-dashboard/course/<str:room_code>/<str:display_name>/', file_preview_view, name='file_preview'),
 ]
