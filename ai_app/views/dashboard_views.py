@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment, Messages
+from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment, Messages, CourseMaterial
 from ai_app.forms import MessageUploadForm
 from django.urls import reverse
 from django.contrib import messages
@@ -85,12 +85,13 @@ def add_class(request):
 @login_required
 def course_page(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-
+    syllabus = CourseMaterial.objects.filter(classroom=classroom, is_syllabus=True)
     students = SchoolUserProfile.objects.filter(classes=classroom, role='student')
 
     context = {
         'classroom': classroom,
         'students': students,
+        'syllabus': syllabus,
     }
 
     return render(request, 'ai_app/dashboards/teacher/course_page.html', context)

@@ -13,6 +13,7 @@
     .content-container {
         width: 75%;
     }
+
     .class-info {
         display: flex;
         justify-content: space-between;
@@ -20,48 +21,63 @@
         align-items: center;
     }
 
-    .class-info label, .class-times li span:first-child {
+    .class-info label,
+    .class-times li span:first-child {
         font-weight: bold;
         color: #434443;
-        width: 40%; /* Align the labels to be fixed width */
+        width: 40%;
+        /* Align the labels to be fixed width */
     }
 
-    .class-info span, .class-times li span:last-child {
-        width: 60%; /* Align the content to the right */
+    .class-info span,
+    .class-times li span:last-child {
+        width: 60%;
+        /* Align the content to the right */
         text-align: right;
     }
 </style>
 {% endblock %}
+
 {% block content %}
-    <div class="class-info">
-        <label>Professor Name:</label>
-        <span>{{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</span>
-    </div>
+<div class="class-info">
+    <label>Course Number:</label>
+    <span>{{ classroom.room_code }}</span>
+</div>
+<div class="class-info">
+    <label>Professor Name:</label>
+    <span>{{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</span>
+</div>
+<div class="class-info">
+    <label>Professor Email:</label>
+    <span>{{ classroom.teacher.email }}</span>
+</div>
+<div class="class-info">
+    <label>Room Number:</label>
+    <span>{{ classroom.room_number }}</span>
+</div>
 
-    <div class="class-info">
-        <label>Professor Email:</label>
-        <span>{{ classroom.teacher.email }}</span>
-    </div>
+<!-- Syllabus Section -->
+<div class="class-info">
+    <label>Syllabus:</label>
+    <span>
+        {% if syllabus %}
+            <a href="{{ syllabus.file.url }}">Download Syllabus</a>
+        {% else %}
+            No syllabus uploaded yet.
+        {% endif %}
+    </span>
+</div>
 
-    <div class="class-info">
-        <label>Room Number:</label>
-        <span>{{ classroom.room_number }}</span>
-    </div>
-
-    <!-- Class Times -->
-    <div class="class-times">
-        <h3>Class Times:</h3>
-        <ul>
-            {% for day, time in classroom.class_times.items %}
-            <li>
-                <span>{{ day|capfirst }}:</span>
-                <span>{{ time }}</span>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="syllabus">
-        Syllabus:
-    </div>
+<!-- Class Times -->
+<div class="class-times">
+    <h3>Class Times:</h3>
+    <ul>
+        {% for day, time in classroom.class_times.items %}
+        <li>
+            <span>{{ day|capfirst }}:</span>
+            <span>{{ time }}</span>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
