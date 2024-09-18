@@ -1,7 +1,7 @@
 from django.urls import path
-
 from .views.auth_views import login_view, logout_view, signup_view, school_signup_view
-from .views.dashboard_views import teacher_dashboard, student_dashboard, add_class, course_page, students_enrolled, student_questions, students_in_class, assignments_in_class, grades_in_class, syllabus_in_class, subjects_in_class, messages_list, create_message, delete_message
+from .views.teacher_dashboard_views import teacher_dashboard, add_class, course_page, students_enrolled, student_questions, messages_list, create_message, delete_message
+from .views.student_dashboard_views import student_dashboard
 from .views.other_views import home, landing_page, contact_view
 from .views.question_views import ask_question, upload_materials, view_questions
 from .views.file_views import file_preview_view, file_download_view, file_list_view, file_upload_view, file_edit_view
@@ -26,11 +26,6 @@ urlpatterns = [
     path('teacher-dashboard/course/<str:room_code>/messages/create-message/', create_message, name='create_message'),
     path('teacher-dashboard/course/<str:room_code>/messages/<int:message_id>/delete', delete_message, name='delete_message'),
     path('teacher-dashboard/course/<str:room_code>/upload-materials/', upload_materials, name='upload_materials'),
-    path('student-dashboard/course/<str:room_code>/students/', students_in_class, name='students_in_class'),
-    path('student-dashboard/course/<str:room_code>/assignments/', assignments_in_class, name='assignments_in_class'),
-    path('student-dashboard/course/<str:room_code>/grades/', grades_in_class, name='grades_in_class'),
-    path('student-dashboard/course/<str:room_code>/syllabus/', syllabus_in_class, name='syllabus_in_class'),
-    path('student-dashboard/course/<str:room_code>/subjects/', subjects_in_class, name='subjects_in_class'),
     path('teacher-dashboard/course/<str:room_code>/upload/', file_upload_view, name='file_upload'),
     path('teacher-dashboard/course/<str:room_code>/files/', file_list_view, name='file_list'),
     path('teacher-dashboard/course/<str:room_code>/edit/<int:file_id>/', file_edit_view, name='file_edit'),

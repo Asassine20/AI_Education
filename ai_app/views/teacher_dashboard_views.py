@@ -25,23 +25,6 @@ def teacher_dashboard(request):
     return render(request, 'ai_app/dashboards/teacher/teacher_dashboard.html', {'classes_teaching': classes_teaching})
 
 
-@login_required
-def student_dashboard(request):
-    profile = get_object_or_404(SchoolUserProfile, user=request.user, role='student')
-    if request.method == 'POST':
-        room_code = request.POST['room_code']
-        try:
-            classroom = ClassRoom.objects.get(room_code=room_code)
-            profile.classes.add(classroom)
-            return redirect('student_dashboard')
-        except ClassRoom.DoesNotExist:
-            return render(request, 'ai_app/dashboards/student/student_dashboard.html', {
-                'error': 'Invalid class code',
-                'classes': classes
-            })
-
-    classes = profile.classes.all()
-    return render(request, 'ai_app/dashboards/student/student_dashboard.html', {'classes': classes})
 
 @login_required
 def add_class(request):
@@ -109,47 +92,6 @@ def student_questions(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     questions = Question.objects.filter(user__schooluserprofile__classes=classroom)
     return render(request, 'ai_app/dashboards/teacher/student_questions.html', {'classroom': classroom, 'questions': questions})
-
-
-@login_required
-def students_in_class(request, room_code):
-    """
-    Looks through ClassRoom table to see if room_code exists. 
-    Filters through SchoolUserProfile to find all students in the class.
-    Renders the HTML page students_in_class.html and passes classroom and students data to the template.
-    """
-    classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    students = SchoolUserProfile.objects.filter(classes=classroom, role='student')
-    return render(request, 'ai_app/dashboards/students/students_in_class.html', {'classroom': classroom, 'students': students})
-
-
-@login_required
-def assignments_in_class(request, room_code):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    assignments = Assignment.objects.filter(classroom=classroom)
-    return render(request, 'ai_app/dashboards/students/assignments_in_class.html', {'classroom': classroom, 'assignments': assignments})
-
-
-@login_required
-def grades_in_class(request, room_code):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    # Assuming a Grade model exists
-    grades = Grade.objects.filter(classroom=classroom)
-    return render(request, 'ai_app/dashboards/grades_in_class.html', {'classroom': classroom, 'grades': grades})
-
-
-@login_required
-def syllabus_in_class(request, room_code):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    return render(request, 'ai_app/dashboards/syllabus_in_class.html', {'classroom': classroom})
-
-
-@login_required
-def subjects_in_class(request, room_code):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    # Assuming a Subject model exists
-    subjects = Subject.objects.filter(classroom=classroom)
-    return render(request, 'ai_app/dashboards/students/subjects_in_class.html', {'classroom': classroom, 'subjects': subjects})
 
 @login_required
 def messages_list(request, room_code):
