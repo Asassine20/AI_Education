@@ -4,6 +4,9 @@ from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment, Me
 from ai_app.forms import MessageUploadForm
 from django.urls import reverse
 from django.contrib import messages
+from django.http import FileResponse
+from django.conf import settings
+import os
 
 @login_required
 def teacher_dashboard(request):
@@ -68,7 +71,7 @@ def add_class(request):
 @login_required
 def course_page(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    syllabus = CourseMaterial.objects.filter(classroom=classroom, is_syllabus=True)
+    syllabus = CourseMaterial.objects.filter(classroom=classroom, is_syllabus=True).first()
     students = SchoolUserProfile.objects.filter(classes=classroom, role='student')
 
     context = {
@@ -123,3 +126,11 @@ def create_message(request, room_code):
     else:
         form = MessageUploadForm(classroom=classroom)
     return render(request, 'ai_app/dashboards/teacher/create_message.html', {'form': form, 'classroom': classroom})
+
+@login_required
+def download_syllabus(request, room_code, file_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    file = get_object_or_404(CourseMaterial, classroom=classroom, id=file_id, is_syllabus=True)
+    file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
+    
+    return FileResponse(open(file_path, 'rb'), as_attachment=True)

@@ -61,7 +61,7 @@
     <label>Syllabus:</label>
     <span>
         {% if syllabus %}
-            <a href="{{ syllabus.file.url }}">Download Syllabus</a>
+            <a href="{% url 'download_syllabus' classroom.room_code syllabus.id %}">Download Syllabus</a>
         {% else %}
             No syllabus uploaded yet.
         {% endif %}
