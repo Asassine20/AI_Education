@@ -6,6 +6,9 @@ from django.urls import reverse
 from django.contrib import messages
 from django.http import FileResponse
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.views.decorators.clickjacking import xframe_options_exempt
 import os
 
 @login_required
@@ -134,3 +137,18 @@ def download_syllabus(request, room_code, file_id):
     file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
     
     return FileResponse(open(file_path, 'rb'), as_attachment=True)
+
+
+@xframe_options_exempt
+def preview_syllabus(request, room_code, file_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    file = get_object_or_404(CourseMaterial, classroom=classroom, id=file_id, is_syllabus=True)
+    
+    # Check if the file is a PDF
+    if file.file.name.endswith('.pdf'):
+        try:
+            return FileResponse(open(file.file.path, 'rb'), content_type='application/pdf')
+        except FileNotFoundError:
+            raise Http404("File not found")
+    else:
+        return Http404("Syllabus is not a PDF")

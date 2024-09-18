@@ -26,14 +26,16 @@
         font-weight: bold;
         color: #434443;
         width: 40%;
-        /* Align the labels to be fixed width */
     }
 
     .class-info span,
     .class-times li span:last-child {
         width: 60%;
-        /* Align the content to the right */
         text-align: right;
+    }
+
+    .syllabus-preview embed {
+        margin-top: 10px;
     }
 </style>
 {% endblock %}
@@ -43,14 +45,17 @@
     <label>Course Number:</label>
     <span>{{ classroom.room_code }}</span>
 </div>
+
 <div class="class-info">
     <label>Professor Name:</label>
     <span>{{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</span>
 </div>
+
 <div class="class-info">
     <label>Professor Email:</label>
     <span>{{ classroom.teacher.email }}</span>
 </div>
+
 <div class="class-info">
     <label>Room Number:</label>
     <span>{{ classroom.room_number }}</span>
@@ -61,9 +66,9 @@
     <label>Syllabus:</label>
     <span>
         {% if syllabus %}
-            <a href="{% url 'download_syllabus' classroom.room_code syllabus.id %}">Download Syllabus</a>
+        <a href="{% url 'download_syllabus' classroom.room_code syllabus.id %}">Download Syllabus</a>
         {% else %}
-            No syllabus uploaded yet.
+        No syllabus uploaded yet.
         {% endif %}
     </span>
 </div>
@@ -80,4 +85,16 @@
         {% endfor %}
     </ul>
 </div>
+
+<!-- Syllabus Preview Section -->
+<div class="syllabus-preview">
+    <h3>Syllabus Preview</h3>
+    {% if syllabus %}
+    <embed src="{% url 'preview_syllabus' classroom.room_code syllabus.id %}" width="100%" height="600px"
+        type="application/pdf">
+    {% else %}
+    <p>No syllabus uploaded yet.</p>
+    {% endif %}
+</div>
+
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.auth_views import login_view, logout_view, signup_view, school_signup_view
-from .views.teacher_dashboard_views import teacher_dashboard, add_class, course_page, students_enrolled, student_questions, messages_list, create_message, delete_message, download_syllabus
+from .views.teacher_dashboard_views import teacher_dashboard, add_class, course_page, students_enrolled, student_questions, messages_list, create_message, delete_message, download_syllabus, preview_syllabus
 from .views.student_dashboard_views import student_dashboard
 from .views.other_views import home, landing_page, contact_view
 from .views.question_views import ask_question, upload_materials, view_questions
@@ -21,6 +21,7 @@ urlpatterns = [
     path('teacher-dashboard/add-class/', add_class, name='add_class'),
     path('teacher-dashboard/course/<str:room_code>/', course_page, name='course_page'),
     path('teacher-dashboard/course/<str:room_code>//download/<int:file_id>/', download_syllabus, name='download_syllabus'),
+    path('teacher-dashboard/course/<str:room_code>/preview-syllabus/<int:file_id>/', preview_syllabus, name='preview_syllabus'),
     path('teacher-dashboard/course/<str:room_code>/students-enrolled/', students_enrolled, name='students_enrolled'),
     path('teacher-dashboard/course/<str:room_code>/student-questions/', student_questions, name='student_questions'),
     path('teacher-dashboard/course/<str:room_code>/messages/', messages_list, name='messages_list'),
@@ -33,3 +34,4 @@ urlpatterns = [
     path('teacher-dashboard/course/<str:room_code>/download/<int:file_id>/', file_download_view, name='file_download'),
     path('teacher-dashboard/course/<str:room_code>/<str:display_name>/', file_preview_view, name='file_preview'),
     ]
+
