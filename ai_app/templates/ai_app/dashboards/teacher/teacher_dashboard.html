@@ -12,9 +12,11 @@
 
 <body>
     <header>
-        <a href="{% url 'landing_page' %}">
-            <img src="{% static 'images/logo.png' %}" alt="My Logo" class="logo">
-        </a>
+        <div class="logo-container">
+            <a href="{% url 'teacher_dashboard' %}">
+                <img class="logo" src="/static/images/UofMLogo.png" alt="Logo">
+            </a>
+        </div>
     </header>
 
     <style>
