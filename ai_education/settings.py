@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ai_app',
     'debug_toolbar',
-    'tinymce',
     'django_quill',
 ]
 

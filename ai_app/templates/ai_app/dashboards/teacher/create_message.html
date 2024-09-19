@@ -1,24 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Message</title>
-    <!-- Django Quill Editor Media -->
-    {{ form.media }}  <!-- This will automatically include the necessary Quill JS and CSS -->
-</head>
-<body>
-    <h1>Create Message</h1>
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+    Create Message
+{% endblock %}
+
+{% block header %}
+    Create a New Message
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .title input {
+        width: 99%;
+        height: 30px;
+        font-size: 18px;
+    }
+
+    .text {
+        font-weight: bold;
+    }
+
+    .post-button {
+        background-color: #000;
+        border-radius: 4px;
+        padding: 8px;
+        color: #fff;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .post-button:hover {
+        background-color: #393939;
+        cursor: pointer;
+    }
+</style>
+    {{ form.media }}  
+{% endblock %}
+
+{% block content %}
     <form method="post">
         {% csrf_token %}
-        <label for="id_title">Title:</label>
-        {{ form.title }}
-
-        <label for="id_text">Message:</label>
-        {{ form.text }}  <!-- This will render the Quill editor -->
-
-        <button type="submit">Post Message</button>
+        <div class="title">
+            <label for="id_title">Title:</label>
+            {{ form.title }}
+        </div>
+        
+        <div> 
+            <label for="id_text" class="text">Message:</label>
+            {{ form.text }}  <!-- This will render the Quill editor -->
+        </div>
+        
+        <button class="post-button" type="submit">Post Message</button>
     </form>
-</body>
-</html>
-
+{% endblock %}

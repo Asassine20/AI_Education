@@ -1,18 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
-    <!-- Add other necessary tags here -->
-</head>
-<body>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.media }}  <!-- This will load the necessary JavaScript for TinyMCE -->
-    {{ form.as_p }}
-    <button type="submit">Upload File</button>
-</form>
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
 
-</body>
-</html>
+{% block title %}
+    Upload File
+{% endblock %}
+
+{% block header %}
+    Upload File
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f9;
+        padding: 2rem;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto; /* Center the container */
+        padding: 2rem;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+        display: cover;
+    }
+
+    h1 {
+        text-align: center; /* Ensure h1 is centered */
+        margin-bottom: 20px;
+        color: #333;
+        font-size: 2rem;
+        width: 100%; /* Make sure the h1 takes full width */
+    }
+
+    form {
+        display: block;
+        width: 100%; /* Ensure form takes full width */
+    }
+
+    label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        display: block;
+        text-align: left;
+        width: 100%;
+    }
+
+    input, textarea, select {
+        padding: 0.8rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        width: 100%; /* Make inputs take full width */
+        box-sizing: border-box;
+    }
+
+    /* Align checkboxes to the left */
+    input[type="checkbox"] {
+        width: auto; /* Prevent checkbox from being full-width */
+        margin-right: 0.5rem;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    button {
+        padding: 1rem;
+        background-color: #000000;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+        width: 100%; /* Button takes full width */
+    }
+
+    button:hover {
+        background-color: #2f2f2f;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="id_file">Upload File:</label>
+        {{ form.file }}
+        <label for="id_display_name">Display Name:</label>
+        {{ form.display_name }}
+
+        <label for="id_category">Select Category:</label>
+        {{ form.category }}
+
+        <label for="id_new_category">Add New Category:</label>
+        {{ form.new_category }}
+
+        <div class="checkbox-label">
+            <input type="checkbox" id="id_visible_to_students" name="visible_to_students">
+            <label for="id_visible_to_students">Visible to Students</label>
+        </div>
+
+        <div class="checkbox-label">
+            <input type="checkbox" id="id_is_syllabus" name="is_syllabus">
+            <label for="id_is_syllabus">Is Syllabus</label>
+        </div>
+
+        
+
+        <button type="submit">Upload File</button>
+    </form>
+</div>
+{% endblock %}
