@@ -1,5 +1,24 @@
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Post Message</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Message</title>
+    <!-- Django Quill Editor Media -->
+    {{ form.media }}  <!-- This will automatically include the necessary Quill JS and CSS -->
+</head>
+<body>
+    <h1>Create Message</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_title">Title:</label>
+        {{ form.title }}
+
+        <label for="id_text">Message:</label>
+        {{ form.text }}  <!-- This will render the Quill editor -->
+
+        <button type="submit">Post Message</button>
+    </form>
+</body>
+</html>
+

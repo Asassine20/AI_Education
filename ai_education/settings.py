@@ -37,8 +37,10 @@ LOGOUT_REDIRECT_URL = 'login'  # Redirect to login after logout
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+# for debug toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +51,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ai_app',
+    'debug_toolbar',
+    'tinymce',
+    'django_quill',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'ai_education.urls'

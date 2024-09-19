@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import jsonfield
+from django_quill.fields import QuillField 
 
 class CourseMaterial(models.Model):
     professor = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -71,7 +72,8 @@ class Assignment(models.Model):
 
 class Messages(models.Model):
     title = models.CharField(max_length=255)
-    text = models.TextField()
+    text = QuillField()
+
     uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='messages')
     

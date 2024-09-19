@@ -122,12 +122,10 @@ def create_message(request, room_code):
         if form.is_valid():
             message = form.save(commit=False)
             message.classroom = classroom
-            message.professor = request.user
-            message.course_name = classroom.room_code
             message.save()
-            return redirect(reverse('messages_list', kwargs={'room_code': room_code}))
+            return redirect('messages_list', room_code=room_code)
     else:
-        form = MessageUploadForm(classroom=classroom)
+        form = MessageUploadForm()
     return render(request, 'ai_app/dashboards/teacher/create_message.html', {'form': form, 'classroom': classroom})
 
 @login_required

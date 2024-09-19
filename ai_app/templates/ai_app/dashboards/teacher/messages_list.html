@@ -48,57 +48,61 @@
         border-radius: 5px;
         border: 1px solid #e0e0e0;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        cursor: pointer; 
-        text-align: left;
     }
 
     ul li:hover {
         background-color: #f0f0f0;
     }
 
-    ul li:hover .message-text {
-        background-color: #f0f0f0;
-    }
-
-    /* Message header: title, uploaded time, and delete button */
+    /* Header section: Title, uploaded time, chevron, and delete button */
     .message-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
+        cursor: pointer; /* Make the entire header clickable */
     }
 
     .message-left {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        flex-grow: 1; /* Ensure it takes up available space */
     }
 
     .message-title {
-        font-size: 1.2rem; /* Larger font for the message title */
+        font-size: 1.2rem;
+        text-align: left;
     }
 
     .uploaded-at {
-        font-size: 0.875rem; /* Smaller font size for the uploaded time */
+        font-size: 0.875rem;
         color: #777;
+        text-align: left;
     }
 
-    /* Message text initially hidden */
+    /* Icon section to the right of the message-left */
+    .chevron-icon {
+        margin-left: 10px;
+    }
+
+    /* Message text aligned to the left */
     .message-text {
         display: none;
         margin-top: 10px;
         padding: 0;
         background-color: #f9f9f9;
         text-align: left;
+        cursor: default;
+        width: 100%; /* Ensure message-text takes up full width */
     }
-
 
     .message-text p {
         margin: 0;
         text-align: left;
     }
 
-    /* Delete button */
+    /* Delete button aligned to the right */
     .delete-btn {
         background-color: #ff4d4d;
         color: white;
@@ -106,6 +110,7 @@
         padding: 5px 10px;
         border-radius: 4px;
         cursor: pointer;
+        margin-left: 10px;
     }
 
     .delete-btn:hover {
@@ -127,14 +132,17 @@
 <ul>
     {% for message in messages %}
     <li class="message-item">
-        <!-- Header containing the title, uploaded_at, and delete button -->
+        <!-- Header containing the title, uploaded_at, chevron, and delete button -->
         <div class="message-header">
             <div class="message-left">
                 <span class="message-title">{{ message.title }}</span>
                 <small class="uploaded-at">Uploaded at: {{ message.uploaded_at }}</small>
             </div>
+
+            <!-- Chevron icon -->
+            <i class="fa fa-chevron-down chevron-icon"></i>
             
-            <!-- Right side: Delete button -->
+            <!-- Delete button aligned to the right -->
             <form method="POST" action="{% url 'delete_message' classroom.room_code message.id %}">
                 {% csrf_token %}
                 <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
@@ -143,7 +151,7 @@
 
         <!-- Message content hidden by default, shown on click -->
         <div class="message-text">
-            <p>{{ message.text }}</p>
+            <p>{{ message.text.html|safe }}</p> <!-- Left-align and render Quill HTML content -->
         </div>
     </li>
     {% endfor %}
@@ -155,12 +163,23 @@
 <script>
     // Accordion behavior for each message item
     document.querySelectorAll('.message-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const messageText = item.querySelector('.message-text');
+        const header = item.querySelector('.message-header');
+        const chevronIcon = item.querySelector('.chevron-icon');
+        const messageText = item.querySelector('.message-text');
+
+        // Set default icon
+        chevronIcon.classList.add('fa-chevron-down');
+
+        // Toggle message text and icons on header click
+        header.addEventListener('click', () => {
             if (messageText.style.display === "none" || messageText.style.display === "") {
                 messageText.style.display = "block"; // Show the content
+                chevronIcon.classList.remove('fa-chevron-down');
+                chevronIcon.classList.add('fa-chevron-up');
             } else {
                 messageText.style.display = "none"; // Hide the content
+                chevronIcon.classList.remove('fa-chevron-up');
+                chevronIcon.classList.add('fa-chevron-down');
             }
         });
     });

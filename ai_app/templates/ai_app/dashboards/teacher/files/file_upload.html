@@ -1,5 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <!-- Add other necessary tags here -->
+</head>
+<body>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    {{ form.media }}  <!-- This will load the necessary JavaScript for TinyMCE -->
     {{ form.as_p }}
     <button type="submit">Upload File</button>
 </form>
+
+</body>
+</html>

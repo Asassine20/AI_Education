@@ -3,6 +3,8 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import CourseMaterial, Messages
 from django.contrib.auth.forms import UserCreationForm
+from tinymce.widgets import TinyMCE
+from django_quill.forms import QuillFormField
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -13,7 +15,7 @@ class SignUpForm(UserCreationForm):
 
 class FileUploadForm(forms.ModelForm):
     category = forms.ChoiceField(choices=[], required=False, label="Select Category")
-    new_category = forms.CharField(max_length=255, required=False, label="Add New Category")
+    new_category = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}),max_length=255, required=False, label="Add New Category")
 
     class Meta:
         model = CourseMaterial
@@ -28,7 +30,7 @@ class FileUploadForm(forms.ModelForm):
         self.fields['category'].choices = [('', 'Select a category')] + category_choices
 
 class MessageUploadForm(forms.ModelForm):
-
+    text = QuillFormField()
     class Meta:
         model = Messages
         fields = ['title', 'text']

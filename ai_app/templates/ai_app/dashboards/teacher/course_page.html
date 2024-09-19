@@ -61,18 +61,6 @@
     <span>{{ classroom.room_number }}</span>
 </div>
 
-<!-- Syllabus Section -->
-<div class="class-info">
-    <label>Syllabus:</label>
-    <span>
-        {% if syllabus %}
-        <a href="{% url 'download_syllabus' classroom.room_code syllabus.id %}">Download Syllabus</a>
-        {% else %}
-        No syllabus uploaded yet.
-        {% endif %}
-    </span>
-</div>
-
 <!-- Class Times -->
 <div class="class-times">
     <h3>Class Times:</h3>
