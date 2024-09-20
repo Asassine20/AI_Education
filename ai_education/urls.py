@@ -2,14 +2,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from ai_app.views.teacher_dashboard_views import preview_syllabus
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("ai_app.urls")),  # Include your app URLs
-    path('tinymce/', include('tinymce.urls')),
-    # Correct URL for syllabus preview with room_code and file_id as arguments
-    path('preview-syllabus/<str:room_code>/<int:file_id>/', preview_syllabus, name='preview_syllabus'),
 ]
 
 # Serve media files during development

@@ -13,9 +13,13 @@
 <body>
     <header>
         <div class="logo-container">
+            {% if university.logo %}
             <a href="{% url 'admin_dashboard' %}">
-                <img class="logo" src="/static/images/UofMLogo.png" alt="Logo">
+                <img src="{{ university.logo.url }}" alt="University Logo">
             </a>
+            {% else %}
+            <a href="{% url 'university_logo_upload' university.code %}">Upload University Logo</a>
+            {% endif %}
         </div>
     </header>
 
@@ -94,14 +98,18 @@
             align-items: center;
         }
 
-        .class-info label, .class-times li span:first-child {
+        .class-info label,
+        .class-times li span:first-child {
             font-weight: bold;
             color: #434443;
-            width: 40%; /* Align the labels to be fixed width */
+            width: 40%;
+            /* Align the labels to be fixed width */
         }
 
-        .class-info span, .class-times li span:last-child {
-            width: 60%; /* Align the content to the right */
+        .class-info span,
+        .class-times li span:last-child {
+            width: 60%;
+            /* Align the content to the right */
             text-align: right;
         }
 
@@ -169,7 +177,7 @@
         <h1>Admin Dashboard</h1>
         <a href="{% url 'university_logo_upload' university.code %}">Upload University Logo</a>
     </div>
-    
+
 </body>
 
 </html>

@@ -141,7 +141,7 @@ def download_syllabus(request, room_code, file_id):
 def preview_syllabus(request, room_code, file_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     file = get_object_or_404(CourseMaterial, classroom=classroom, id=file_id, is_syllabus=True)
-    
+    print("FILE:", file)
     # Check if the file is a PDF
     if file.file.name.endswith('.pdf'):
         try:

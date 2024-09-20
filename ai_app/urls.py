@@ -31,5 +31,6 @@ urlpatterns = [
     path('teacher-dashboard/course/<str:room_code>/<str:display_name>/', file_preview_view, name='file_preview'),
     path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin-dashboard/image-upload/<str:code>/', university_logo_upload_view, name='university_logo_upload'),
+    path('admin-dashboard/display-logo/<str:code>/', display_logo, name='display_logo'),
     ]
 

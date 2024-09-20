@@ -30,3 +30,11 @@ def university_logo_upload_view(request, code):
         'form': form, 
         'university': university
     })
+
+@login_required
+def display_logo(request, code):
+    profile = get_object_or_404(SchoolUserProfile, user=request.user)
+    university = profile.university
+    return {
+        'university': university
+    }

@@ -43,5 +43,6 @@ from .file_views import (
 )
 from .admin_views import (
     admin_dashboard, 
-    university_logo_upload_view
+    university_logo_upload_view,
+    display_logo
 )
