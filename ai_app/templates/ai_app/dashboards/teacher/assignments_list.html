@@ -1,0 +1,152 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+{{ classroom.room_name }} - Assignments
+{% endblock %}
+
+{% block header %}
+{{ classroom.room_name }} - Assignments
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Styles for the message list header and create button */
+    .upload-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .upload-button {
+        background-color: #000;
+        border-radius: 4px;
+        padding: 8px;
+    }
+
+    .upload-button a {
+        text-decoration: none;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    .upload-button:hover {
+        background-color: #393939;
+    }
+
+    /* Style for the message list as a UL */
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Header section: Title, uploaded time, chevron, and delete button */
+    .assignment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        cursor: pointer; /* Make the entire header clickable */
+    }
+
+    .assignment-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex-grow: 1; /* Ensure it takes up available space */
+    }
+
+    .assignment-title {
+        font-size: 1.2rem;
+        text-align: left;
+    }
+
+    .uploaded-at {
+        font-size: 0.875rem;
+        color: #777;
+        text-align: left;
+    }
+
+    /* Icon section to the right of the message-left */
+    .chevron-icon {
+        margin-left: 10px;
+    }
+
+    /* Message text aligned to the left */
+    .assignment-text {
+        display: none;
+        margin-top: 10px;
+        padding: 0;
+        background-color: #f9f9f9;
+        text-align: left;
+        cursor: default;
+        width: 100%; /* Ensure message-text takes up full width */
+    }
+
+    .assignment-text p {
+        margin: 0;
+        text-align: left;
+    }
+
+    /* Delete button aligned to the right */
+    .delete-btn {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .delete-btn:hover {
+        background-color: #cc0000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="upload-header">
+    <h2>Assignments</h2>
+    <div class="upload-button">
+        <a href="{% url 'create_message' classroom.room_code %}">Create Post <i class="fa-solid fa-pen-to-square"
+                style="font-size: 16px; margin-left: 5px;"></i></a>
+    </div>
+</div>
+
+{% if assignments %}
+<ul>
+    {% for assignment in assignments %}
+    <li class="assignment-item">
+        <!-- Header containing the title, uploaded_at, chevron, and delete button -->
+        <div class="assignment-header">
+            <div class="assignment-left">
+                <span class="assignment-title">{{ assignment.title }}</span>
+                <small class="uploaded-at">Uploaded at: {{ assignment.uploaded_at }}</small>
+            </div>
+
+            <!-- Chevron icon -->
+            <i class="fa fa-chevron-down chevron-icon"></i>
+        
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="list-group-item text-center">No assignments available.</p>
+{% endif %}
+{% endblock %}

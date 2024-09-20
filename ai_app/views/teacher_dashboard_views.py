@@ -150,3 +150,10 @@ def preview_syllabus(request, room_code, file_id):
             raise Http404("File not found")
     else:
         return Http404("Syllabus is not a PDF")
+
+@login_required
+def assignments_list(request, room_code):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    assignments = Assignment.objects.filter(classroom=classroom)
+    print(assignments)
+    return render(request, 'ai_app/dashboards/teacher/assignments_list.html', {'classroom': classroom, 'assignments': assignments})
