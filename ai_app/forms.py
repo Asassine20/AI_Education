@@ -43,3 +43,8 @@ class UniversityLogoUploadForm(forms.ModelForm):
     class Meta:
         model = University
         fields = ['logo']
+    
+    def __init__(self, *args, **kwargs):
+        # Extract 'university' from kwargs
+        self.university = kwargs.pop('university', None)
+        super(UniversityLogoUploadForm, self).__init__(*args, **kwargs)
