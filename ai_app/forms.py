@@ -1,7 +1,7 @@
 # ai_app/forms.py
 from django import forms
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages
+from .models import CourseMaterial, Messages, University
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -39,3 +39,7 @@ class MessageUploadForm(forms.ModelForm):
         self.classroom = kwargs.pop('classroom', None)
         super(MessageUploadForm, self).__init__(*args, **kwargs)
                                     
+class UniversityLogoUploadForm(forms.ModelForm):
+    class Meta:
+        model = University
+        fields = ['logo']

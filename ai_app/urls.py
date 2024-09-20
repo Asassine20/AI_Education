@@ -1,10 +1,5 @@
 from django.urls import path
-from .views.auth_views import login_view, logout_view, signup_view, school_signup_view
-from .views.teacher_dashboard_views import teacher_dashboard, add_class, course_page, students_enrolled, student_questions, messages_list, create_message, delete_message, download_syllabus, preview_syllabus, assignments_list
-from .views.student_dashboard_views import student_dashboard
-from .views.other_views import home, landing_page, contact_view
-from .views.question_views import ask_question, upload_materials, view_questions
-from .views.file_views import file_preview_view, file_download_view, file_list_view, file_upload_view, file_edit_view
+from .views import *
 
 urlpatterns = [
     path("", landing_page, name="landing_page"),  # Landing page route
@@ -34,5 +29,7 @@ urlpatterns = [
     path('teacher-dashboard/course/<str:room_code>/edit/<int:file_id>/', file_edit_view, name='file_edit'),
     path('teacher-dashboard/course/<str:room_code>/download/<int:file_id>/', file_download_view, name='file_download'),
     path('teacher-dashboard/course/<str:room_code>/<str:display_name>/', file_preview_view, name='file_preview'),
+    path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('admin-dashboard/image-upload', university_logo_upload_view, name='university_logo_upload_view'),
     ]
 

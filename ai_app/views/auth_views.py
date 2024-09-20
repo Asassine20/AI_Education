@@ -17,6 +17,8 @@ def login_view(request):
                 profile = SchoolUserProfile.objects.get(user=user)
                 if profile.role == 'teacher':
                     return redirect('teacher_dashboard')
+                elif profile.role == 'admin': 
+                    return redirect('admin_dashboard')
                 elif profile.role == 'student':
                     return redirect('student_dashboard')
 
@@ -50,6 +52,8 @@ def signup_view(request):
 
             if school_role == 'teacher':
                 return redirect('teacher_dashboard')
+            elif school_role == 'admin':
+                return redirect('admin_dashboard')
             elif school_role == 'student':
                 return redirect('student_dashboard')
         else:

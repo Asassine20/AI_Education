@@ -33,7 +33,7 @@
         }
 
         .hero-section {
-            height: 100vh;
+            height: 70vh; /* Reduced height for a more compact view */
             background-image: url('https://example.com/university-campus.jpg'); /* Replace with actual image */
             background-size: cover;
             background-position: center;
@@ -43,20 +43,21 @@
             align-items: center;
             color: #434443;
             text-align: center;
+            padding-top: 50px; /* Move content higher up */
         }
 
         .hero-section h1 {
-            font-size: 3.5rem;
+            font-size: 3rem; /* Slightly smaller font */
             margin: 0;
         }
 
         .hero-section p {
-            font-size: 1.5rem;
-            margin: 1rem 0 2rem;
+            font-size: 1.3rem; /* Slightly smaller font */
+            margin: 1rem 0 1.5rem; /* Reduced bottom margin */
         }
 
         .hero-section .cta-button {
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem; /* Smaller button */
             background-color: #fd3b78;
             color: white;
             border: none;
@@ -70,14 +71,14 @@
         }
 
         .features-section {
-            padding: 4rem 2rem;
+            padding: 2.5rem 1rem; /* Reduced padding for a more compact section */
             background-color: #ffffff;
             text-align: center;
         }
 
         .features-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
+            font-size: 2rem; /* Slightly smaller font */
+            margin-bottom: 1.5rem; /* Reduced margin */
             color: #22cc9d;
         }
 
@@ -85,33 +86,34 @@
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
+            gap: 1rem; /* Added gap between flex items */
         }
 
         .feature-box {
             background-color: #f8f9fa;
             border-radius: 10px;
-            padding: 2rem;
-            width: 300px;
-            margin-bottom: 2rem;
+            padding: 1.5rem; /* Slightly reduced padding */
+            width: 280px; /* Reduced width */
+            margin-bottom: 1.5rem;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .feature-box h3 {
             color: #22cc9d;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.3rem; /* Slightly smaller font */
+            margin-bottom: 0.8rem; /* Reduced bottom margin */
         }
 
         .feature-box p {
-            font-size: 1rem;
+            font-size: 0.95rem; /* Slightly smaller font */
             color: #434443;
         }
 
         .footer {
             background-color: #22cc9d;
             color: white;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem; /* Reduced padding for footer */
             text-align: center;
         }
 
@@ -131,11 +133,11 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero-section h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem; /* Adjusted for mobile */
             }
 
             .hero-section p {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
 
             .features-container {
@@ -144,7 +146,7 @@
             }
 
             .feature-box {
-                width: 90%;
+                width: 90%; /* Full width for mobile */
             }
         }
     </style>
