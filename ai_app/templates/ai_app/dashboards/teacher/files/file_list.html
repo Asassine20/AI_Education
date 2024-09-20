@@ -121,9 +121,9 @@
         <!-- File name on the left -->
         <span>
             {% if file.display_name and file.display_name != file.file.name %}
-            <a href="{% url 'file_preview' classroom.room_code file.display_name %}">{{ file.display_name }}</a>
+            <a href="{% url 'file_preview' classroom.room_code file.display_name %}" target="_blank">{{ file.display_name }}</a>
             {% else %}
-            <a href="{% url 'file_preview' classroom.room_code file.display_name %}">{{ file.file.name }}</a>
+            <a href="{% url 'file_preview' classroom.room_code file.display_name %}" target="_blank">{{ file.file.name }}</a>
             {% endif %}
 
         </span>

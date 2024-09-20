@@ -5,8 +5,10 @@ from ai_app.models import CourseMaterial, ClassRoom, SchoolUserProfile
 from django.urls import reverse
 import os
 from django.conf import settings
-from django.http import FileResponse
+from django.http import FileResponse, Http404
 from urllib.parse import unquote
+from django.views.decorators.clickjacking import xframe_options_exempt
+import mimetypes
 
 def file_upload_view(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
@@ -68,7 +70,17 @@ def file_preview_view(request, room_code, display_name):
     classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
     decoded_display_name = unquote(display_name)
     file = get_object_or_404(CourseMaterial, display_name=decoded_display_name, classroom=classroom)
-    file_path = os.path.join(settings.MEDIA_ROOT,file.file.name)
-    if file.file.name.endswith(('.png', '.jpg', '.jpeg')):
-        return render(request, 'ai_app/dashboards/teacher/files/file_preview.html', {'file': file, 'classroom': classroom})
+    file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
+
+    # Get the MIME type of the file using mimetypes
+    mime_type, _ = mimetypes.guess_type(file.file.name)
+
+    # If the MIME type is found, return the correct FileResponse
+    if mime_type:
+        try:
+            return FileResponse(open(file.file.path, 'rb'), content_type=mime_type)
+        except FileNotFoundError:
+            raise Http404("File not found")
+
+    # If the MIME type is not supported, return a default response
     return HttpResponse("Preview not available for this file type")
