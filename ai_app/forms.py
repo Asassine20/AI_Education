@@ -1,7 +1,7 @@
 # ai_app/forms.py
 from django import forms
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University
+from .models import CourseMaterial, Messages, University, SchoolUserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -48,3 +48,8 @@ class UniversityLogoUploadForm(forms.ModelForm):
         # Extract 'university' from kwargs
         self.university = kwargs.pop('university', None)
         super(UniversityLogoUploadForm, self).__init__(*args, **kwargs)
+
+class ProfileImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = SchoolUserProfile
+        fields = ['profile_image']

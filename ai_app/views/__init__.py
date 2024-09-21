@@ -28,7 +28,8 @@ from .question_views import (
 from .other_views import (
     home, 
     landing_page, 
-    contact_view
+    contact_view,
+    profile_image_upload_view
 )
 
 from .student_dashboard_views import (

@@ -15,6 +15,8 @@ import os
 def teacher_dashboard(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
     university = profile.university
+    profile_image = profile.profile_image
+    print("PROFILE:", profile_image)
     if request.method == 'POST':
         room_name = request.POST['room_name']
         room_code = request.POST['room_code']
@@ -31,7 +33,8 @@ def teacher_dashboard(request):
     classes_teaching = profile.classes.all()
     return render(request, 'ai_app/dashboards/teacher/teacher_dashboard.html', {
         'classes_teaching': classes_teaching,
-        'university': university
+        'university': university,
+        'profile_image': profile_image,
     })
 
 

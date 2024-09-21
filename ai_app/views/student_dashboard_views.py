@@ -6,6 +6,7 @@ from ai_app.models import SchoolUserProfile, ClassRoom
 def student_dashboard(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='student')
     university = profile.university
+    profile_image = profile.profile_image
     if request.method == 'POST':
         room_code = request.POST['room_code']
         try:
@@ -21,5 +22,6 @@ def student_dashboard(request):
     classes = profile.classes.all()
     return render(request, 'ai_app/dashboards/student/student_dashboard.html', {
         'classes': classes,
-        'university': university
+        'university': university,
+        'profile_image': profile_image
     })

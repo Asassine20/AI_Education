@@ -62,6 +62,7 @@ class SchoolUserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     classes = models.ManyToManyField(ClassRoom, related_name='school_profiles', blank=True)  # Updated related_name to avoid conflict
 
     def __str__(self):
