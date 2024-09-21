@@ -1,15 +1,91 @@
 <style>
-    /* Sidebar styling - minimal and professional */
+    :root {
+        --primary-color: {{ primary_color }};
+        --secondary-color: {{ secondary_color }};
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-color: #f4f7f9;
+    }
+
+    /* Navbar styling */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        width: 100vw;
+        align-items: center;
+        padding: 20px;
+        background-color: var(--primary-color);
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 80px; /* Height of the navbar */
+        z-index: 1000;
+    }
+
+    .logo {
+        padding-left: 20px;
+        cursor: pointer;
+    }
+
+    .profile-icon {
+        font-size: 24px;
+        color: var(--secondary-color);
+        padding-right: 20px;
+        cursor: pointer;
+    }
+
+    .profile-icon img {
+        width: 60px;
+        border-radius: 30px;
+    }
+
+    /* Dropdown menu styling */
+    .profile-menu {
+        display: none;
+        position: absolute;
+        top: 80px; /* Adjust for navbar height */
+        right: 35px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        z-index: 1000;
+        width: auto;
+    }
+
+    .profile-menu.active {
+        display: block;
+        border-radius: 5px;
+    }
+
+    .profile-menu a {
+        display: block;
+        padding: 10px;
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .profile-menu a:hover {
+        background-color: var(--secondary-color);
+        color: white;
+        border-radius: 5px;
+    }
+
+    /* Sidebar styling */
     .sidebar {
         width: auto;
         background-color: #f9fafb;
         padding: 1rem;
         border-right: 1px solid #e0e0e0;
-        height: 100vh; /* Full height */
-        position: fixed; /* Ensure the sidebar is always fixed on the left */
-        top: 0;
+        height: calc(100vh - 80px); /* Full height minus the navbar height */
+        position: fixed;
+        top: 80px; /* Start below the navbar */
         left: 0;
-        overflow-y: auto; /* Scrollable if content overflows */
+        overflow-y: auto;
     }
 
     .sidebar a {
@@ -29,9 +105,17 @@
         color: #1976d2;
     }
 
-    /* Style the logo */
     .logo-container {
-        text-align: center; /* Center the logo */
+        text-align: center;
+    }
+
+    .logo-container a {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .logo-container a:hover {
+        background-color: transparent;
     }
 
     .logo {
@@ -39,26 +123,42 @@
         height: 80px;
     }
 
-    /* Add hover effect for the logo */
-    .logo-container a {
-        display: inline-block;
-        cursor: pointer; /* Show pointer cursor on hover */
-    }
-
-    /* Ensure no background color changes on hover */
-    .logo-container a:hover {
-        background-color: transparent; /* Keep background unchanged */
+    /* Adjust body to account for the fixed navbar */
+    body {
+        padding-top: 80px; /* Adjusted for the navbar height */
     }
 </style>
 
-<div class="sidebar dashboard-nav">
-    <!-- Logo wrapped in a link -->
-    <div class="logo-container">
-        <a href="{% url 'teacher_dashboard' %}">
-            <img class="logo" src="/static/images/UofMLogo.png" alt="Logo">
-        </a>
+<!-- Navbar + Sidebar -->
+<div class="navbar">
+    {% if user_role == 'admin' %}
+    <a href="{% url 'admin_dashboard' %}">
+    {% elif user_role == 'teacher' %}
+    <a href="{% url 'teacher_dashboard' %}">
+    {% elif user_role == 'student' %}
+    <a href="{% url 'student_dashboard' %}">
+    {% endif %}
+        <img class="logo" src="{{ university.logo.url }}" alt="University Logo">
+    </a>
+
+    <!-- Profile Icon -->
+    <div class="profile-icon">
+        {% if profile_image %}
+        <img src="{{ profile_image.url }}" id="profile-icon">
+        {% else %}
+        <i class="fa-solid fa-user profile-icon" id="profile-icon"></i>
+        {% endif %}
     </div>
 
+    <!-- Profile Dropdown Menu -->
+    <div class="profile-menu" id="profile-menu">
+        <a href="{% url 'profile_image_upload' %}">Profile Image</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar dashboard-nav">
     <a href="{% url 'course_page' classroom.room_code %}">Home</a>
     <a href="{% url 'file_list' classroom.room_code %}">Files</a>
     <a href="{% url 'assignments_list' classroom.room_code %}">Assignments</a>
@@ -66,3 +166,19 @@
     <a href="{% url 'students_enrolled' classroom.room_code %}">People</a>
     <a href="{% url 'messages_list' classroom.room_code %}">Messages</a>
 </div>
+
+<script>
+    // Toggle profile menu visibility when the profile icon is clicked
+    document.getElementById('profile-icon').addEventListener('click', function() {
+        var menu = document.getElementById('profile-menu');
+        menu.classList.toggle('active');
+    });
+
+    // Close the profile menu if clicked outside
+    window.addEventListener('click', function(e) {
+        if (!document.getElementById('profile-icon').contains(e.target) &&
+            !document.getElementById('profile-menu').contains(e.target)) {
+            document.getElementById('profile-menu').classList.remove('active');
+        }
+    });
+</script>

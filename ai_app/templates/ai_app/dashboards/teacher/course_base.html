@@ -8,56 +8,62 @@
     <title>{% block title %}My Website{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-
+    
     <style>
-        /* Ensure body and html take full height and width */
         html, body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7f9;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             height: 100%;
-            width: 100%;
+            background-color: #f4f7f9
         }
 
-        /* Main container takes full height and is flex */
+        /* Navbar at the top */
+        .navbar {
+            width: 100vw;
+            height: 60px;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1001; /* Ensure navbar stays on top */
+        }
+
+        /* Main container to hold sidebar and content */
         .container {
             display: flex;
             width: 100%;
-            height: 100%;
+            height: calc(100vh - 60px); /* Adjust based on navbar height */
+            margin-top: 60px; /* Push content below the navbar */
         }
 
-        /* Sidebar fixed on the left */
+        /* Sidebar */
         .sidebar {
             width: 200px;
             background-color: #f9fafb;
             padding: 1rem;
             border-right: 1px solid #e0e0e0;
-            height: 100vh; /* Sidebar takes full height */
+            height: calc(100vh - 60px); /* Adjust for the navbar height */
             position: fixed;
-            top: 0;
+            top: 60px; /* Start below navbar */
             left: 0;
-            z-index: 1000;
-            overflow-y: auto;
+            overflow-y: auto; /* Scrollable if content overflows */
         }
 
-        /* Content area takes full height and grows to fit remaining space */
+        /* Content container */
         .content-container {
             flex-grow: 1;
-            margin-left: 200px; /* Offset by the sidebar width */
+            margin-left: 200px; /* Leave space for the sidebar */
             padding: 2rem;
-            height: 100vh;
+            height: calc(100vh - 60px); /* Adjust for the navbar */
             box-sizing: border-box;
             overflow-y: auto; /* Scroll if content overflows */
-        }
-
-        /* Header inside content, centered horizontally */
-        .header {
-            display: flex;
-            justify-content: center; /* Center title horizontally */
-            align-items: center;
-            height: 100px; /* Header height */
-            margin-bottom: 2rem;
+            margin-top: -50px;
         }
 
         h1 {
@@ -65,42 +71,7 @@
             color: #333;
             text-align: center;
             margin: 0;
-            width: 100%; /* Make title span the entire content area */
         }
-
-        /* Styling for ul elements */
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 1rem 0;
-        }
-
-        ul li {
-            background-color: #f9f9f9;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e0e0e0;
-        }
-
-        ul li:hover {
-            background-color: #f0f0f0;
-        }
-
-        ul li a {
-            color: #1976d2;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        ul li a:hover {
-            text-decoration: underline;
-        }
-
     </style>
 
     {% block extra_css %}
@@ -108,20 +79,18 @@
 </head>
 
 <body>
-    <!-- Sidebar remains fixed on the left -->
-    <div class="sidebar">
-        {% block sidebar %}
-            {% include 'includes/sidebar.html' %}
-        {% endblock %}
-    </div>
+    <!-- Sidebar and Content -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            {% block sidebar %}
+                {% include 'includes/sidebar.html' %}
+            {% endblock %}
+        </div>
 
-    <!-- Content area that grows next to the sidebar -->
-    <div class="content-container">
-        <header class="header">
+        <!-- Content -->
+        <div class="content-container">
             <h1>{% block header %}{% endblock %}</h1>
-        </header>
-
-        <div class="content">
             {% block content %}
             {% endblock %}
         </div>
