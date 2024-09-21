@@ -25,6 +25,7 @@ class University(models.Model):
     logo = models.ImageField(upload_to='university_logos/')
     primary_color = models.CharField(max_length=7, default='#00274C')
     secondary_color = models.CharField(max_length=7, default='#FFCB05')
+    font_family = models.CharField(max_length=255, blank=True, null=True)
     
     def __str__(self):
         return self.name

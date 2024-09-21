@@ -6,18 +6,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
+    {% if font_family %}
+    <link href="https://fonts.googleapis.com/css2?family={{ font_family | urlencode }}&display=swap" rel="stylesheet">
+    {% endif %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     <style>
+        :root {
+            --font-family: '{{ font_family }}', sans-serif;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: var(--font-family);
             background-color: #f4f7f9;
         }
 
         h1 {
             font-size: 2rem;
             text-align: center;
+            font-weight: bold;
             color: black;
+            font-family: var(--font-family)
         }
 
         .header {
@@ -70,7 +78,7 @@
         }
 
         .class-card h2 {
-            font-size: 1.5rem;
+            font-size: 2rem;
             color: black;
             margin-bottom: 1rem;
             margin-top: -5px;
@@ -117,13 +125,6 @@
             padding: 5px 0;
         }
 
-        .copy-icon-container {
-            position: relative;
-            display: inline-block;
-            margin-left: 8px;
-            cursor: pointer;
-        }
-
         .tooltip-text {
             visibility: hidden;
             width: 60px;
@@ -140,13 +141,8 @@
             transform: translateX(-50%);
         }
 
-        .copy-icon-container:hover .tooltip-text {
+        .tooltip-text {
             visibility: visible;
-        }
-
-        .copy-icon {
-            color: #22cc9d;
-            font-size: 1rem;
         }
 
         .clickable-card {
@@ -156,11 +152,6 @@
             bottom: 0;
             left: 0;
             z-index: 0;
-        }
-
-        .copy-text {
-            z-index: 1;
-            position: relative;
         }
     </style>
 
