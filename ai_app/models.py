@@ -23,6 +23,8 @@ class University(models.Model):
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=50, unique=True)  # Unique university code
     logo = models.ImageField(upload_to='university_logos/')
+    primary_color = models.CharField(max_length=7, default='#00274C')
+    secondary_color = models.CharField(max_length=7, default='#FFCB05')
     
     def __str__(self):
         return self.name
