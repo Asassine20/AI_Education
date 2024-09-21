@@ -14,6 +14,7 @@ import os
 @login_required
 def teacher_dashboard(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
+    university = profile.university
     if request.method == 'POST':
         room_name = request.POST['room_name']
         room_code = request.POST['room_code']
@@ -28,7 +29,10 @@ def teacher_dashboard(request):
         return redirect('teacher_dashboard')
 
     classes_teaching = profile.classes.all()
-    return render(request, 'ai_app/dashboards/teacher/teacher_dashboard.html', {'classes_teaching': classes_teaching})
+    return render(request, 'ai_app/dashboards/teacher/teacher_dashboard.html', {
+        'classes_teaching': classes_teaching,
+        'university': university
+    })
 
 
 
@@ -141,7 +145,6 @@ def download_syllabus(request, room_code, file_id):
 def preview_syllabus(request, room_code, file_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     file = get_object_or_404(CourseMaterial, classroom=classroom, id=file_id, is_syllabus=True)
-    print("FILE:", file)
     # Check if the file is a PDF
     if file.file.name.endswith('.pdf'):
         try:

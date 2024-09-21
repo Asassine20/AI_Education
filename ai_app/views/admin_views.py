@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.forms import UniversityLogoUploadForm
 from ai_app.models import University, SchoolUserProfile
+from django.contrib.auth import logout
 
 @login_required
 def admin_dashboard(request):
@@ -38,3 +39,7 @@ def display_logo(request, code):
     return {
         'university': university
     }
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')

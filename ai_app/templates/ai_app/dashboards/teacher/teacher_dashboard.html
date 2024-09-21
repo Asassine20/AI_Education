@@ -8,22 +8,10 @@
     <title>Teacher Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-</head>
-
-<body>
-    <header>
-        <div class="logo-container">
-            <a href="{% url 'teacher_dashboard' %}">
-                <img class="logo" src="/static/images/UofMLogo.png" alt="Logo">
-            </a>
-        </div>
-    </header>
-
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f7f9;
-            padding: 2rem;
         }
 
         h1 {
@@ -36,7 +24,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            padding-right: 2rem;
+            padding-left: 2rem;
+            padding-top: 2rem;
         }
 
         .header h1 {
@@ -64,6 +54,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
+            padding: 2rem;
         }
 
         .class-card {
@@ -72,6 +63,10 @@
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             position: relative;
+        }
+
+        .class-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
         .class-card h2 {
@@ -94,14 +89,18 @@
             align-items: center;
         }
 
-        .class-info label, .class-times li span:first-child {
+        .class-info label,
+        .class-times li span:first-child {
             font-weight: bold;
             color: #434443;
-            width: 40%; /* Align the labels to be fixed width */
+            width: 40%;
+            /* Align the labels to be fixed width */
         }
 
-        .class-info span, .class-times li span:last-child {
-            width: 60%; /* Align the content to the right */
+        .class-info span,
+        .class-times li span:last-child {
+            width: 60%;
+            /* Align the content to the right */
             text-align: right;
         }
 
@@ -165,11 +164,21 @@
         }
     </style>
 
+</head>
+
+<body>
+    <!-- Navbar remains fixed on the top -->
+    <div class="navbar">
+        {% block navbar %}
+        {% include 'includes/navbar.html' %}
+        {% endblock %}
+    </div>
+
     <div class="header">
         <h1>Teacher Dashboard</h1>
         <a href="{% url 'add_class' %}" class="add-class-btn">Add a class</a>
     </div>
-    
+
     <!-- Display teacher's classes in a grid -->
     <div class="class-grid">
         {% for class in classes_teaching %}
@@ -200,10 +209,10 @@
             <div class="class-times">
                 <ul>
                     {% for day, time in class.class_times.items %}
-                        <li>
-                            <span>{{ day|capfirst }}:</span>
-                            <span>{{ time }}</span>
-                        </li>
+                    <li>
+                        <span>{{ day|capfirst }}:</span>
+                        <span>{{ time }}</span>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>

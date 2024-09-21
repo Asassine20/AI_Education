@@ -8,20 +8,6 @@
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-</head>
-
-<body>
-    <header>
-        <div class="logo-container">
-            {% if university.logo %}
-            <a href="{% url 'admin_dashboard' %}">
-                <img src="{{ university.logo.url }}" alt="University Logo">
-            </a>
-            {% else %}
-            <a href="{% url 'university_logo_upload' university.code %}">Upload University Logo</a>
-            {% endif %}
-        </div>
-    </header>
 
     <style>
         body {
@@ -172,10 +158,27 @@
             position: relative;
         }
     </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            {% if university.logo %}
+            <div class="navbar">
+                {% block navbar %}
+                {% include 'includes/navbar.html' %}
+                {% endblock %}
+            </div>
+            {% else %}
+            <a href="{% url 'university_logo_upload' university.code %}">Upload University Logo</a>
+            {% endif %}
+        </div>
+    </header>
 
     <div class="header">
         <h1>Admin Dashboard</h1>
         <a href="{% url 'university_logo_upload' university.code %}">Upload University Logo</a>
+        <a href="{% url 'logout' %}">Logout</a>
     </div>
 
 </body>

@@ -1,0 +1,37 @@
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .logo-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100vw;
+        align-items: center;
+        padding: 20px;
+        background-color: #00274C;
+        box-sizing: border-box;
+    }
+
+    .profile-icon {
+        font-size: 24px;
+        margin-left: auto;
+        color: #FFCB05;
+    }
+</style>
+
+<div class="logo-container">
+    {% if user_role == 'admin' %}
+        <a href="{% url 'admin_dashboard' %}">
+    {% elif user_role == 'teacher' %}
+        <a href="{% url 'teacher_dashboard' %}">
+    {% elif user_role == 'student' %}
+        <a href="{% url 'student_dashboard' %}">
+    {% endif %}
+        <img class="logo" src="{{ university.logo.url }}" alt="Logo">
+    </a>
+    <a href="">
+        <i class="fa-solid fa-user profile-icon"></i>
+    </a>
+</div>
