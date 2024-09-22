@@ -10,6 +10,9 @@
 
 {% block extra_css %}
 <style>
+    :root {
+        --font-family: '{{ font_family }}', sans-serif;
+    }
     body {
         background-color: #f4f7f9;
         color: #434443;
@@ -75,8 +78,8 @@
 
     button {
         padding: 1rem;
-        background-color: #000000;
-        color: white;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
         border: none;
         border-radius: 8px;
         cursor: pointer;
@@ -86,7 +89,7 @@
     }
 
     button:hover {
-        background-color: #2f2f2f;
+        filter: brightness(1.5);
     }
 </style>
 {% endblock %}

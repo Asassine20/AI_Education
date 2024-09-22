@@ -1,119 +1,129 @@
-<style>
-    :root {
-        --primary-color: {{ primary_color }};
-        --secondary-color: {{ secondary_color }};
-    }
-
-    html, body {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    .logo-container {
-        display: flex;
-        justify-content: space-between;
-        width: 100vw;
-        align-items: center;
-        padding: 20px;
-        background-color: var(--primary-color);
-        box-sizing: border-box;
-        position: relative;
-    }
-
-    .logo {
-        padding-left: 20px;
-        cursor: pointer;
-        width: 100px;
-    }
-
-    .profile-icon {
-        font-size: 24px;
-        margin-left: auto;
-        color: var(--secondary-color);
-        padding-right: 20px;
-        cursor: pointer;
-        position: relative;
-        /* Makes the icon relative to its container */
-    }
-
-    .profile-icon img {
-        width: 60px;
-        border-radius: 30px;
-    }
-
-    /* Dropdown menu styling */
-    .profile-menu {
-        display: none;
-        position: absolute;
-        top: 70%;
-        right: 35px;
-        background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        z-index: 1000;
-        width: auto;
-        /* Adjust width to your needs */
-    }
-
-    .profile-menu.active {
-        display: block;
-        border-radius: 5px;
-    }
-
-    .profile-menu a {
-        display: block;
-        padding: 10px;
-        color: #000;
-        text-decoration: none;
-    }
-
-    .profile-menu a:hover {
-        background-color: var(--secondary-color);
-        color: white;
-        border-radius: 5px;
-    }
-</style>
-
-<div class="logo-container">
-    {% if user_role == 'admin' %}
-    <a href="{% url 'admin_dashboard' %}">
-    {% elif user_role == 'teacher' %}
-    <a href="{% url 'teacher_dashboard' %}">
-    {% elif user_role == 'student' %}
-    <a href="{% url 'student_dashboard' %}">
-    {% endif %}
-        <img class="logo" src="{{ university.logo.url }}" alt="Logo">
-    </a>
-
-    <!-- Profile Icon -->
-    <div class="profile-icon">
-        {% if profile_image %}
-        <img src="{{ profile_image.url }}" id="profile-icon">
-        {% else %}
-        <i class="fa-solid fa-user profile-icon" id="profile-icon"></i>
-        {% endif %}
-    </div>
-
-    <!-- Profile Dropdown Menu -->
-    <div class="profile-menu" id="profile-menu">
-        <a href="{% url 'profile_image_upload' %}">Profile Image</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    </div>
-</div>
-
-<script>
-    // Toggle profile menu visibility when the profile icon is clicked
-    document.getElementById('profile-icon').addEventListener('click', function() {
-        var menu = document.getElementById('profile-menu');
-        menu.classList.toggle('active');
-    });
-
-    // Close the profile menu if clicked outside
-    window.addEventListener('click', function(e) {
-        if (!document.getElementById('profile-icon').contains(e.target) &&
-            !document.getElementById('profile-menu').contains(e.target)) {
-            document.getElementById('profile-menu').classList.remove('active');
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: {{ primary_color }};
+            --secondary-color: {{ secondary_color }};
         }
-    });
-</script>
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100vw;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--primary-color);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .logo {
+            padding-left: 20px;
+            cursor: pointer;
+            width: 100px;
+        }
+
+        .profile-icon {
+            font-size: 24px;
+            margin-left: auto;
+            color: var(--secondary-color);
+            padding-right: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-icon img {
+            width: 60px;
+            border-radius: 30px;
+        }
+
+        .profile-menu {
+            display: none;
+            position: absolute;
+            top: 70%;
+            right: 35px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 1000;
+            width: auto;
+        }
+
+        .profile-menu.active {
+            display: block;
+            border-radius: 5px;
+        }
+
+        .profile-menu a {
+            display: block;
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .profile-menu a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        {% if user_role == 'admin' %}
+        <a href="{% url 'admin_dashboard' %}">
+        {% elif user_role == 'teacher' %}
+        <a href="{% url 'teacher_dashboard' %}">
+        {% elif user_role == 'student' %}
+        <a href="{% url 'student_dashboard' %}">
+        {% endif %}
+            {% if logo %}
+            <img class="logo" src="{{ logo.url }}" alt="University Logo">
+            {% else %}
+            <img class="logo" src="{% static 'images/default_logo.png' %}" alt="Default Logo">
+            {% endif %}
+        </a>
+
+        <!-- Profile Icon -->
+        <div class="profile-icon">
+            {% if profile_image %}
+            <img src="{{ profile_image.url }}" id="profile-icon">
+            {% else %}
+            <i class="fa-solid fa-user profile-icon" id="profile-icon"></i>
+            {% endif %}
+        </div>
+
+        <!-- Profile Dropdown Menu -->
+        <div class="profile-menu" id="profile-menu">
+            <a href="{% url 'profile_image_upload' %}">Profile Image</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <script>
+        // Toggle profile menu visibility when the profile icon is clicked
+        document.getElementById('profile-icon').addEventListener('click', function() {
+            var menu = document.getElementById('profile-menu');
+            menu.classList.toggle('active');
+        });
+
+        // Close the profile menu if clicked outside
+        window.addEventListener('click', function(e) {
+            if (!document.getElementById('profile-icon').contains(e.target) &&
+                !document.getElementById('profile-menu').contains(e.target)) {
+                document.getElementById('profile-menu').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

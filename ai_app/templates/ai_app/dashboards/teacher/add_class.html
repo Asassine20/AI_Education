@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family={{ font_family|urlencode }}:wght@400;700&display=swap" rel="stylesheet">
     <title>Add a Class</title>
     <style>
+        :root {
+            --font-family: '{{ font_family }}', sans-serif;
+            --primary-color: {{ primary_color }};
+            --secondary-color: {{ secondary_color }};
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: var(--font-family);
             background-color: #f4f7f9;
-            padding: 2rem;
+            padding-top: 100px; /* To adjust for fixed navbar */
         }
 
         .container {
@@ -54,8 +60,8 @@
 
         button {
             padding: 1rem;
-            background-color: #000000;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -64,7 +70,7 @@
         }
 
         button:hover {
-            background-color: #2f2f2f;
+            filter: brightness(1.5);
         }
 
         .delete-btn {
@@ -94,8 +100,8 @@
             gap: 0.5rem;
         }
 
-        .time-input select{
-            width:75px;
+        .time-input select {
+            width: 75px;
         }
 
         .am-pm-btn {
@@ -117,6 +123,9 @@
     </style>
 </head>
 <body>
+
+<!-- Include Navbar -->
+{% include 'includes/navbar.html' %}
 
 <div class="container">
     <h1>Add a Class</h1>
