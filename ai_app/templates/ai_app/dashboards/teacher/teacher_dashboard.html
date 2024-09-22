@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
     {% if font_family %}
-    <link href="https://fonts.googleapis.com/css2?family={{ font_family | urlencode }}&display=swap" rel="stylesheet">
-    {% endif %}
+    <link href="https://fonts.googleapis.com/css2?family={{ font_family|urlencode }}:wght@400;700&display=swap" rel="stylesheet">
+    {% endif %}    
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     <style>
@@ -44,8 +44,8 @@
 
         .add-class-btn {
             padding: 0.8rem 1.5rem;
-            background-color: #000;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -55,7 +55,7 @@
         }
 
         .add-class-btn:hover {
-            background-color: #434443;
+            filter: brightness(1.5);
         }
 
         /* Update class-grid to have 2 columns per row */

@@ -6,14 +6,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Website{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family={{ font_family|urlencode }}:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-    
+
     <style>
         :root {
             --font-family: '{{ font_family }}', sans-serif;
         }
-        html, body {
+
+        html,
+        body {
             font-family: var(--font-family);
             margin: 0;
             padding: 0;
@@ -35,15 +38,18 @@
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1001; /* Ensure navbar stays on top */
+            z-index: 1001;
+            /* Ensure navbar stays on top */
         }
 
         /* Main container to hold sidebar and content */
         .container {
             display: flex;
             width: 100%;
-            height: calc(100vh - 60px); /* Adjust based on navbar height */
-            margin-top: 60px; /* Push content below the navbar */
+            height: calc(100vh - 60px);
+            /* Adjust based on navbar height */
+            margin-top: 60px;
+            /* Push content below the navbar */
         }
 
         /* Sidebar */
@@ -52,21 +58,27 @@
             background-color: #f9fafb;
             padding: 1rem;
             border-right: 1px solid #e0e0e0;
-            height: calc(100vh - 60px); /* Adjust for the navbar height */
+            height: calc(100vh - 60px);
+            /* Adjust for the navbar height */
             position: fixed;
-            top: 60px; /* Start below navbar */
+            top: 60px;
+            /* Start below navbar */
             left: 0;
-            overflow-y: auto; /* Scrollable if content overflows */
+            overflow-y: auto;
+            /* Scrollable if content overflows */
         }
 
         /* Content container */
         .content-container {
             flex-grow: 1;
-            margin-left: 200px; /* Leave space for the sidebar */
+            margin-left: 200px;
+            /* Leave space for the sidebar */
             padding: 2rem;
-            height: calc(100vh - 60px); /* Adjust for the navbar */
+            height: calc(100vh - 60px);
+            /* Adjust for the navbar */
             box-sizing: border-box;
-            overflow-y: auto; /* Scroll if content overflows */
+            overflow-y: auto;
+            /* Scroll if content overflows */
             margin-top: -50px;
         }
 
@@ -89,7 +101,7 @@
         <!-- Sidebar -->
         <div class="sidebar">
             {% block sidebar %}
-                {% include 'includes/sidebar.html' %}
+            {% include 'includes/sidebar.html' %}
             {% endblock %}
         </div>
 

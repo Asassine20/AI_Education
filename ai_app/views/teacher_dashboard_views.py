@@ -16,7 +16,6 @@ def teacher_dashboard(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
     university = profile.university
     profile_image = profile.profile_image
-    print("PROFILE:", profile_image)
     if request.method == 'POST':
         room_name = request.POST['room_name']
         room_code = request.POST['room_code']
@@ -161,5 +160,4 @@ def preview_syllabus(request, room_code, file_id):
 def assignments_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignments = Assignment.objects.filter(classroom=classroom)
-    print(assignments)
     return render(request, 'ai_app/dashboards/teacher/assignments_list.html', {'classroom': classroom, 'assignments': assignments})

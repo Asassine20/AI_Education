@@ -1,13 +1,6 @@
-:root {
-    --primary-color: #ffffff; /* Default color */
-    --secondary-color: #000000; /* Default color */
-    --font-family: 'Arial', sans-serif; /* Default font */
-}
-
 body {
     background-color: var(--primary-color);
     color: var(--secondary-color);
-    font-family: var(--font-family);
 }
 
 header {
