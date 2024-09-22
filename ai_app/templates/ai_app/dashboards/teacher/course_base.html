@@ -10,7 +10,11 @@
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     
     <style>
+        :root {
+            --font-family: '{{ font_family }}', sans-serif;
+        }
         html, body {
+            font-family: var(--font-family);
             margin: 0;
             padding: 0;
             box-sizing: border-box;

@@ -39,36 +39,37 @@
         border-radius: 30px;
     }
 
-    /* Dropdown menu styling */
-    .profile-menu {
-        display: none;
-        position: absolute;
-        top: 80px; /* Adjust for navbar height */
-        right: 35px;
-        background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        z-index: 1000;
-        width: auto;
-    }
-
-    .profile-menu.active {
-        display: block;
-        border-radius: 5px;
-    }
-
-    .profile-menu a {
-        display: block;
-        padding: 10px;
-        color: var(--primary-color);
-        text-decoration: none;
-    }
-
-    .profile-menu a:hover {
-        background-color: var(--secondary-color);
-        color: white;
-        border-radius: 5px;
-    }
+        /* Dropdown menu styling */
+        .profile-menu {
+            display: none;
+            position: absolute;
+            top: 70%;
+            right: 35px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 1000;
+            width: auto;
+            /* Adjust width to your needs */
+        }
+    
+        .profile-menu.active {
+            display: block;
+            border-radius: 5px;
+        }
+    
+        .profile-menu a {
+            display: block;
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+        }
+    
+        .profile-menu a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 5px;
+        }
 
     /* Sidebar styling */
     .sidebar {
@@ -123,7 +124,7 @@
     }
     
     .sidebar a:hover {
-        color: #1976d2;
+        color: var(--primary-color);
     }
 </style>
 
