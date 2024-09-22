@@ -14,44 +14,9 @@ h1, h2, h3 {
     font-family: var(--font-family);
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.logo {
-    width: 150px; /* Adjust the width of the logo */
-    height: auto; /* Keeps the aspect ratio */
-}
-
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-/* Sidebar styling - minimal and professional */
-.sidebar {
-    width: 200px;
-    background-color: #f9fafb;
-    padding: 1rem;
-    border-right: 1px solid #e0e0e0;
-    height: 100vh; /* Full height */
-}
 
-.sidebar a {
-    display: block;
-    text-decoration: none;
-    padding: 0.8rem 1rem;
-    margin-bottom: 0.5rem;
-    background-color: transparent;
-    color: #333;
-    font-weight: 500;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.sidebar a:hover {
-    background-color: #e3f2fd;
-    color: #1976d2;
-}

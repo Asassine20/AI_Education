@@ -11,18 +11,18 @@
 {% block extra_css %}
 <style>
     body {
-        font-family: Arial, sans-serif;
         background-color: #f4f7f9;
-        padding: 2rem;
+        color: #434443;
     }
 
     .container {
-        max-width: 600px;
-        margin: 0 auto; /* Center the container */
-        padding: 2rem;
+        max-width: auto;
+        margin: auto; /* Center the container */
+        padding: 1rem;
         background-color: white;
         border-radius: 10px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+        margin-left: -24px;
     }
 
     .header {
@@ -32,6 +32,7 @@
     h1 {
         text-align: center; /* Ensure h1 is centered */
         margin-bottom: 20px;
+        padding-top: 20px;
         color: #333;
         font-size: 2rem;
         width: 100%; /* Make sure the h1 takes full width */
@@ -114,9 +115,6 @@
             <input type="checkbox" id="id_is_syllabus" name="is_syllabus">
             <label for="id_is_syllabus">Is Syllabus</label>
         </div>
-
-        
-
         <button type="submit">Upload File</button>
     </form>
 </div>

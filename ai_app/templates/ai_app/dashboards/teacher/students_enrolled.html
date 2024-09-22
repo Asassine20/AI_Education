@@ -7,11 +7,131 @@
 {% block header %}
     {{ classroom.room_name }} - Students Enrolled
 {% endblock %}
+{% block extra_css %}
+<style>
+    body {
+        color: #434443;
+    }
+    .upload-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #434443;
+    }
 
+    .upload-button {
+        background-color: #000;
+        border-radius: 4px;
+        padding: 8px;
+    }
+
+    .upload-button a {
+        text-decoration: none;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    .upload-button:hover {
+        background-color: #393939;
+    }
+
+    /* Style for the message list as a UL */
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Header section: Title, uploaded time, chevron, and delete button */
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        cursor: pointer; /* Make the entire header clickable */
+    }
+
+    .message-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex-grow: 1; /* Ensure it takes up available space */
+    }
+
+    .message-title {
+        font-size: 1.2rem;
+        text-align: left;
+    }
+
+    .uploaded-at {
+        font-size: 0.875rem;
+        color: #777;
+        text-align: left;
+    }
+
+    /* Icon section to the right of the message-left */
+    .chevron-icon {
+        margin-left: 10px;
+    }
+
+    /* Message text aligned to the left */
+    .message-text {
+        display: none;
+        margin-top: 10px;
+        padding: 0;
+        background-color: #f9f9f9;
+        text-align: left;
+        cursor: default;
+        width: 100%; /* Ensure message-text takes up full width */
+    }
+
+    .message-text p {
+        margin: 0;
+        text-align: left;
+    }
+
+    /* Delete button aligned to the right */
+    .delete-btn {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .delete-btn:hover {
+        background-color: #cc0000;
+    }
+
+    .list-group-item {
+        color: #434443;
+    }
+
+    .student-list-item {
+        color: #434443;
+    }
+</style>
+{% endblock %}
 {% block content %}
 <ul>
     {% for student in students %}
-    <li>{{ student.user.first_name }} {{ student.user.last_name }}</li>
+    <li class="student-list-item">{{ student.user.first_name }} {{ student.user.last_name }}</li>
     {% empty %}
     <li class="no-data">No students enrolled yet.</li>
     {% endfor %}

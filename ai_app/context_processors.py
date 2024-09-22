@@ -11,5 +11,7 @@ def user_role(request):
                 'primary_color': university.primary_color,
                 'secondary_color': university.secondary_color,
                 'font_family': university.font_family,
+                'profile_image': profile.profile_image,
+                'logo': university.logo,
             }
     return {}

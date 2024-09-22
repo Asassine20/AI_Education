@@ -83,14 +83,14 @@ def course_page(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     syllabus = CourseMaterial.objects.filter(classroom=classroom, is_syllabus=True).first()
     students = SchoolUserProfile.objects.filter(classes=classroom, role='student')
-
-    context = {
+    
+    return render(request, 'ai_app/dashboards/teacher/course_page.html',{
         'classroom': classroom,
         'students': students,
         'syllabus': syllabus,
-    }
 
-    return render(request, 'ai_app/dashboards/teacher/course_page.html', context)
+    })
+
 
 
 @login_required

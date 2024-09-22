@@ -23,13 +23,8 @@
         position: fixed;
         top: 0;
         left: 0;
-        height: 80px; /* Height of the navbar */
+        height: 115px;
         z-index: 1000;
-    }
-
-    .logo {
-        padding-left: 20px;
-        cursor: pointer;
     }
 
     .profile-icon {
@@ -77,17 +72,44 @@
 
     /* Sidebar styling */
     .sidebar {
-        width: auto;
         background-color: #f9fafb;
         padding: 1rem;
         border-right: 1px solid #e0e0e0;
         height: calc(100vh - 80px); /* Full height minus the navbar height */
         position: fixed;
-        top: 80px; /* Start below the navbar */
+        width: auto;
+        top: 115px; /* Start below the navbar */
         left: 0;
         overflow-y: auto;
     }
 
+    /* Specific logo styling */
+    .logo-container {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .logo-container img {
+        width: 150px;
+        height: auto;
+        cursor: pointer;
+        transition: none; /* No hover background effect */
+    }
+
+    .logo {
+        margin-top: 10px;
+        width: 100px;
+    }
+
+    .logo-container img:hover {
+        cursor: pointer; /* Only cursor change on hover */
+    }
+
+    /* Adjust body to account for the fixed navbar */
+    body {
+        padding-top: 80px; /* Adjusted for the navbar height */
+    }
     .sidebar a {
         display: block;
         text-decoration: none;
@@ -99,37 +121,13 @@
         border-radius: 5px;
         transition: background-color 0.3s ease, color 0.3s ease;
     }
-
+    
     .sidebar a:hover {
-        background-color: #e3f2fd;
         color: #1976d2;
-    }
-
-    .logo-container {
-        text-align: center;
-    }
-
-    .logo-container a {
-        display: inline-block;
-        cursor: pointer;
-    }
-
-    .logo-container a:hover {
-        background-color: transparent;
-    }
-
-    .logo {
-        width: 100px;
-        height: 80px;
-    }
-
-    /* Adjust body to account for the fixed navbar */
-    body {
-        padding-top: 80px; /* Adjusted for the navbar height */
     }
 </style>
 
-<!-- Navbar + Sidebar -->
+<!-- Navbar -->
 <div class="navbar">
     {% if user_role == 'admin' %}
     <a href="{% url 'admin_dashboard' %}">
@@ -138,7 +136,7 @@
     {% elif user_role == 'student' %}
     <a href="{% url 'student_dashboard' %}">
     {% endif %}
-        <img class="logo" src="{{ university.logo.url }}" alt="University Logo">
+        <img class="logo" src="{{ logo.url }}" alt="University Logo">
     </a>
 
     <!-- Profile Icon -->
@@ -159,7 +157,7 @@
 
 <!-- Sidebar -->
 <div class="sidebar dashboard-nav">
-    <a href="{% url 'course_page' classroom.room_code %}">Home</a>
+    <a href="{% url 'course_page' classroom.room_code %}" class="sidebar-links">Home</a>
     <a href="{% url 'file_list' classroom.room_code %}">Files</a>
     <a href="{% url 'assignments_list' classroom.room_code %}">Assignments</a>
     <a href="#">Grades</a>
