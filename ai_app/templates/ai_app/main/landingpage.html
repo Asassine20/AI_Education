@@ -9,11 +9,10 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            color: #333;
         }
 
         .navbar {
-            background-color: #22cc9d;
+            background-color: #307351;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -33,7 +32,7 @@
         }
 
         .hero-section {
-            height: 70vh; /* Reduced height for a more compact view */
+            height: 70vh;
             background-image: url('https://example.com/university-campus.jpg'); /* Replace with actual image */
             background-size: cover;
             background-position: center;
@@ -41,79 +40,106 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #434443;
+            color: #000;
             text-align: center;
-            padding-top: 50px; /* Move content higher up */
+            position: relative;
         }
 
         .hero-section h1 {
-            font-size: 3rem; /* Slightly smaller font */
+            font-size: 3rem;
             margin: 0;
         }
 
         .hero-section p {
-            font-size: 1.3rem; /* Slightly smaller font */
-            margin: 1rem 0 1.5rem; /* Reduced bottom margin */
+            font-size: 1.3rem;
+            margin: 1rem 0 1.5rem;
         }
 
-        .hero-section .cta-button {
-            padding: 0.8rem 1.5rem; /* Smaller button */
-            background-color: #fd3b78;
+        .cta-button {
+            padding: 0.8rem 1.5rem;
+            background-color: #636cff;
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 1.2rem;
             cursor: pointer;
+            position: relative;
+            z-index: 10; /* Ensures button is above SVGs */
         }
 
         .cta-button:hover {
-            background-color: #ff9933;
+            filter: brightness(1.5);
         }
 
         .features-section {
-            padding: 2.5rem 1rem; /* Reduced padding for a more compact section */
+            padding: 3rem 1rem;
             background-color: #ffffff;
             text-align: center;
+            position: relative;
         }
 
         .features-section h2 {
-            font-size: 2rem; /* Slightly smaller font */
-            margin-bottom: 1.5rem; /* Reduced margin */
-            color: #22cc9d;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #307351;
+            position: relative;
+            z-index: 10;
         }
 
         .features-container {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
-            gap: 1rem; /* Added gap between flex items */
+            gap: 1rem;
         }
 
         .feature-box {
             background-color: #f8f9fa;
             border-radius: 10px;
-            padding: 1.5rem; /* Slightly reduced padding */
-            width: 280px; /* Reduced width */
+            padding: 1.5rem;
+            width: 280px;
             margin-bottom: 1.5rem;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
         }
 
-        .feature-box h3 {
-            color: #22cc9d;
-            font-size: 1.3rem; /* Slightly smaller font */
-            margin-bottom: 0.8rem; /* Reduced bottom margin */
+        /* SVGs positioned in the background */
+        .svg-background {
+            position: absolute;
+            opacity: 1; /* Faded so text is still readable */
+            z-index: 1;
         }
 
-        .feature-box p {
-            font-size: 0.95rem; /* Slightly smaller font */
-            color: #434443;
+        .professor {
+            width: 400px;
+            top: 5%;
+            right: 60%;
+        }
+
+        .teacher {
+            top: 0%; /* Adjust positioning as needed */
+            left: 75%;
+            width: 200px;
+        }
+
+        .exams {
+            top: 60%;
+            left: 0%;
+            width: 300px;
+        }
+
+        .educator {
+            top: 70%;
+            left: 60%;
+            width: 350px;
         }
 
         .footer {
-            background-color: #22cc9d;
+            background-color: #307351;
             color: white;
-            padding: 1.5rem 1rem; /* Reduced padding for footer */
+            padding: 1.5rem 1rem;
             text-align: center;
         }
 
@@ -122,7 +148,7 @@
         }
 
         .footer a {
-            color: #fd3b78;
+            color: #70163c;
             text-decoration: none;
         }
 
@@ -133,7 +159,7 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero-section h1 {
-                font-size: 2.2rem; /* Adjusted for mobile */
+                font-size: 2.2rem;
             }
 
             .hero-section p {
@@ -146,7 +172,15 @@
             }
 
             .feature-box {
-                width: 90%; /* Full width for mobile */
+                width: 90%;
+            }
+
+            .svg-background {
+                width: 200px; /* Resize SVGs for smaller screens */
+            }
+
+            .teacher, .exams, .educator {
+                left: 20%; /* Adjust positioning for smaller screens */
             }
         }
     </style>
@@ -169,6 +203,12 @@
         <h1>Revolutionize Learning with AI</h1>
         <p>Empowering universities and schools with cutting-edge AI tools for education</p>
         <a href="{% url 'signup' %}"><button class="cta-button">Get Started Today</button></a>
+
+        <!-- SVGs as background elements -->
+        <img src="/static/images/undraw_professor_re_mj1s.svg" alt="Teacher Image" class="svg-background professor">
+        <!--<img src="/static/images/undraw_teacher_re_sico.svg" alt="Teacher Image" class="svg-background teacher"> 
+        <img src="/static/images/undraw_exams_re_4ios.svg" alt="Exams Image" class="svg-background exams">-->
+        <img src="/static/images/undraw_educator_re_ju47.svg" alt="Educator Image" class="svg-background educator">
     </section>
 
     <!-- Features Section -->
