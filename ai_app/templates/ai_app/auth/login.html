@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +9,15 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f7f9;
+            margin: 0;
+        }
+
+        /* Center the container */
+        .container-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            height: calc(100vh - 80px); /* Adjust height to subtract navbar height */
         }
 
         .container {
@@ -87,21 +92,83 @@
         .cta-button:hover {
             background-color: #27e2ad;
         }
+
+        /* Error list styling */
+        .errorlist {
+            color: #ff4d4d; /* Red color for errors */
+            padding: 10px;
+            background-color: #ffe0e0; /* Light red background */
+            border-radius: 5px;
+            list-style: none; /* Remove default list style */
+        }
+
+        .errorlist li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #307351;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .logo-container img {
+            width: 100px;
+            border-radius: 50px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Login</h1>
+<!-- Include the Navbar -->
+{% include 'includes/homeNav.html' %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
+<!-- Content Wrapper -->
+<div class="container-wrapper">
+    <div class="container">
+        <h1>Login</h1>
 
-    <div class="contact-box">
-        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Show only non-field errors to avoid duplication -->
+            {% if form.non_field_errors %}
+                <ul class="errorlist">
+                    {{ form.non_field_errors }}
+                </ul>
+            {% endif %}
+
+            <!-- Username Field with Errors -->
+            <label for="id_username">Username:</label>
+            {{ form.username.errors }}
+            {{ form.username }}
+
+            <!-- Password Field with Errors -->
+            <label for="id_password">Password:</label>
+            {{ form.password.errors }}
+            {{ form.password }}
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="contact-box">
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+        </div>
     </div>
 </div>
 

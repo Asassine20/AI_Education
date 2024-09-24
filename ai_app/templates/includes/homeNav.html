@@ -1,0 +1,39 @@
+{% load static %}
+<style>
+.navbar {
+    background-color: #307351;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 1.5rem;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+.logo-container img {
+    width: 100px;
+    border-radius: 50px;
+}
+</style>
+<nav class="navbar">
+    <div class="logo-container">
+        <a href="/">
+            <img src="{% static 'images/jackieLogo.png' %}" alt="Logo">
+        </a>
+    </div>
+    <h2>AI Education Platform</h2>
+
+    <div class="nav-links">
+        <a href="{% url 'signup' %}">Sign Up</a>
+        <a href="{% url 'login' %}">Log In</a>
+    </div>
+</nav>

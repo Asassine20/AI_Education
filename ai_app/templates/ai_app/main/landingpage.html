@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,29 +12,8 @@
             padding: 0;
         }
 
-        .navbar {
-            background-color: #307351;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 1.5rem;
-        }
-
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-
         .hero-section {
-            height: 70vh;
-            background-image: url('https://example.com/university-campus.jpg'); /* Replace with actual image */
+            height: 80vh;
             background-size: cover;
             background-position: center;
             display: flex;
@@ -41,6 +21,7 @@
             justify-content: center;
             align-items: center;
             color: #000;
+            margin-top: -50px;
             text-align: center;
             position: relative;
         }
@@ -52,7 +33,6 @@
 
         .hero-section p {
             font-size: 1.3rem;
-            margin: 1rem 0 1.5rem;
         }
 
         .cta-button {
@@ -63,6 +43,7 @@
             border-radius: 5px;
             font-size: 1.2rem;
             cursor: pointer;
+            margin-top: 20px;
             position: relative;
             z-index: 10; /* Ensures button is above SVGs */
         }
@@ -76,6 +57,8 @@
             background-color: #ffffff;
             text-align: center;
             position: relative;
+            margin-top: -125px;
+
         }
 
         .features-section h2 {
@@ -87,10 +70,11 @@
         }
 
         .features-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
+            justify-items: center;
+            align-items: start;
         }
 
         .feature-box {
@@ -98,42 +82,14 @@
             border-radius: 10px;
             padding: 1.5rem;
             width: 280px;
-            margin-bottom: 1.5rem;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 10;
         }
 
-        /* SVGs positioned in the background */
-        .svg-background {
-            position: absolute;
-            opacity: 1; /* Faded so text is still readable */
-            z-index: 1;
-        }
-
-        .professor {
-            width: 400px;
-            top: 5%;
-            right: 60%;
-        }
-
-        .teacher {
-            top: 0%; /* Adjust positioning as needed */
-            left: 75%;
-            width: 200px;
-        }
-
-        .exams {
-            top: 60%;
-            left: 0%;
-            width: 300px;
-        }
-
-        .educator {
-            top: 70%;
-            left: 60%;
-            width: 350px;
+        .feature-box h3 {
+            color: #636cff;
         }
 
         .footer {
@@ -148,15 +104,15 @@
         }
 
         .footer a {
-            color: #70163c;
+            color: #636cff;
             text-decoration: none;
+            font-weight: bold;
         }
 
         .footer a:hover {
             text-decoration: underline;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .hero-section h1 {
                 font-size: 2.2rem;
@@ -167,48 +123,27 @@
             }
 
             .features-container {
-                flex-direction: column;
-                align-items: center;
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .features-section {
+                margin-top: -125px;
             }
 
             .feature-box {
-                width: 90%;
-            }
-
-            .svg-background {
-                width: 200px; /* Resize SVGs for smaller screens */
-            }
-
-            .teacher, .exams, .educator {
-                left: 20%; /* Adjust positioning for smaller screens */
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">
-            <h2>AI Education Platform</h2>
-        </div>
-        <div class="nav-links">
-            <a href="{% url 'signup' %}">Sign Up</a>
-            <a href="{% url 'login' %}">Log In</a>
-        </div>
-    </nav>
-
+    {% include 'includes/homeNav.html' %}
     <!-- Hero Section -->
     <section class="hero-section">
         <h1>Revolutionize Learning with AI</h1>
         <p>Empowering universities and schools with cutting-edge AI tools for education</p>
         <a href="{% url 'signup' %}"><button class="cta-button">Get Started Today</button></a>
-
-        <!-- SVGs as background elements -->
-        <img src="/static/images/undraw_professor_re_mj1s.svg" alt="Teacher Image" class="svg-background professor">
-        <!--<img src="/static/images/undraw_teacher_re_sico.svg" alt="Teacher Image" class="svg-background teacher"> 
-        <img src="/static/images/undraw_exams_re_4ios.svg" alt="Exams Image" class="svg-background exams">-->
-        <img src="/static/images/undraw_educator_re_ju47.svg" alt="Educator Image" class="svg-background educator">
     </section>
 
     <!-- Features Section -->

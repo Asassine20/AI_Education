@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,15 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f7f9;
+            margin: 0;
+        }
+
+        /* Center the container */
+        .container-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            height: calc(100vh - 80px); /* Adjust height to subtract navbar height */
         }
 
         .container {
@@ -40,7 +45,8 @@
             font-weight: bold;
         }
 
-        input, select {
+        input,
+        select {
             padding: 0.8rem;
             margin-bottom: 1rem;
             border: 1px solid #ccc;
@@ -71,50 +77,83 @@
         button:hover {
             filter: brightness(1.5);
         }
+
+        .navbar {
+            background-color: #307351;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .logo-container img {
+            width: 100px;
+            border-radius: 50px;
+        }
     </style>
 </head>
+
 <body>
+    {% include 'includes/homeNav.html' %}
 
-<div class="container">
-    <h1>School / University Sign Up</h1>
-    <form method="POST">
-        {% csrf_token %}
-        
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required class="{% if error_username %}error-border{% endif %}">
-        {% if error_username %}
-            <p class="error">{{ error_username }}</p>
-        {% endif %}
+    <div class="container-wrapper">
+        <div class="container">
+            <h1>School / University Sign Up</h1>
+            <form method="POST">
+                {% csrf_token %}
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required class="{% if error_email %}error-border{% endif %}">
-        {% if error_email %}
-            <p class="error">{{ error_email }}</p>
-        {% endif %}
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required
+                    class="{% if error_username %}error-border{% endif %}">
+                {% if error_username %}
+                <p class="error">{{ error_username }}</p>
+                {% endif %}
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required
+                    class="{% if error_email %}error-border{% endif %}">
+                {% if error_email %}
+                <p class="error">{{ error_email }}</p>
+                {% endif %}
 
-        <label for="university_code">University Code:</label>
-        <input type="text" id="university_code" name="university_code" required class="{% if error_university_code %}error-border{% endif %}">
-        {% if error_university_code %}
-            <p class="error">{{ error_university_code }}</p>
-        {% endif %}
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
 
-        <label for="school_role">Role (Student/Teacher):</label>
-        <select id="school_role" name="school_role" required>
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="admin">Admin</option>
-        </select>
+                <label for="university_code">University Code:</label>
+                <input type="text" id="university_code" name="university_code" required
+                    class="{% if error_university_code %}error-border{% endif %}">
+                {% if error_university_code %}
+                <p class="error">{{ error_university_code }}</p>
+                {% endif %}
 
-        <button type="submit">Sign Up</button>
+                <label for="school_role">Role (Student/Teacher):</label>
+                <select id="school_role" name="school_role" required>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="admin">Admin</option>
+                </select>
 
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
-    </form>
-</div>
+                <button type="submit">Sign Up</button>
+
+                {% if error %}
+                <p class="error">{{ error }}</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 
 </body>
+
 </html>

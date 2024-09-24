@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,15 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f7f9;
+            margin: 0;
+        }
+
+        /* Center the container */
+        .container-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            height: calc(100vh - 80px); /* Adjust height to subtract navbar height */
         }
 
         .container {
@@ -95,9 +100,34 @@
 
         /* Icons */
         .school-icon::before {
-            content: "\1F3EB"; /* School building icon */
+            content: "\1F3EB";
+            /* School building icon */
         }
 
+        .navbar {
+            background-color: #307351;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .logo-container img {
+            width: 100px;
+            border-radius: 50px;
+        }
     </style>
     <script>
         function selectUserType(type) {
@@ -106,27 +136,33 @@
             }
         }
     </script>
-    
+
 </head>
+
 <body>
+    {% include 'includes/homeNav.html' %}
 
-<div class="container">
-    <h1>Sign Up</h1>
+    <div class="container-wrapper">
+        <div class="container">
+            <h1>Sign Up</h1>
 
-    <!-- User type selection -->
-    <div class="option-box">
-        <div class="box" onclick="selectUserType('school')">
-            <i class="school-icon"></i>
-            <h2>School / University</h2>
+            <!-- User type selection -->
+            <div class="option-box">
+                <div class="box" onclick="selectUserType('school')">
+                    <i class="school-icon"></i>
+                    <h2>School / University</h2>
+                </div>
+            </div>
+
+            <!-- Call to Action for universities -->
+            <div class="contact-box">
+                <p>Are you looking to set up <strong>{AIEDU}</strong> for your university? <a href="/contact/">Request a
+                        quote now!</a></p>
+                <a href="/contact/" class="cta-button">Contact Sales</a>
+            </div>
         </div>
     </div>
 
-    <!-- Call to Action for universities -->
-    <div class="contact-box">
-        <p>Are you looking to set up <strong>{AIEDU}</strong> for your university? <a href="/contact/">Request a quote now!</a></p>
-        <a href="/contact/" class="cta-button">Contact Sales</a>
-    </div>
-</div>
-
 </body>
+
 </html>
