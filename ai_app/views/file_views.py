@@ -41,12 +41,12 @@ def file_edit_view(request, room_code, file_id):
     material = get_object_or_404(CourseMaterial, id=file_id, classroom=classroom)
 
     if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES, instance=material)
+        form = FileUploadForm(request.POST, request.FILES, instance=material, classroom=classroom)
         if form.is_valid():
             form.save()
             return redirect(reverse('file_list', kwargs={'room_code': room_code}))
     else:
-        form = FileUploadForm(instance=material)
+        form = FileUploadForm(instance=material, classroom=classroom)
 
     return render(request, 'ai_app/dashboards/teacher/files/file_edit.html', {'form': form, 'classroom': classroom})
 

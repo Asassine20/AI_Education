@@ -11,25 +11,27 @@
 {% block extra_css %}
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f7f9;
-        padding: 2rem;
+        color: #333;
+        overflow-x: hidden; /* Prevent horizontal scroll on the page */
     }
 
     .container {
-        max-width: 600px;
+        max-width: 93%;
         margin: 0 auto; /* Center the container */
         padding: 2rem;
         background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        overflow: visible; /* Ensure no scrolling within the container */
     }
 
-    h1 {
+    .content-container {
+        padding: 0;
+    }
+
+    .content-container h1 {
         text-align: center; /* Ensure h1 is centered */
-        margin-bottom: 20px;
         color: #333;
         font-size: 2rem;
+        margin-top: 90px; /* Reduced margin for better layout */
         width: 100%; /* Make sure the h1 takes full width */
     }
 
@@ -42,6 +44,7 @@
         margin-bottom: 0.5rem;
         font-weight: bold;
         display: block;
+        color: #333;
         text-align: left;
         width: 100%;
     }
@@ -54,11 +57,6 @@
         font-size: 1rem;
         width: 100%; /* Make inputs take full width */
         box-sizing: border-box;
-    }
-
-    /* Hide only the clear checkbox for file inputs */
-    input[type="file"] ~ a, input[type="file"] ~ label {
-        display: none;
     }
 
     /* Align checkboxes to the left */
@@ -75,8 +73,8 @@
 
     button {
         padding: 1rem;
-        background-color: #000000;
-        color: white;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
         border: none;
         border-radius: 8px;
         cursor: pointer;
