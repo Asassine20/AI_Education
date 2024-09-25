@@ -83,9 +83,9 @@
         {% if user_role == 'admin' %}
         <a href="{% url 'admin_dashboard' %}">
         {% elif user_role == 'teacher' %}
-        <a href="{% url 'teacher_dashboard' %}">
+        <a href="{% url 'dashboard' %}">
         {% elif user_role == 'student' %}
-        <a href="{% url 'student_dashboard' %}">
+        <a href="{% url 'dashboard' %}">
         {% endif %}
             {% if logo %}
             <img class="logo" src="{{ logo.url }}" alt="University Logo">

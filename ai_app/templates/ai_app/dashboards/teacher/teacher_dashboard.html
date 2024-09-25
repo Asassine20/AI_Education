@@ -167,17 +167,23 @@
     </div>
 
     <div class="header">
-        {% if user_role == 'student' %}
-            <h1>Dashboard</h1>
-        {% elif user_role == 'teacher' %}
-            <h1>Dashboard</h1>
-        <a href="{% url 'add_class' %}" class="add-class-btn">Add a class</a>
-    </div>
+        <h1>
+            {% if user_role == 'student' %}
+                Dashboard
+            {% elif user_role == 'teacher' %}
+                Dashboard
+            {% endif %}
+        </h1>
+    
+        {% if user_role == 'teacher' %}
+            <a href="{% url 'add_class' %}" class="add-class-btn">Add a class</a>
         {% endif %}
+    </div>
+    
 
     <!-- Display teacher's classes in a grid -->
     <div class="class-grid">
-        {% for class in classes_teaching %}
+        {% for class in classes%}
         <div class="class-card">
             <!-- Clickable area to navigate to course page -->
             <a href="{% url 'course_page' class.room_code %}" class="clickable-card"></a>
@@ -214,7 +220,7 @@
             </div>
         </div>
         {% empty %}
-        <p>No classes yet. Click "Add a class" to create one.</p>
+        <p>No classes yet.</p>
         {% endfor %}
     </div>
 </body>

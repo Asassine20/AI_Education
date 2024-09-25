@@ -22,9 +22,9 @@ def profile_image_upload_view(request):
             if profile.role == 'admin':
                 return redirect('admin_dashboard')
             elif profile.role == 'teacher':
-                return redirect('teacher_dashboard')
+                return redirect('dashboard')
             elif profile.role == 'student':
-                return redirect('student_dashboard')    
+                return redirect('dashboard')    
     else:
         form = ProfileImageUploadForm(instance=profile)
     

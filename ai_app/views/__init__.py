@@ -6,7 +6,7 @@ from .auth_views import (
 )
 
 from .teacher_dashboard_views import (
-    teacher_dashboard, 
+    dashboard, 
     add_class, 
     course_page, 
     students_enrolled, 

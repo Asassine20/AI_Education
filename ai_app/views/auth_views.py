@@ -16,11 +16,11 @@ def login_view(request):
                 login(request, user)
                 profile = SchoolUserProfile.objects.get(user=user)
                 if profile.role == 'teacher':
-                    return redirect('teacher_dashboard')
+                    return redirect('dashboard')
                 elif profile.role == 'admin': 
                     return redirect('admin_dashboard')
                 elif profile.role == 'student':
-                    return redirect('student_dashboard')
+                    return redirect('dashboard')
 
     else:
         form = AuthenticationForm()
@@ -51,11 +51,11 @@ def signup_view(request):
                 return render(request, 'ai_app/school_signup.html', {'error': 'Invalid University Code'})
 
             if school_role == 'teacher':
-                return redirect('teacher_dashboard')
+                return redirect('dashboard')
             elif school_role == 'admin':
                 return redirect('admin_dashboard')
             elif school_role == 'student':
-                return redirect('student_dashboard')
+                return redirect('dashboard')
         else:
             login(request, user)
             return redirect('home')

@@ -12,8 +12,8 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 import os
 
 @login_required
-def teacher_dashboard(request):
-    profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
+def dashboard(request):
+    profile = get_object_or_404(SchoolUserProfile, user=request.user)
     university = profile.university
     profile_image = profile.profile_image
     if request.method == 'POST':
@@ -27,11 +27,11 @@ def teacher_dashboard(request):
             teacher=request.user
         )
         profile.classes.add(new_class)
-        return redirect('teacher_dashboard')
+        return redirect('dashboard')
 
-    classes_teaching = profile.classes.all()
+    classes = profile.classes.all()
     return render(request, 'ai_app/dashboards/teacher/teacher_dashboard.html', {
-        'classes_teaching': classes_teaching,
+        'classes': classes,
         'university': university,
         'profile_image': profile_image,
     })
@@ -71,7 +71,7 @@ def add_class(request):
         )
 
         profile.classes.add(new_class)
-        return redirect('teacher_dashboard')
+        return redirect('dashboard')
 
     return render(request, 'ai_app/dashboards/teacher/add_class.html')
 
