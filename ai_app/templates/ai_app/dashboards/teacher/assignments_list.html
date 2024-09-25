@@ -127,10 +127,12 @@
 {% block content %}
 <div class="upload-header">
     <h2>Assignments</h2>
+    {% if user_role == 'teacher' %}
     <div class="upload-button">
         <a href="{% url 'create_message' classroom.room_code %}">Create Post <i class="fa-solid fa-pen-to-square"
                 style="font-size: 16px; margin-left: 5px;"></i></a>
     </div>
+    {% endif %}
 </div>
 
 {% if assignments %}

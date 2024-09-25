@@ -71,21 +71,19 @@
     }
 
     .download-btn {
-        color: #22cc9d;
+        color: var(--primary-color);
     }
 
     .download-btn:hover {
-        color: #1ba37b;
+        filter: brightness(1.5);
     }
 
     .edit-btn {
-        color: #ffcc00;
-        /* Yellow-orange */
+        color: var(--primary-color)
     }
 
     .edit-btn:hover {
-        color: #e6b800;
-        /* Darker yellow-orange */
+        filter: brightness(1.5);
     }
 
     /* Category headers */
@@ -105,11 +103,13 @@
 {% block content %}
 <div class="upload-header">
     <h2>Files</h2>
+    {% if user_role == 'teacher' %}
     <div class="upload-button">
         <a href="{% url 'file_upload' classroom.room_code %}">
             Upload File <i class="fa-solid fa-upload" style="font-size: 16px; margin-left: 5px;"></i>
         </a>
     </div>
+    {% endif %}
 </div>
 
 {% if files %}
@@ -136,13 +136,17 @@
         <!-- Actions on the right: Download and Edit buttons -->
         <div class="file-actions">
             <!-- Indicate visibility status -->
+            {% if user_role == 'teacher' %}
             {% if file.visible_to_students %}
-            <a style="color:rgb(61, 61, 61);"><i class="fa-solid fa-eye"></i></a>
+            <a style="color:green;"><i class="fa-solid fa-eye"></i></a>
             {% else %}
             <a style="color:red;"><i class="fa-solid fa-eye-slash"></i></a>
             {% endif %}
+            <!-- Edit Icon -->
             <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i
                     class="fa-solid fa-pen-to-square"></i></a>
+            {% endif %}
+            <!-- Download Icon -->
             <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i
                     class="fa-solid fa-download"></i></a>
         </div>
