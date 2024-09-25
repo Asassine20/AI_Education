@@ -8,12 +8,17 @@
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family={{ font_family|urlencode }}:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --font-family: '{{ font_family }}', sans-serif;
+            --primary-color: {{ primary_color }};
+            --secondary-color: {{ secondary_color }};
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: var(--font-family);
             background-color: #f4f7f9;
-            padding: 2rem;
         }
 
         h1 {
@@ -33,129 +38,8 @@
             margin: 0;
         }
 
-        .add-class-btn {
-            padding: 0.8rem 1.5rem;
-            background-color: #000;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .add-class-btn:hover {
-            background-color: #434443;
-        }
-
-        /* Update class-grid to have 2 columns per row */
-        .class-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
-
-        .class-card {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        .class-card h2 {
-            font-size: 1.5rem;
-            color: black;
-            margin-bottom: 1rem;
-            margin-top: -5px;
-        }
-
-        .room-code {
-            font-size: 1.2rem;
-            color: #434443;
-        }
-
-        /* Flexbox for labels and data */
-        .class-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            align-items: center;
-        }
-
-        .class-info label,
-        .class-times li span:first-child {
-            font-weight: bold;
-            color: #434443;
-            width: 40%;
-            /* Align the labels to be fixed width */
-        }
-
-        .class-info span,
-        .class-times li span:last-child {
-            width: 60%;
-            /* Align the content to the right */
-            text-align: right;
-        }
-
-        /* Clean and professional styling for class times */
-        .class-times ul {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 0.5rem;
-        }
-
-        .class-times li {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-        }
-
-        .copy-icon-container {
-            position: relative;
-            display: inline-block;
-            margin-left: 8px;
-            cursor: pointer;
-        }
-
-        .tooltip-text {
-            visibility: hidden;
-            width: 60px;
-            background-color: #22cc9d;
-            font-size: 14px;
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .copy-icon-container:hover .tooltip-text {
-            visibility: visible;
-        }
-
-        .copy-icon {
-            color: #22cc9d;
-            font-size: 1rem;
-        }
-
-        .clickable-card {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 0;
-        }
-
-        .copy-text {
-            z-index: 1;
-            position: relative;
+        .logo-container {
+            padding: 10px !important;
         }
     </style>
 </head>

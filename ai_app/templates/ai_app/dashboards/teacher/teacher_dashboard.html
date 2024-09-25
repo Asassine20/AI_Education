@@ -167,9 +167,13 @@
     </div>
 
     <div class="header">
-        <h1>Teacher Dashboard</h1>
+        {% if user_role == 'student' %}
+            <h1>Dashboard</h1>
+        {% elif user_role == 'teacher' %}
+            <h1>Dashboard</h1>
         <a href="{% url 'add_class' %}" class="add-class-btn">Add a class</a>
     </div>
+        {% endif %}
 
     <!-- Display teacher's classes in a grid -->
     <div class="class-grid">

@@ -13,15 +13,12 @@
         }
 
         .hero-section {
-            height: 80vh;
-            background-size: cover;
-            background-position: center;
+            margin-top: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #000;
-            margin-top: -50px;
             text-align: center;
             position: relative;
         }
@@ -50,6 +47,15 @@
 
         .cta-button:hover {
             filter: brightness(1.5);
+        }
+
+        .screenshot-img {
+            max-width: 100%;
+            margin-top: 50px;
+            justify-content: center;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .features-section {
@@ -144,7 +150,10 @@
         <h1>Revolutionize Learning with AI</h1>
         <p>Empowering universities and schools with cutting-edge AI tools for education</p>
         <a href="{% url 'signup' %}"><button class="cta-button">Get Started Today</button></a>
+        <img src="{% static 'images/static.png' %}" class="screenshot-img">
     </section>
+
+    
 
     <!-- Features Section -->
     <section class="features-section">

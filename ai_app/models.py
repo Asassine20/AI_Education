@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-import jsonfield
 from django_quill.fields import QuillField 
 
 class CourseMaterial(models.Model):
@@ -38,7 +37,7 @@ class ClassRoom(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='classes_teaching')
     students = models.ManyToManyField(User, related_name='enrolled_classrooms', blank=True)  
     room_number = models.CharField(max_length=10)
-    class_times = jsonfield.JSONField(blank=True, null=True)
+    class_times = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return self.room_name

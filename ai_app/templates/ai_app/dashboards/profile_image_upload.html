@@ -1,101 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-    Upload Image
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
 
-{% block header %}
-    Upload Image
-{% endblock %}
+    <!-- Google Fonts Link -->
+    <link href="https://fonts.googleapis.com/css2?family={{ font_family|urlencode }}:wght@400;700&display=swap"
+        rel="stylesheet">
 
-{% block extra_css %}
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f7f9;
-        padding: 2rem;
-    }
+    {% block extra_css %}
+    <style>
+        :root {
+            --font-family: '{{ font_family }}', sans-serif;
+            --primary-color: {{primary_color}};
+            --secondary-color: {{secondary_color}};
+        }
 
-    .container {
-        max-width: 600px;
-        margin: 0 auto; /* Center the container */
-        padding: 2rem;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
+        body {
+            background-color: #f4f7f9;
+            font-family: var(--font-family);
+            padding: 2rem;
+        }
 
-    .header {
-        display: cover;
-    }
+        .container {
+            max-width: 85%;
+            margin: auto;
+            margin-top: 50px;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
 
-    h1 {
-        text-align: center; /* Ensure h1 is centered */
-        margin-bottom: 20px;
-        color: #333;
-        font-size: 2rem;
-        width: 100%; /* Make sure the h1 takes full width */
-    }
+        .header {
+            display: cover;
+        }
 
-    form {
-        display: block;
-        width: 100%; /* Ensure form takes full width */
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 2rem;
+            width: 100%;
+        }
 
-    label {
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-        display: block;
-        text-align: left;
-        width: 100%;
-    }
+        form {
+            display: block;
+            width: 100%;
+        }
 
-    input, textarea, select {
-        padding: 0.8rem;
-        margin-bottom: 1.5rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
-        width: 100%; /* Make inputs take full width */
-        box-sizing: border-box;
-    }
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            width: 100%;
+        }
 
-    /* Align checkboxes to the left */
-    input[type="checkbox"] {
-        width: auto; /* Prevent checkbox from being full-width */
-        margin-right: 0.5rem;
-    }
+        input,
+        textarea,
+        select {
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            /* Make inputs take full width */
+            box-sizing: border-box;
+        }
 
-    .checkbox-label {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
+        /* Align checkboxes to the left */
+        input[type="checkbox"] {
+            width: auto;
+            /* Prevent checkbox from being full-width */
+            margin-right: 0.5rem;
+        }
 
-    button {
-        padding: 1rem;
-        background-color: #000000;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-top: 10px;
-        width: 100%; /* Button takes full width */
-    }
 
-    button:hover {
-        background-color: #2f2f2f;
-    }
-</style>
-{% endblock %}
+        button {
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+            /* Button takes full width */
+        }
 
-{% block content %}
-<div class="container">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.profile_image }}
-        <label for="id_file">Upload Image:</label>
-        <button type="submit">Upload Image</button>
-    </form>
-</div>
-{% endblock %}
+        button:hover {
+            filter: brightness(1.5);
+        }
+    </style>
+    {% endblock %}
+    {% include 'includes/navbar.html' %}
+
+    {% block content %}
+    <div class="container">
+        <h1>Upload Profile Image</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.profile_image }}
+            <label for="id_file">Upload Image:</label>
+            <button type="submit">Upload Image</button>
+        </form>
+    </div>
+    {% endblock %}
