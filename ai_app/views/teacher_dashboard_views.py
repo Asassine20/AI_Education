@@ -108,7 +108,7 @@ def student_questions(request, room_code):
 @login_required
 def messages_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    messages = Messages.objects.filter(classroom=classroom)
+    messages = Messages.objects.filter(classroom=classroom).select_related('user__schooluserprofile')
     return render(request, 'ai_app/dashboards/teacher/messages_list.html', {
         'classroom': classroom, 
         'messages': messages,
@@ -131,6 +131,7 @@ def create_message(request, room_code):
         if form.is_valid():
             message = form.save(commit=False)
             message.classroom = classroom
+            message.user = request.user
             message.save()
             return redirect('messages_list', room_code=room_code)
     else:

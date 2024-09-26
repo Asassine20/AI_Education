@@ -5,7 +5,6 @@ from django_quill.fields import QuillField
 class CourseMaterial(models.Model):
     professor = models.ForeignKey(User, on_delete=models.CASCADE)
     course_name = models.CharField(max_length=255)
-    material = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     file = models.FileField(upload_to='uploads/', null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)

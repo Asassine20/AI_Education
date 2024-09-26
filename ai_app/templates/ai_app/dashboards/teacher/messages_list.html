@@ -45,14 +45,10 @@
         flex-direction: column;
         padding: 10px;
         margin-bottom: 10px;
-        background-color: #f9f9f9;
+        background-color: #fff;
         border-radius: 5px;
         border: 1px solid #e0e0e0;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    ul li:hover {
-        background-color: #f0f0f0;
     }
 
     /* Header section: Title, uploaded time, chevron, and delete button */
@@ -65,12 +61,17 @@
         /* Make the entire header clickable */
     }
 
+    /* Message content and profile image grouped together */
+    .message-content {
+        display: flex;
+        align-items: center;
+    }
+
     .message-left {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        max-width: calc(100% - 60px);
         flex-grow: 1;
-        /* Ensure it takes up available space */
     }
 
     .message-title {
@@ -97,9 +98,23 @@
         display: inline-block;
     }
 
-    /* Icon section to the right of the message-left */
-    .chevron-icon {
+    .profile-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
         margin-left: 10px;
+        object-fit: cover;
+    }
+
+    /* Icon section to the right of the message */
+    .message-actions {
+        display: flex;
+        align-items: center;
+        /* Ensures items are aligned horizontally */
+    }
+
+    .chevron-icon {
+        margin-right: 10px;
         color: #434443;
     }
 
@@ -108,12 +123,11 @@
         display: none;
         margin-top: 10px;
         padding: 0;
-        background-color: #f9f9f9;
+        background-color: #fff;
         text-align: left;
         color: #434443;
         cursor: default;
         width: 100%;
-        /* Ensure message-text takes up full width */
     }
 
     .message-text p {
@@ -129,7 +143,6 @@
         padding: 5px 10px;
         border-radius: 4px;
         cursor: pointer;
-        margin-left: 10px;
     }
 
     .delete-btn:hover {
@@ -155,30 +168,37 @@
 <ul>
     {% for message in messages %}
     <li class="message-item">
-        <!-- Header containing the title, user name, uploaded_at, chevron, and delete button -->
+        <!-- Header containing the title, user name, uploaded_at, and delete button -->
         <div class="message-header">
-            <div class="message-left">
-                <!-- Ensure title and name are on the same line -->
-                <span class="message-title">
-                    {{ message.title }} -
-                    <small class="user-info">
-                        {{ message.user.first_name }} {{ message.user.last_name }}
-                    </small>
-                </span>
-
-                <small class="uploaded-at"> Uploaded at: {{ message.uploaded_at }}</small>
+            <div class="message-content">
+                <div class="message-left">
+                    <!-- Ensure title and name are on the same line -->
+                    <span class="message-title">
+                        {{ message.title }} -
+                        <small class="user-info">
+                            {{ message.user.first_name }} {{ message.user.last_name }}
+                        </small>
+                    </span>
+                    <small class="uploaded-at"> Uploaded at: {{ message.uploaded_at }}</small>
+                </div>
+                {% if message.user.schooluserprofile.profile_image %}
+                <img src="{{ message.user.schooluserprofile.profile_image.url}}" alt="{{message.user.username }}'s Profile Image" class="profile-image">
+                {% else %}
+                <i class="fa-solid fa-user"></i>
+                {% endif %}
             </div>
+            <div class="message-actions">
+                <!-- Chevron icon aligned to the left of the delete button -->
+                <i class="fa fa-chevron-down chevron-icon"></i>
 
-            <!-- Chevron icon -->
-            <i class="fa fa-chevron-down chevron-icon"></i>
-
-            <!-- Delete button aligned to the right -->
-            {% if message.user_id == user.id or user_role == 'teacher' %}
-            <form method="POST" action="{% url 'delete_message' classroom.room_code message.id %}">
-                {% csrf_token %}
-                <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-            </form>
-            {% endif %}
+                <!-- Delete button aligned to the right -->
+                {% if message.user_id == user.id or user_role == 'teacher' %}
+                <form method="POST" action="{% url 'delete_message' classroom.room_code message.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                </form>
+                {% endif %}
+            </div>
         </div>
 
         <!-- Message content hidden by default, shown on click -->
@@ -188,7 +208,6 @@
     </li>
     {% endfor %}
 </ul>
-
 
 {% else %}
 <p class="list-group-item text-center">No messages available.</p>

@@ -11,7 +11,6 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('contact/', contact_view, name='contact'),
-    path('student-dashboard/', student_dashboard, name='student_dashboard'),
     path('dashboard/', dashboard, name='dashboard'),
     path('dashboard/add-class/', add_class, name='add_class'),
     path('dashboard/course/<str:room_code>/', course_page, name='course_page'),
