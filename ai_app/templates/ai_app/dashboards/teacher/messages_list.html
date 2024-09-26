@@ -61,26 +61,40 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        cursor: pointer; /* Make the entire header clickable */
+        cursor: pointer;
+        /* Make the entire header clickable */
     }
 
     .message-left {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        flex-grow: 1; /* Ensure it takes up available space */
+        flex-grow: 1;
+        /* Ensure it takes up available space */
     }
 
     .message-title {
         font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
         text-align: left;
         color: #434443;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .user-info {
+        font-size: 1rem;
+        font-weight: normal;
+        color: #777;
+        display: inline-block;
     }
 
     .uploaded-at {
-        font-size: 0.875rem;
+        font-size: 1rem;
         color: #777;
         text-align: left;
+        display: inline-block;
     }
 
     /* Icon section to the right of the message-left */
@@ -98,7 +112,8 @@
         text-align: left;
         color: #434443;
         cursor: default;
-        width: 100%; /* Ensure message-text takes up full width */
+        width: 100%;
+        /* Ensure message-text takes up full width */
     }
 
     .message-text p {
@@ -140,21 +155,30 @@
 <ul>
     {% for message in messages %}
     <li class="message-item">
-        <!-- Header containing the title, uploaded_at, chevron, and delete button -->
+        <!-- Header containing the title, user name, uploaded_at, chevron, and delete button -->
         <div class="message-header">
             <div class="message-left">
-                <span class="message-title">{{ message.title }}</span>
-                <small class="uploaded-at">Uploaded at: {{ message.uploaded_at }}</small>
+                <!-- Ensure title and name are on the same line -->
+                <span class="message-title">
+                    {{ message.title }} -
+                    <small class="user-info">
+                        {{ message.user.first_name }} {{ message.user.last_name }}
+                    </small>
+                </span>
+
+                <small class="uploaded-at"> Uploaded at: {{ message.uploaded_at }}</small>
             </div>
 
             <!-- Chevron icon -->
             <i class="fa fa-chevron-down chevron-icon"></i>
-            
+
             <!-- Delete button aligned to the right -->
+            {% if message.user_id == user.id or user_role == 'teacher' %}
             <form method="POST" action="{% url 'delete_message' classroom.room_code message.id %}">
                 {% csrf_token %}
                 <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
             </form>
+            {% endif %}
         </div>
 
         <!-- Message content hidden by default, shown on click -->
@@ -164,6 +188,8 @@
     </li>
     {% endfor %}
 </ul>
+
+
 {% else %}
 <p class="list-group-item text-center">No messages available.</p>
 {% endif %}

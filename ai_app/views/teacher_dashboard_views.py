@@ -109,7 +109,10 @@ def student_questions(request, room_code):
 def messages_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     messages = Messages.objects.filter(classroom=classroom)
-    return render(request, 'ai_app/dashboards/teacher/messages_list.html', {'classroom': classroom, 'messages': messages})
+    return render(request, 'ai_app/dashboards/teacher/messages_list.html', {
+        'classroom': classroom, 
+        'messages': messages,
+        })
 
 @login_required
 def delete_message(request, room_code, message_id):
@@ -122,7 +125,7 @@ def delete_message(request, room_code, message_id):
 
 @login_required
 def create_message(request, room_code):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
     if request.method == 'POST':
         form = MessageUploadForm(request.POST, classroom=classroom)
         if form.is_valid():

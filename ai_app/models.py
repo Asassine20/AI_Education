@@ -79,9 +79,9 @@ class Assignment(models.Model):
 class Messages(models.Model):
     title = models.CharField(max_length=255)
     text = QuillField()
-
     uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='messages')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     
     def __str__(self):
         return self.title
