@@ -1,7 +1,7 @@
 # ai_app/forms.py
 from django import forms
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile
+from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Choices, Questions
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -35,6 +35,7 @@ class MessageUploadForm(forms.ModelForm):
         model = Messages
         fields = ['title', 'text']
     
+    # Automatically gets the classroom for the form
     def __init__(self, *args, **kwargs):
         self.classroom = kwargs.pop('classroom', None)
         super(MessageUploadForm, self).__init__(*args, **kwargs)
@@ -53,3 +54,20 @@ class ProfileImageUploadForm(forms.ModelForm):
     class Meta:
         model = SchoolUserProfile
         fields = ['profile_image']
+
+class AssignmentForm(forms.ModelForm):
+    class Meta:
+        model = Assignments 
+        fields = ['title', 'description', 'start_date', 'due_date', 'category']
+
+    def __init__(self, *args, **kwargs):
+        self.classroom = kwargs.pop('classroom', None)
+        super(AssignmentForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super(AssignmentForm, self).save(commit=False)
+        if self.classroom:
+            instance.classroom = self.classroom
+        if commit:
+            instance.save()
+        return instance

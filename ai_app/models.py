@@ -66,15 +66,47 @@ class SchoolUserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
-class Assignment(models.Model):
+class Category(models.Model):
+    points = models.CharField(max_length=20)
+    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classrooms')
+
+    def __str__(self):
+        return self.classroom.room_name
+    
+class Assignments(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField()  
+    start_date = models.DateField()
     due_date = models.DateField()
-    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='assignments')
+    uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
+    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classroom_assignments')
 
     def __str__(self):
         return self.title
-    
+
+class Questions(models.Model):
+    assignment = models.ForeignKey(Assignments, on_delete=models.CASCADE, related_name='assignment_questions')
+    points = models.FloatField()
+    QUESTION_TYPES = [
+        ('MULTIPLE_CHOICE', 'Multiple Choice'),
+        ('SHORT_ANSWER', 'Short Answer'),
+        ('DROPDOWN', 'Dropdown')
+    ]
+    question_type = models.CharField(max_length=20, choices=QUESTION_TYPES)
+    question = QuillField()
+
+    def __str__(self):
+        return self.question
+
+class Choices(models.Model):
+    question = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name='question_choices')
+    choice_text = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.question
+
 class Messages(models.Model):
     title = models.CharField(max_length=255)
     text = QuillField()
@@ -84,3 +116,4 @@ class Messages(models.Model):
     
     def __str__(self):
         return self.title
+    

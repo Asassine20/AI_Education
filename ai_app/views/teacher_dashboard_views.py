@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignment, Messages, CourseMaterial
-from ai_app.forms import MessageUploadForm
+from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial
+from ai_app.forms import MessageUploadForm, AssignmentForm
 from django.urls import reverse
 from django.contrib import messages
 from django.http import FileResponse
@@ -136,7 +136,10 @@ def create_message(request, room_code):
             return redirect('messages_list', room_code=room_code)
     else:
         form = MessageUploadForm()
-    return render(request, 'ai_app/dashboards/teacher/create_message.html', {'form': form, 'classroom': classroom})
+    return render(request, 'ai_app/dashboards/teacher/create_message.html', {
+        'form': form, 
+        'classroom': classroom
+    })
 
 @login_required
 def download_syllabus(request, room_code, file_id):
@@ -160,8 +163,25 @@ def preview_syllabus(request, room_code, file_id):
     else:
         return Http404("Syllabus is not a PDF")
 
+
+@login_required
+def create_assignment(request, room_code):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    if request.method == 'POST':
+        assignment_form = AssignmentForm(request.POST, classroom=classroom)
+        if assignment_form.is_valid():
+            assignment_form.save()
+            return redirect('assignments_list', room_code=room_code)
+    else:
+        assignment_form = AssignmentForm(classroom=classroom)
+
+    return render(request, 'ai_app/dashboards/teacher/create_assignment.html', {
+        'assignment_form': assignment_form,  # Pass the form to the template
+        'classroom': classroom
+    })
+
 @login_required
 def assignments_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    assignments = Assignment.objects.filter(classroom=classroom)
+    assignments = Assignments.objects.filter(classroom=classroom)
     return render(request, 'ai_app/dashboards/teacher/assignments_list.html', {'classroom': classroom, 'assignments': assignments})

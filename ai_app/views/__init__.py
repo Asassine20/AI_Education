@@ -16,6 +16,7 @@ from .teacher_dashboard_views import (
     create_message, 
     download_syllabus, 
     preview_syllabus, 
+    create_assignment, 
     assignments_list
 )
 

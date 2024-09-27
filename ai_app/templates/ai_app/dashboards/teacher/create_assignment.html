@@ -1,11 +1,11 @@
 {% extends 'ai_app/dashboards/teacher/course_base.html' %}
 
 {% block title %}
-    Create Message
+    Create Assignment
 {% endblock %}
 
 {% block header %}
-    Create a New Message
+    Create Assignment
 {% endblock %}
 
 {% block extra_css %}
@@ -33,8 +33,8 @@
         border-radius: 4px;
         padding: 8px;
         color: var(--secondary-color);
-        margin-top: 10px;
         border: none;
+        margin-top: 10px;
         font-size: 16px;
     }
 
@@ -51,14 +51,14 @@
         {% csrf_token %}
         <div class="title">
             <label for="id_title">Title:</label>
-            {{ form.title }}
+            {{ assignment_form.title }}
         </div>
         
         <div> 
-            <label for="id_text" class="text">Message:</label>
-            {{ form.text }}  <!-- This will render the Quill editor -->
+            <label for="id_text" class="text">Description:</label>
+            {{ assignment_form.description }}  <!-- This will render the Quill editor -->
         </div>
         
-        <button class="post-button" type="submit">Post Message</button>
+        <button class="post-button" type="submit">Post Assignment</button>
     </form>
 {% endblock %}

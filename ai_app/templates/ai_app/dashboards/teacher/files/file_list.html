@@ -102,7 +102,6 @@
 
 {% block content %}
 <div class="upload-header">
-    <h2>Files</h2>
     {% if user_role == 'teacher' %}
     <div class="upload-button">
         <a href="{% url 'file_upload' classroom.room_code %}">
