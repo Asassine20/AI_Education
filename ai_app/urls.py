@@ -20,6 +20,7 @@ urlpatterns = [
     path('dashboard/course/<str:room_code>/student-questions/', student_questions, name='student_questions'),
     path('dashboard/course/<str:room_code>/messages/', messages_list, name='messages_list'),
     path('dashboard/course/<str:room_code>/assignments_list/', assignments_list, name='assignments_list'),
+    path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/', assignment_page, name='assignment_page'),
     path('dashboard/course/<str:room_code>/assignments/create-assignment/', create_assignment, name='create_assignment'),
     path('dashboard/course/<str:room_code>/messages/create-message/', create_message, name='create_message'),
     path('dashboard/course/<str:room_code>/messages/<int:message_id>/delete', delete_message, name='delete_message'),

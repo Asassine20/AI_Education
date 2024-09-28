@@ -1,0 +1,59 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+{{ assignment.title }} - Assignment Page
+{% endblock %}
+
+{% block header %}
+{{ assignment.title }}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        color: #434443;
+    }
+
+    .upload-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #434443;
+    }
+
+    .upload-button {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 8px;
+    }
+
+    .upload-button a {
+        text-decoration: none;
+        font-size: 16px;
+        color: var(--secondary-color);        
+    }
+
+    .upload-button:hover {
+        filter: brightness(1.5);
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="upload-header">
+    {% if user_role == 'student' %}
+    <div class="upload-button">
+        <a href="{}">Submit <i class="fa-solid fa-pen-to-square"
+                style="font-size: 16px; margin-left: 5px;"></i></a>
+    </div>
+    {% endif %}
+</div>
+<div class="assignment-details">
+    <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
+    <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
+    <p><strong>Points:</strong> {{ assignment.points }}</p>
+    <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
+    
+</div>
+{% endblock %}

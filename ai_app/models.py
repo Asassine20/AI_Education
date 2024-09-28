@@ -69,15 +69,17 @@ class SchoolUserProfile(models.Model):
 class Category(models.Model):
     points = models.CharField(max_length=20)
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classrooms')
+    category_name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.classroom.room_name
+        return self.category_name
     
 class Assignments(models.Model):
     title = models.CharField(max_length=255)
     description = QuillField()
     start_date = models.DateTimeField()
     due_date = models.DateTimeField()
+    points = models.IntegerField(default=0, blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classroom_assignments')

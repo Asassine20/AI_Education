@@ -17,7 +17,8 @@ from .teacher_dashboard_views import (
     download_syllabus, 
     preview_syllabus, 
     create_assignment, 
-    assignments_list
+    assignments_list,
+    assignment_page
 )
 
 from .question_views import (

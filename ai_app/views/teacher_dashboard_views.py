@@ -75,8 +75,6 @@ def add_class(request):
 
     return render(request, 'ai_app/dashboards/teacher/add_class.html')
 
-
-
 @login_required
 def course_page(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
@@ -184,4 +182,17 @@ def create_assignment(request, room_code):
 def assignments_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignments = Assignments.objects.filter(classroom=classroom)
-    return render(request, 'ai_app/dashboards/teacher/assignments_list.html', {'classroom': classroom, 'assignments': assignments})
+    return render(request, 'ai_app/dashboards/teacher/assignments_list.html', {
+        'classroom': classroom, 
+        'assignments': assignments
+    })
+
+@login_required
+def assignment_page(request, room_code, assignment_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
+
+    return render(request, 'ai_app/dashboards/teacher/assignment_page.html',{
+        'classroom': classroom,
+        'assignment': assignment
+    })

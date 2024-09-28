@@ -122,8 +122,8 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="upload-header">
-    <h2>Assignments</h2>
     {% if user_role == 'teacher' %}
     <div class="upload-button">
         <a href="{% url 'create_assignment' classroom.room_code %}">Create Assignment <i class="fa-solid fa-pen-to-square"
@@ -137,12 +137,15 @@
     {% for assignment in assignments %}
     <li class="assignment-item">
         <!-- Header containing the title, uploaded_at, chevron, and delete button -->
+        <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
         <div class="assignment-header">
             <div class="assignment-left">
                 <span class="assignment-title">{{ assignment.title }}</span>
+                <small class="uploaded-at">Due Date: {{ assignment.start_date }}</small>
                 <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
             </div>
         </div>
+    </a>
     </li>
     {% endfor %}
 </ul>
