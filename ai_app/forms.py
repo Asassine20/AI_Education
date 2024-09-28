@@ -1,7 +1,8 @@
 # ai_app/forms.py
 from django import forms
+from django.forms import inlineformset_factory
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments
+from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -60,7 +61,7 @@ class AssignmentForm(forms.ModelForm):
 
     class Meta:
         model = Assignments
-        fields = ['title', 'description', 'start_date', 'due_date', 'category']
+        fields = ['title', 'description', 'start_date', 'due_date', 'category', 'points']
         widgets = {
             'start_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),  # Ensure this uses DateTimeInput
             'due_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),   # Ensure this uses DateTimeInput
@@ -84,3 +85,20 @@ class AssignmentForm(forms.ModelForm):
             print("Assignment not saved, commit is False.")
         
         return instance
+
+class QuestionForm(forms.ModelForm):
+    question = QuillFormField()
+    class Meta:
+        model = Questions 
+        fields = ['question_type', 'question', 'points']
+
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Choices 
+        fields = ['choice_text', 'is_correct']
+
+# Formset for Questions
+QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=3)
+
+# Formset for Choices (for each Question)
+ChoiceFormSet = inlineformset_factory(Questions, Choices, form=ChoiceForm, extra=3)

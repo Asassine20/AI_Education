@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial
-from ai_app.forms import MessageUploadForm, AssignmentForm
+from ai_app.forms import MessageUploadForm, AssignmentForm, QuestionFormSet, ChoiceFormSet
 from django.urls import reverse
 from django.contrib import messages
 from django.http import FileResponse
@@ -167,14 +167,22 @@ def create_assignment(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     if request.method == 'POST':
         assignment_form = AssignmentForm(request.POST, classroom=classroom)
-        if assignment_form.is_valid():
-            assignment_form.save()
+        question_formset = QuestionFormSet(request.POST, instance=assignment_form.instance)
+        if assignment_form.is_valid() and question_formset.is_valid():
+            assignment = assignment_form.save()
+            questions = question_formset.save(commit=False)
+            for question in questions:
+                question.assignment = assignment
+                question.save()
+
             return redirect('assignments_list', room_code=room_code)
     else:
         assignment_form = AssignmentForm(classroom=classroom)
+        question_formset = QuestionFormSet()
 
     return render(request, 'ai_app/dashboards/teacher/create_assignment.html', {
-        'assignment_form': assignment_form,  # Pass the form to the template
+        'assignment_form': assignment_form,
+        'question_formset': question_formset,
         'classroom': classroom
     })
 

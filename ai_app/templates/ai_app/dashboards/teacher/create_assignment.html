@@ -117,7 +117,47 @@
             <label for="id_category">Category:</label>
             {{ assignment_form.category }}
         </div>
+
+        <div>
+            <label for="id_category">Points:</label>
+            {{ assignment_form.points }}
+        </div>
+
+        <hr>
         
+        <h3>Questions</h3>
+        {{ question_formset.management_form }}
+
+        {% for form in question_formset %}
+        <div class="question">
+            <h4>Question {{ forloop.counter }}</h4>
+            <div>
+                <label for="{{ form.question_type.id_for_label }}">Question Type:</label>
+                {{ form.question_type}}
+            </div>
+            <div>
+                <label for="{{ form.question_text.id_for_label }}">Question:</label>
+                {{ form.question_text}}
+            </div>
+            <div>
+                <label for="{{ form.question_text.id_for_label }}">Points:</label>
+                {{ form.points}}
+            </div>
+
+            <h5>Choices for this Question</h5>
+            {{ form.choice_formset.management_form }}
+
+            {% for choice_form in form.choice_formset %}
+                <div>
+                    <label for="{{ choice_form.choice_text.id_for_label }}">Choice {{ forloop.counter }}:</label>
+                    {{ choice_form.choice_text }}
+                    <label for="{{ choice_form.is_correct.id_for_label }}">Correct Choice:</label>
+                    {{ choice_form.is_correct }}
+                </div>
+            {% endfor %}
+        </div>
+        <hr>
+        {% endfor %}
         <button class="post-button" type="submit">Post Assignment</button>
     </form>
 
