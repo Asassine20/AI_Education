@@ -54,6 +54,18 @@
     <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
     <p><strong>Points:</strong> {{ assignment.points }}</p>
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
-    
+    <hr>
+    {% for question in questions %}
+        <p><strong>Question {{ forloop.counter }}: <small style="font-weight: normal;">({{question.points |floatformat:0}} Points)</small></strong> {{ question.question.html|safe }}</p>
+    {% endfor %}
+    <p><strong>Points:</strong> {{ assignment.points }}</p>
+    <p><strong>Points:</strong> {{ assignment.points }}</p>
+    <p><strong>Points:</strong> {{ assignment.points }}</p>
+
+</div>
+<div class="upload-header">
+    <div class="upload-button">
+        <a href="{}">Submit Assignment</a>
+    </div>
 </div>
 {% endblock %}

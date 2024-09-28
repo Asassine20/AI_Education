@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial
+from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial, Questions
 from ai_app.forms import MessageUploadForm, AssignmentForm, QuestionFormSet, ChoiceFormSet
 from django.urls import reverse
 from django.contrib import messages
@@ -169,26 +169,30 @@ def create_assignment(request, room_code):
         question_formset = QuestionFormSet(request.POST, instance=assignment_form.instance)
 
         if assignment_form.is_valid() and question_formset.is_valid():
-            # Save the assignment first
+            # Save the assignment
             assignment = assignment_form.save()
 
             questions = question_formset.save(commit=False)
 
-            # Save each question and its related choices
-            for question in questions:
+            # Process each question and its related choices
+            for index, question_form in enumerate(question_formset):
+                question = question_form.save(commit=False)
                 question.assignment = assignment
                 question.save()
 
-                # Handle the choices for each question
-                choice_formset = ChoiceFormSet(request.POST, instance=question)
+                # Instantiate ChoiceFormSet for each question using dynamic prefix
+                choice_formset = ChoiceFormSet(request.POST, instance=question, prefix=f'choice-{index}')
+
                 if choice_formset.is_valid():
                     choices = choice_formset.save(commit=False)
                     for choice in choices:
                         choice.question = question
                         choice.save()
+                else:
+                    print("Choice formset errors: ", choice_formset.errors)
 
-            # Redirect after successful save
             return redirect('assignments_list', room_code=room_code)
+
         else:
             print("Assignment form or question formset is invalid.")
             print(assignment_form.errors)
@@ -204,7 +208,6 @@ def create_assignment(request, room_code):
         'classroom': classroom,
     })
 
-
 @login_required
 def assignments_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
@@ -218,8 +221,9 @@ def assignments_list(request, room_code):
 def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
-
+    questions = Questions.objects.filter(assignment_id=assignment_id)
     return render(request, 'ai_app/dashboards/teacher/assignment_page.html',{
         'classroom': classroom,
-        'assignment': assignment
+        'assignment': assignment,
+        'questions': questions,
     })
