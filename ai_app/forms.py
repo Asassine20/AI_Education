@@ -72,8 +72,15 @@ class AssignmentForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super(AssignmentForm, self).save(commit=False)
+        
         if self.classroom:
             instance.classroom = self.classroom
+            print(f"Assigned classroom: {self.classroom}")
+
         if commit:
             instance.save()
+            print("Assignment saved!")
+        else:
+            print("Assignment not saved, commit is False.")
+        
         return instance

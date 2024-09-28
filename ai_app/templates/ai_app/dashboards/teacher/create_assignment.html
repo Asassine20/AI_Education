@@ -44,6 +44,30 @@
         filter: brightness(1.5);
         cursor: pointer;
     }
+
+    /* Customizing Flatpickr to use primary and secondary colors */
+    .flatpickr-calendar {
+        background-color: var(--secondary-color);
+    }
+
+    .flatpickr-months {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+    }
+
+    .flatpickr-weekdays, .flatpickr-days, .flatpickr-time, .flatpickr-hour, .flatpickr-minute {
+        color: var(--primary-color);
+    }
+
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-current-month {
+        background-color: var(--primary-color) !important;
+        color: var(--secondary-color) !important;
+    }
+
+    .flatpickr-day:hover {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+    }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -54,6 +78,20 @@
     {{ assignment_form.media }}  
     <form method="post">
         {% csrf_token %}
+
+        <!-- Show form errors -->
+        {% if assignment_form.errors %}
+            <ul class="errorlist">
+                {% for field in assignment_form %}
+                    {% if field.errors %}
+                        <li>{{ field.label }}: {{ field.errors }}</li>
+                    {% endif %}
+                {% endfor %}
+                {% if assignment_form.non_field_errors %}
+                    <li>{{ assignment_form.non_field_errors }}</li>
+                {% endif %}
+            </ul>
+        {% endif %}
 
         <div class="title">
             <label for="id_title">Title:</label>
@@ -86,9 +124,9 @@
     <script>
         // Initialize Flatpickr for the date-time fields
         flatpickr('.datetimepicker', {
-            enableTime: true,  // Enable time selection
-            dateFormat: "Y-m-d H:i",  // Format date as 'YYYY-MM-DD HH:MM'
-            time_24hr: true  // Use 24-hour time
+            enableTime: true,
+            dateFormat: "Y-m-d H:i:S",  // Match Django's default DateTimeField format
+            time_24hr: false,  // Use 12-hour format with AM/PM
         });
     </script>
 {% endblock %}

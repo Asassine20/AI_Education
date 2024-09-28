@@ -10,7 +10,9 @@
 
 {% block extra_css %}
 <style>
-    /* Styles for the message list header and create button */
+    body {
+        color: #434443;
+    }
     .upload-header {
         display: flex;
         justify-content: space-between;
@@ -82,11 +84,6 @@
         text-align: left;
     }
 
-    /* Icon section to the right of the message-left */
-    .chevron-icon {
-        margin-left: 10px;
-    }
-
     /* Message text aligned to the left */
     .assignment-text {
         display: none;
@@ -143,12 +140,8 @@
         <div class="assignment-header">
             <div class="assignment-left">
                 <span class="assignment-title">{{ assignment.title }}</span>
-                <small class="uploaded-at">Uploaded at: {{ assignment.uploaded_at }}</small>
+                <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
             </div>
-
-            <!-- Chevron icon -->
-            <i class="fa fa-chevron-down chevron-icon"></i>
-        
         </div>
     </li>
     {% endfor %}
