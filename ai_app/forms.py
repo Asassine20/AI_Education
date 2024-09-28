@@ -101,4 +101,4 @@ class ChoiceForm(forms.ModelForm):
 QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=3)
 
 # Formset for Choices (for each Question)
-ChoiceFormSet = inlineformset_factory(Questions, Choices, form=ChoiceForm, extra=3)
+ChoiceFormSet = inlineformset_factory(Questions, Choices, form=ChoiceForm, extra=4)

@@ -160,22 +160,40 @@ def preview_syllabus(request, room_code, file_id):
             raise Http404("File not found")
     else:
         return Http404("Syllabus is not a PDF")
-
-
 @login_required
 def create_assignment(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
+
     if request.method == 'POST':
         assignment_form = AssignmentForm(request.POST, classroom=classroom)
         question_formset = QuestionFormSet(request.POST, instance=assignment_form.instance)
+
         if assignment_form.is_valid() and question_formset.is_valid():
+            # Save the assignment first
             assignment = assignment_form.save()
+
             questions = question_formset.save(commit=False)
+
+            # Save each question and its related choices
             for question in questions:
                 question.assignment = assignment
                 question.save()
 
+                # Handle the choices for each question
+                choice_formset = ChoiceFormSet(request.POST, instance=question)
+                if choice_formset.is_valid():
+                    choices = choice_formset.save(commit=False)
+                    for choice in choices:
+                        choice.question = question
+                        choice.save()
+
+            # Redirect after successful save
             return redirect('assignments_list', room_code=room_code)
+        else:
+            print("Assignment form or question formset is invalid.")
+            print(assignment_form.errors)
+            print(question_formset.errors)
+
     else:
         assignment_form = AssignmentForm(classroom=classroom)
         question_formset = QuestionFormSet()
@@ -183,8 +201,9 @@ def create_assignment(request, room_code):
     return render(request, 'ai_app/dashboards/teacher/create_assignment.html', {
         'assignment_form': assignment_form,
         'question_formset': question_formset,
-        'classroom': classroom
+        'classroom': classroom,
     })
+
 
 @login_required
 def assignments_list(request, room_code):
