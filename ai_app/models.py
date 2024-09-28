@@ -75,9 +75,9 @@ class Category(models.Model):
     
 class Assignments(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField()  
-    start_date = models.DateField()
-    due_date = models.DateField()
+    description = QuillField()
+    start_date = models.DateTimeField()
+    due_date = models.DateTimeField()
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classroom_assignments')

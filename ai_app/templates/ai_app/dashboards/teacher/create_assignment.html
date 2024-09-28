@@ -9,10 +9,12 @@
 {% endblock %}
 
 {% block extra_css %}
+
 <style>
     body {
         color: #434443;
     }
+
     .title {
         font-weight: bold;
         margin-bottom: 10px;
@@ -43,22 +45,50 @@
         cursor: pointer;
     }
 </style>
-    {{ form.media }}  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 {% endblock %}
 
 {% block content %}
+    {{ assignment_form.media }}  
     <form method="post">
         {% csrf_token %}
+
         <div class="title">
             <label for="id_title">Title:</label>
             {{ assignment_form.title }}
         </div>
         
         <div> 
-            <label for="id_text" class="text">Description:</label>
-            {{ assignment_form.description }}  <!-- This will render the Quill editor -->
+            <label for="id_description" class="text">Description:</label>
+            {{ assignment_form.description }}  
+        </div>
+        
+        <div>
+            <label for="id_start_date">Start Date:</label>
+            {{ assignment_form.start_date }}
+        </div>
+
+        <div>
+            <label for="id_due_date">Due Date:</label>
+            {{ assignment_form.due_date }}
+        </div>
+
+        <div>
+            <label for="id_category">Category:</label>
+            {{ assignment_form.category }}
         </div>
         
         <button class="post-button" type="submit">Post Assignment</button>
     </form>
+
+    <script>
+        // Initialize Flatpickr for the date-time fields
+        flatpickr('.datetimepicker', {
+            enableTime: true,  // Enable time selection
+            dateFormat: "Y-m-d H:i",  // Format date as 'YYYY-MM-DD HH:MM'
+            time_24hr: true  // Use 24-hour time
+        });
+    </script>
 {% endblock %}

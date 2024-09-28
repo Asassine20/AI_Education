@@ -1,7 +1,7 @@
 # ai_app/forms.py
 from django import forms
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Choices, Questions
+from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -56,9 +56,15 @@ class ProfileImageUploadForm(forms.ModelForm):
         fields = ['profile_image']
 
 class AssignmentForm(forms.ModelForm):
+    description = QuillFormField()
+
     class Meta:
-        model = Assignments 
+        model = Assignments
         fields = ['title', 'description', 'start_date', 'due_date', 'category']
+        widgets = {
+            'start_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),  # Ensure this uses DateTimeInput
+            'due_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),   # Ensure this uses DateTimeInput
+        }
 
     def __init__(self, *args, **kwargs):
         self.classroom = kwargs.pop('classroom', None)
