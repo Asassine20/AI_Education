@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial, Questions, Choices
-from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, QuestionFormSet, ChoiceFormSet, ChoiceForm, QuestionForm 
+from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm 
 from django.urls import reverse
 from django.contrib import messages
 from django.http import FileResponse, JsonResponse, HttpResponseServerError
@@ -163,59 +163,74 @@ def preview_syllabus(request, room_code, file_id):
     else:
         return Http404("Syllabus is not a PDF")
     
-# Step 1: Create the Assignment
-def create_assignment(request, room_code):
+def assignment_create(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    
     if request.method == 'POST':
-        form = AssignmentForm(request.POST, classroom=classroom)
+        form = AssignmentForm(request.POST)
         if form.is_valid():
-            assignment = form.save()
-            return redirect('add_questions_and_choices', room_code=room_code, assignment_id=assignment.id)
+            assignment = form.save(commit=False)
+            assignment.classroom = classroom
+            assignment.save()
+            return redirect('assignment_detail', pk=assignment.pk)
     else:
         form = AssignmentForm()
-
-    return render(request, 'ai_app/dashboards/teacher/create_assignment.html', {
-        'form': form, 
+    return render(request, 'ai_app/dashboards/teacher/assignment_form.html', {
+        'form': form,
         'classroom': classroom
     })
 
-def add_questions_and_choices(request, room_code, assignment_id):
+def question_create(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    assignment = get_object_or_404(Assignments, id=assignment_id)
-
-    QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=1, can_delete=True)
-    questions = assignment.assignment_questions.all()
-    ChoiceFormSet = inlineformset_factory(Questions, Choices, form=ChoiceForm, extra=1, can_delete=True)
-
+    assignment = get_object_or_404(Assignments, pk=assignment_id, classroom=classroom)
     if request.method == 'POST':
-        question_formset = QuestionFormSet(request.POST, instance=assignment)
-
-        # Collect all choice formsets for each question
-        choice_formsets = []
-        valid = question_formset.is_valid()
-
-        for question in questions:
-            choice_formset = ChoiceFormSet(request.POST, instance=question, prefix=f'choice_{question.id}')
-            choice_formsets.append(choice_formset)
-            if not choice_formset.is_valid():
-                valid = False
-
-        if valid:
-            question_formset.save()
-            for choice_formset in choice_formsets:
-                choice_formset.save()
-            return redirect('assignment_page', room_code=room_code, assignment_id=assignment.id)
-
+        form = QuestionForm(request.POST)
+        formset = ChoiceFormSet(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.assignment = assignment
+            question.save()
+            if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
+                formset = ChoiceFormSet(request.POST, instance=question)
+                if formset.is_valid():
+                    formset.save()
+            return redirect('assignment_detail', pk=assignment.pk)
     else:
-        question_formset = QuestionFormSet(instance=assignment)
-        choice_formsets = [ChoiceFormSet(instance=question, prefix=f'choice_{question.id}') for question in questions]
-
-    return render(request, 'ai_app/dashboards/teacher/add_questions_and_choices.html', {
-        'question_formset': question_formset,
-        'choice_formsets': zip(choice_formsets, questions),
+        form = QuestionForm()
+        formset = ChoiceFormSet()
+    return render(request, 'ai_app/dashboards/teacher/question_form.html', {
+        'form': form,
+        'formset': formset,
         'assignment': assignment,
         'classroom': classroom
+    })
+
+def assignment_detail(request, pk):
+    assignment = get_object_or_404(Assignments, pk=pk)
+    questions = assignment.assignment_questions.all()
+    classroom = assignment.classroom  # Get the classroom if needed
+
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        formset = ChoiceFormSet(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.assignment = assignment
+            question.save()
+            if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
+                formset = ChoiceFormSet(request.POST, instance=question)
+                if formset.is_valid():
+                    formset.save()
+            return redirect('assignment_detail', pk=assignment.pk)
+    else:
+        form = QuestionForm()
+        formset = ChoiceFormSet()
+
+    return render(request, 'ai_app/dashboards/teacher/assignment_detail.html', {
+        'assignment': assignment,
+        'questions': questions,
+        'form': form,
+        'formset': formset,
+        'classroom': classroom,  # Include if needed in the template
     })
 
 @login_required

@@ -1,0 +1,107 @@
+<!-- assignment_detail.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ assignment.title }}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Add necessary styles */
+        .choice-form {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #choice-formset {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ assignment.title }}</h1>
+    <p>{{ assignment.description.html|safe }}</p>
+
+    <h2>Questions</h2>
+    <ul>
+        {% for question in questions %}
+            <li>{{ question.question.html|safe }} ({{ question.get_question_type_display }})</li>
+        {% empty %}
+            <li>No questions added yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add a New Question</h2>
+    <form method="post">
+        {{ form.media }}
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div id="choice-formset" style="display:none;">
+            <h3>Choices</h3>
+            {{ formset.management_form }}
+            <div id="formset-forms">
+                {% for form in formset %}
+                    <div class="choice-form" style="display:none;">
+                        {{ form.as_p }}
+                        <input type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" style="display:none;">
+                        <button type="button" class="remove-choice">Remove Choice</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-choice">Add Choice</button>
+        </div>
+
+        <input type="submit" value="Add Question">
+    </form>
+
+    <!-- Empty form template for cloning -->
+    <div id="empty-form" style="display:none;">
+        <div class="choice-form">
+            {{ formset.empty_form.as_p }}
+            <input type="checkbox" name="__prefix__-DELETE" id="id___prefix__-DELETE" style="display:none;">
+            <button type="button" class="remove-choice">Remove Choice</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            var questionTypeField = $('#id_question_type');
+            var choiceFormset = $('#choice-formset');
+            var totalForms = $('#id_form-TOTAL_FORMS');
+            var formContainer = $('#formset-forms');
+
+            function toggleChoiceFormset() {
+                var questionType = questionTypeField.val();
+                if (questionType == 'MULTIPLE_CHOICE' || questionType == 'DROPDOWN') {
+                    choiceFormset.show();
+                    $('.choice-form').show();
+                } else {
+                    choiceFormset.hide();
+                    $('.choice-form').hide();
+                }
+            }
+
+            toggleChoiceFormset();
+
+            questionTypeField.change(function(){
+                toggleChoiceFormset();
+            });
+
+            var formIdx = parseInt(totalForms.val());
+            $('#add-choice').click(function(){
+                var emptyFormHtml = $('#empty-form').html();
+                var newFormHtml = emptyFormHtml.replace(/__prefix__/g, formIdx);
+                formContainer.append(newFormHtml);
+                formIdx++;
+                totalForms.val(formIdx);
+            });
+
+            $(document).on('click', '.remove-choice', function(){
+                var $form = $(this).closest('.choice-form');
+                // Mark the form for deletion
+                $form.find('input[type="checkbox"][name$="-DELETE"]').prop('checked', true);
+                $form.hide();
+            });
+        });
+    </script>
+</body>
+</html>

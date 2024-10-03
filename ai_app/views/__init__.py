@@ -16,10 +16,11 @@ from .teacher_dashboard_views import (
     create_message, 
     download_syllabus, 
     preview_syllabus, 
-    create_assignment, 
     assignments_list,
     assignment_page,
-    add_questions_and_choices,
+    assignment_detail,
+    assignment_create,
+    question_create,
 )
 
 from .question_views import (

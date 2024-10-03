@@ -90,5 +90,7 @@ class ChoiceForm(forms.ModelForm):
         fields = ['choice_text', 'is_correct']
 
 # Inline formsets
-QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=1, can_delete=True)
-ChoiceFormSet = inlineformset_factory(Questions, Choices, form=ChoiceForm, extra=1, can_delete=True)
+# QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=1, can_delete=True)
+ChoiceFormSet = inlineformset_factory(
+    Questions, Choices, form=ChoiceForm, 
+    fields=['choice_text', 'is_correct'], extra=4, can_delete=True)
