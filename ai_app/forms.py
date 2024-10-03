@@ -58,13 +58,12 @@ class ProfileImageUploadForm(forms.ModelForm):
 
 class AssignmentForm(forms.ModelForm):
     description = QuillFormField()
-
     class Meta:
         model = Assignments
         fields = ['title', 'description', 'start_date', 'due_date', 'category', 'points']
         widgets = {
-            'start_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),  # Ensure this uses DateTimeInput
-            'due_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),   # Ensure this uses DateTimeInput
+            'start_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),
+            'due_date': forms.DateTimeInput(attrs={'class': 'datetimepicker'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -72,33 +71,24 @@ class AssignmentForm(forms.ModelForm):
         super(AssignmentForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        instance = super(AssignmentForm, self).save(commit=False)
-        
+        instance = super().save(commit=False)
         if self.classroom:
             instance.classroom = self.classroom
-            print(f"Assigned classroom: {self.classroom}")
-
         if commit:
             instance.save()
-            print("Assignment saved!")
-        else:
-            print("Assignment not saved, commit is False.")
-        
         return instance
 
 class QuestionForm(forms.ModelForm):
     question = QuillFormField()
     class Meta:
-        model = Questions 
+        model = Questions
         fields = ['question_type', 'question', 'points']
 
 class ChoiceForm(forms.ModelForm):
     class Meta:
-        model = Choices 
+        model = Choices
         fields = ['choice_text', 'is_correct']
 
-# Formset for Questions
-QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=3)
-
-# Formset for Choices (for each Question)
-ChoiceFormSet = inlineformset_factory(Questions, Choices, form=ChoiceForm, extra=4)
+# Inline formsets
+QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=1, can_delete=True)
+ChoiceFormSet = inlineformset_factory(Questions, Choices, form=ChoiceForm, extra=1, can_delete=True)

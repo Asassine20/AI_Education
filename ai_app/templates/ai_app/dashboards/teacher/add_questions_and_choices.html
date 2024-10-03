@@ -1,0 +1,135 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block content %}
+{{ question_formset.media }}
+  <h2>Add Questions and Choices for {{ assignment.title }}</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    
+    {{ question_formset.management_form }}
+    
+    <div id="questions-container">
+      {% for form in question_formset %}
+        <div class="question-form" id="question-{{ forloop.counter }}">
+          <h3>Question {{ forloop.counter }}</h3>
+          {{ form.as_p }}
+
+          <!-- Dynamically show choices for MULTIPLE_CHOICE or DROPDOWN types -->
+          <div class="choice-form" id="choices-{{ forloop.counter }}" {% if form.instance.question_type != 'MULTIPLE_CHOICE' and form.instance.question_type != 'DROPDOWN' %} style="display: none;" {% endif %}>
+            <h4>Choices for Question {{ forloop.counter }}</h4>
+            {% for choice_formset, question in choice_formsets %}
+              {% if forloop.counter == forloop.parentloop.counter %}
+                {{ choice_formset.management_form }}
+                <div class="choices-container" id="choices-container-{{ forloop.parentloop.counter }}">
+                  {% for choice_form in choice_formset %}
+                    <div class="choice-item">
+                      {{ choice_form.as_p }}
+                    </div>
+                  {% endfor %}
+                </div>
+                <!-- Button to add more choices -->
+                <button type="button" class="btn btn-secondary add-choice" data-question-id="{{ forloop.parentloop.counter }}">Add Another Choice</button>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Button to add another question -->
+    <button type="button" class="btn btn-secondary" id="add-question-btn">Add Another Question</button>
+
+    <br><br>
+    
+    <button type="submit" class="btn btn-primary">Save Assignment</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const questionTypeSelectors = document.querySelectorAll('select[name$="-question_type"]');
+      
+      questionTypeSelectors.forEach((selector, index) => {
+        const choiceForm = document.getElementById(`choices-${index + 1}`);
+        
+        // Show/hide choice form based on selected question type
+        selector.addEventListener('change', function() {
+          if (this.value === 'MULTIPLE_CHOICE' || this.value === 'DROPDOWN') {
+            choiceForm.style.display = 'block';
+          } else {
+            choiceForm.style.display = 'none';
+          }
+        });
+
+        // Trigger the event on page load to correctly display existing question types
+        const event = new Event('change');
+        selector.dispatchEvent(event);
+      });
+
+      // Add event listener to dynamically add choices
+      document.querySelectorAll('.add-choice').forEach(button => {
+        button.addEventListener('click', function() {
+          const questionId = this.getAttribute('data-question-id');
+          const choicesContainer = document.getElementById(`choices-container-${questionId}`);
+          const totalForms = document.querySelector(`#id_choice_${questionId}-TOTAL_FORMS`);
+
+          // Clone the first choice form and reset its values
+          const newChoice = choicesContainer.children[0].cloneNode(true); 
+          newChoice.querySelectorAll('input, select, textarea').forEach((input, idx) => {
+            // Update form field names and IDs to ensure they are unique
+            input.value = '';
+            const name = input.name.replace(/-(\d+)-/, `-${totalForms.value}-`);
+            input.name = name;
+            input.id = `id_${name}`;
+
+            // Also update the associated label's "for" attribute to match the new id
+            const label = newChoice.querySelector(`label[for="${input.id}"]`);
+            if (label) {
+              label.setAttribute('for', input.id);
+            }
+          });
+
+          // Append the new choice form
+          choicesContainer.appendChild(newChoice);
+          
+          // Increment the TOTAL_FORMS count to account for the new form
+          totalForms.value = parseInt(totalForms.value) + 1;
+        });
+      });
+
+      // Add event listener to dynamically add questions
+      document.getElementById('add-question-btn').addEventListener('click', function() {
+        const questionsContainer = document.getElementById('questions-container');
+        const newQuestionForm = questionsContainer.children[0].cloneNode(true); // Clone the first question
+
+        // Reset the value of the cloned inputs
+        newQuestionForm.querySelectorAll('input, select, textarea').forEach(input => input.value = '');
+        newQuestionForm.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        
+        // Update question and choices IDs
+        const newQuestionCount = questionsContainer.children.length + 1;
+        newQuestionForm.id = `question-${newQuestionCount}`;
+        newQuestionForm.querySelector('h3').textContent = `Question ${newQuestionCount}`;
+        newQuestionForm.querySelector('.choice-form').id = `choices-${newQuestionCount}`;
+
+        // Hide choices initially
+        newQuestionForm.querySelector('.choice-form').style.display = 'none';
+
+        // Append new question to the container
+        questionsContainer.appendChild(newQuestionForm);
+
+        // Add event listener for the question type select in the newly added form
+        const newSelector = newQuestionForm.querySelector('select[name$="-question_type"]');
+        const newChoiceForm = newQuestionForm.querySelector(`.choice-form`);
+        newSelector.addEventListener('change', function() {
+          if (this.value === 'MULTIPLE_CHOICE' || this.value === 'DROPDOWN') {
+            newChoiceForm.style.display = 'block';
+          } else {
+            newChoiceForm.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+
+{% endblock %}

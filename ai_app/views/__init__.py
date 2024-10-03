@@ -18,7 +18,8 @@ from .teacher_dashboard_views import (
     preview_syllabus, 
     create_assignment, 
     assignments_list,
-    assignment_page
+    assignment_page,
+    add_questions_and_choices,
 )
 
 from .question_views import (
