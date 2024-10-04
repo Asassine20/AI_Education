@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial, Questions, Choices
-from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm 
+from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm
 from django.urls import reverse
 from django.contrib import messages
 from django.http import FileResponse, JsonResponse, HttpResponseServerError
@@ -149,7 +149,6 @@ def download_syllabus(request, room_code, file_id):
     
     return FileResponse(open(file_path, 'rb'), as_attachment=True)
 
-
 @xframe_options_exempt
 def preview_syllabus(request, room_code, file_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
@@ -247,6 +246,8 @@ def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
     questions = Questions.objects.filter(assignment_id=assignment_id)
+    #choices = Choices.objects.filter(question_id=question_id)
+    #print(choices)
     return render(request, 'ai_app/dashboards/teacher/assignment_page.html',{
         'classroom': classroom,
         'assignment': assignment,

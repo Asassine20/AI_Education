@@ -1,16 +1,96 @@
-<!-- assignment_form.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Assignment</title>
-</head>
-<body>
-    <h1>Create Assignment in {{ classroom.name }}</h1>
-    <form method="post">
-        {{form.media}}
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Create Assignment">
-    </form>
-</body>
-</html>
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+Create Assignment
+{% endblock %}
+
+{% block header %}
+Create Assignment in {{ classroom.room_name}}
+{% endblock %}
+{% block extra_css %}
+<style>
+    body {
+        color: #434443;
+    }
+
+    .title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .title input {
+        width: 99%;
+        height: 30px;
+        font-size: 18px;
+    }
+
+    .text {
+        font-weight: bold;
+    }
+
+    .post-button {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 8px;
+        color: var(--secondary-color);
+        border: none;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .post-button:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+
+    /* Customizing Flatpickr to use primary and secondary colors */
+    .flatpickr-calendar {
+        background-color: var(--secondary-color);
+    }
+
+    .flatpickr-months {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+    }
+
+    .flatpickr-weekdays,
+    .flatpickr-days,
+    .flatpickr-time,
+    .flatpickr-hour,
+    .flatpickr-minute {
+        color: var(--primary-color);
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange,
+    .flatpickr-current-month,
+    .flatpickr-current-month span {
+        background-color: var(--primary-color) !important;
+        color: var(--secondary-color) !important;
+    }
+
+    .flatpickr-day:hover {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+    }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock %}
+{% block content %}
+<form method="post">
+    {{form.media}}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create Assignment">
+</form>
+<script>
+    // Initialize Flatpickr for the date-time fields
+    flatpickr('.datetimepicker', {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i:S",  // Match Django's default DateTimeField format
+        time_24hr: false,  // Use 12-hour format with AM/PM
+    });
+</script>
+{% endblock %}

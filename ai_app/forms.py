@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices
+from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -94,3 +94,8 @@ class ChoiceForm(forms.ModelForm):
 ChoiceFormSet = inlineformset_factory(
     Questions, Choices, form=ChoiceForm, 
     fields=['choice_text', 'is_correct'], extra=4, can_delete=True)
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['category_name', 'points']
