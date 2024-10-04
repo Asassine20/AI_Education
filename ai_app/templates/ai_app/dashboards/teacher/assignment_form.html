@@ -19,19 +19,32 @@ Create Assignment in {{ classroom.room_name}}
     }
 
     .title input {
-        width: 99%;
-        height: 30px;
         font-size: 18px;
     }
 
-    .text {
-        font-weight: bold;
+    /* Apply width to specific fields like title, start and due date, points, category, and description */
+    input[type="text"], 
+    input[type="number"], 
+    input[type="datetime-local"], 
+    textarea, 
+    select {
+        width: 95%;
+        font-size: 16px;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .category {
+        margin-top: 10px;
+        width: 200px;
     }
 
     .post-button {
         background-color: var(--primary-color);
         border-radius: 4px;
-        padding: 8px;
+        padding: 12px;
         color: var(--secondary-color);
         border: none;
         margin-top: 10px;
@@ -80,10 +93,33 @@ Create Assignment in {{ classroom.room_name}}
 {% endblock %}
 {% block content %}
 <form method="post">
-    {{form.media}}
+    {{ form.media }}
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Create Assignment">
+    <div class="title">
+        {{ form.title.label_tag }}<br>
+        {{ form.title }}
+    </div>
+    <div class="description">
+        {{ form.description.label_tag }}<br>
+        {{ form.description }}
+    </div>
+    <div class="category">
+        {{ form.category.label_tag }}<br>
+        {{ form.category }}
+    </div>
+    <div class="start-date">
+        {{ form.start_date.label_tag }}<br>
+        {{ form.start_date }}
+    </div>
+    <div class="due-date">
+        {{ form.due_date.label_tag }}<br>
+        {{ form.due_date }}
+    </div>
+    <div class="points">
+        {{ form.points.label_tag }}<br>
+        {{ form.points }}
+    </div>
+    <input type="submit" class="post-button" value="Create Assignment">
 </form>
 <script>
     // Initialize Flatpickr for the date-time fields
