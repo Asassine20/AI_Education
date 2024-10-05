@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial, Questions, Choices
 from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm
 from django.urls import reverse
+from django.utils import timezone
 from django.contrib import messages
 from django.http import FileResponse, JsonResponse, HttpResponseServerError
 from django.conf import settings
@@ -228,10 +229,16 @@ def assignment_detail(request, pk):
 @login_required
 def assignments_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    assignments = Assignments.objects.filter(classroom=classroom)
+    assignments = Assignments.objects.filter(classroom=classroom).order_by('due_date')
+
+    current_time = timezone.now()
+    upcoming_assignments = assignments.filter(due_date__gte=current_time)
+    past_assignments = assignments.filter(due_date__lt=current_time)
+
     return render(request, 'ai_app/dashboards/teacher/assignments/assignments_list.html', {
         'classroom': classroom, 
-        'assignments': assignments
+        'upcoming_assignments': upcoming_assignments,
+        'past_assignments': past_assignments,
     })
 
 @login_required
@@ -239,10 +246,15 @@ def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
     questions = Questions.objects.filter(assignment_id=assignment_id)
-    #choices = Choices.objects.filter(question_id=question_id)
-    #print(choices)
+    current_time = timezone.now()
+    before_start = current_time < assignment.start_date
+    after_due = current_time > assignment.due_date
+    show_questions = assignment.start_date <= current_time <= assignment.due_date
     return render(request, 'ai_app/dashboards/teacher/assignments/assignment_page.html',{
         'classroom': classroom,
         'assignment': assignment,
         'questions': questions,
+        'show_questions': show_questions,
+        'after_due': after_due,
+        'before_start': before_start,
     })

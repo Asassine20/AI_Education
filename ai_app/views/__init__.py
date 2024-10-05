@@ -35,9 +35,6 @@ from .other_views import (
     profile_image_upload_view
 )
 
-from .student_dashboard_views import (
-    student_dashboard
-)
 from .file_views import (
     file_upload_view, 
     file_download_view, 

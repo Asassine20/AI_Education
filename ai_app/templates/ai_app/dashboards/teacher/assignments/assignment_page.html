@@ -58,6 +58,8 @@
     <p><strong>Points:</strong> {{ assignment.points }}</p>
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
     <hr>
+
+    {% if show_questions %}
     {% for question in questions %}
     <p>
         <strong>Question {{ forloop.counter }}:
@@ -70,11 +72,17 @@
         {% endfor %}
     </ul>
     {% endfor %}
+    <div class="upload-header">
+        <div class="upload-button">
+            <a href="{}">Submit Assignment</a>
+        </div>
+    </div>
+    {% elif before_start %}
+    <p>Questions will be available after {{ assignment.start_date }}</p>
+    {% elif after_due %}
+    <p>The due date for this assignment has passed.</p>
+    {% endif %}
 
 </div>
-<div class="upload-header">
-    <div class="upload-button">
-        <a href="{}">Submit Assignment</a>
-    </div>
-</div>
+
 {% endblock %}

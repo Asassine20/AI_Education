@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from ai_app.models import Question, CourseMaterial
+from ai_app.models import Question, CourseMaterial, ClassRoom
 from openai import OpenAI
 from django.conf import settings
 
@@ -20,7 +20,7 @@ def ask_question(request):
         try:
             # Use the ChatCompletion API for the AI response (not saving it in the DB)
             response = client.chat.completions.create(
-                model="gpt-3.5",  
+                model="gpt-4o-mini",  
                 messages=[
                     {"role": "system", "content": "You are an educational assistant."},
                     {"role": "user", "content": f"Explain the topic '{topic}' in detail for a student to understand."}

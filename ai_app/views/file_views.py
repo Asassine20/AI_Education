@@ -4,6 +4,7 @@ from ai_app.forms import FileUploadForm
 from ai_app.models import CourseMaterial, ClassRoom, SchoolUserProfile
 from django.urls import reverse
 import os
+from collections import defaultdict
 from django.conf import settings
 from django.http import FileResponse, Http404
 from urllib.parse import unquote
@@ -57,8 +58,16 @@ def file_list_view(request, room_code):
         files = CourseMaterial.objects.filter(classroom=classroom)
     else:
         files = CourseMaterial.objects.filter(classroom=classroom, visible_to_students=True)
+    print(files)
+    files_by_category = defaultdict(list)
+    for file in files:
+        category = file.category if file.category else 'Uncategorized'
+        files_by_category[file.category].append(file)
 
-    return render(request, 'ai_app/dashboards/teacher/files/file_list.html', {'files': files, 'classroom': classroom})
+    return render(request, 'ai_app/dashboards/teacher/files/file_list.html', {
+        'classroom': classroom,
+        'files_by_category': dict(files_by_category)
+    })
 
 def file_download_view(request, room_code, file_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)

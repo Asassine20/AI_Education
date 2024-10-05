@@ -13,6 +13,7 @@
     body {
         color: #434443;
     }
+
     .upload-header {
         display: flex;
         justify-content: space-between;
@@ -29,7 +30,7 @@
     .upload-button a {
         text-decoration: none;
         font-size: 16px;
-        color: var(--secondary-color);        
+        color: var(--secondary-color);
     }
 
     .upload-button:hover {
@@ -61,20 +62,23 @@
         color: #434443;
         text-decoration: none;
     }
+
     /* Header section: Title, uploaded time, chevron, and delete button */
     .assignment-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        cursor: pointer; /* Make the entire header clickable */
+        cursor: pointer;
+        /* Make the entire header clickable */
     }
 
     .assignment-left {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        flex-grow: 1; /* Ensure it takes up available space */
+        flex-grow: 1;
+        /* Ensure it takes up available space */
     }
 
     .assignment-title {
@@ -96,7 +100,8 @@
         background-color: #f9f9f9;
         text-align: left;
         cursor: default;
-        width: 100%; /* Ensure message-text takes up full width */
+        width: 100%;
+        /* Ensure message-text takes up full width */
     }
 
     .assignment-text p {
@@ -130,30 +135,53 @@
 <div class="upload-header">
     {% if user_role == 'teacher' %}
     <div class="upload-button">
-        <a href="{% url 'assignment_create' classroom.room_code %}">Create Assignment <i class="fa-solid fa-pen-to-square"
-                style="font-size: 16px; margin-left: 5px;"></i></a>
+        <a href="{% url 'assignment_create' classroom.room_code %}">Create Assignment <i
+                class="fa-solid fa-pen-to-square" style="font-size: 16px; margin-left: 5px;"></i></a>
     </div>
     {% endif %}
 </div>
 
-{% if assignments %}
-<ul>
-    {% for assignment in assignments %}
-    <li class="assignment-item">
-        <!-- Header containing the title, uploaded_at, chevron, and delete button -->
-        <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
-        <div class="assignment-header">
-            <div class="assignment-left">
-                <span class="assignment-title">{{ assignment.title }}</span>
-                <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
-                <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
-            </div>
-        </div>
-    </a>
-    </li>
-    {% endfor %}
-</ul>
+{% if upcoming_assignments %}
+    <ul>
+        {% for assignment in upcoming_assignments %}
+        <li class="assignment-item">
+            <!-- Header containing the title, uploaded_at, chevron, and delete button -->
+            <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
+                <div class="assignment-header">
+                    <div class="assignment-left">
+                        <span class="assignment-title">{{ assignment.title }}</span>
+                        <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
+                        <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
 {% else %}
 <p class="list-group-item text-center">No assignments available.</p>
+{% endif %}
+
+<hr>
+<h3>Past Assignments</h3>
+{% if past_assignments %}
+    <ul>
+        {% for assignment in past_assignments %}
+        <li class="assignment-item">
+            <!-- Header containing the title, uploaded_at, chevron, and delete button -->
+            <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
+                <div class="assignment-header">
+                    <div class="assignment-left">
+                        <span class="assignment-title">{{ assignment.title }}</span>
+                        <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
+                        <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+<p>No past assignments</p>
 {% endif %}
 {% endblock %}

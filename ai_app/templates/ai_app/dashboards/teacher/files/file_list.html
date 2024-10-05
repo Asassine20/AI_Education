@@ -105,54 +105,45 @@
     {% if user_role == 'teacher' %}
     <div class="upload-button">
         <a href="{% url 'file_upload' classroom.room_code %}">
-            Upload File <i class="fa-solid fa-upload" style="font-size: 16px; margin-left: 5px;"></i>
-        </a>
+            Upload File <i class="fa-solid fa-upload" style="font-size: 16px; margin-left: 5px;"></i></a>
     </div>
     {% endif %}
 </div>
 
-{% if files %}
-{% with prev_category=None %}
-{% for file in files %}
-<!-- Only show the category header when the category changes -->
-{% if file.category != prev_category %}
-<h3 class="category-header">{{ file.category }}</h3>
-{% with file.category as prev_category %}
-{% endwith %}
-{% endif %}
-<ul>
-    <li>
-        <!-- File name on the left -->
-        <span>
-            {% if file.display_name and file.display_name != file.file.name %}
-            <a href="{% url 'file_preview' classroom.room_code file.display_name %}" target="_blank">{{ file.display_name }}</a>
-            {% else %}
-            <a href="{% url 'file_preview' classroom.room_code file.display_name %}" target="_blank">{{ file.file.name }}</a>
-            {% endif %}
+{% if files_by_category %}
+    {% for category, files in files_by_category.items %}
+    <h3 class="category-header">{{ category }}</h3>
+    <ul>
+        {% for file in files %}
+        <li>
+            <!-- File name on the left -->
+            <span>
+                {% if file.display_name and file.display_name != file.file.name %}
+                <a href="{% url 'file_preview' classroom.room_code file.display_name %}" target="_blank">{{ file.display_name }}</a>
+                {% else %}
+                <a href="{% url 'file_preview' classroom.room_code file.file.name %}" target="_blank">{{ file.file.name }}</a>
+                {% endif %}
+            </span>
 
-        </span>
-
-        <!-- Actions on the right: Download and Edit buttons -->
-        <div class="file-actions">
-            <!-- Indicate visibility status -->
-            {% if user_role == 'teacher' %}
-            {% if file.visible_to_students %}
-            <a style="color:green;"><i class="fa-solid fa-eye"></i></a>
-            {% else %}
-            <a style="color:red;"><i class="fa-solid fa-eye-slash"></i></a>
-            {% endif %}
-            <!-- Edit Icon -->
-            <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i
-                    class="fa-solid fa-pen-to-square"></i></a>
-            {% endif %}
-            <!-- Download Icon -->
-            <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i
-                    class="fa-solid fa-download"></i></a>
-        </div>
-    </li>
-</ul>
-{% endfor %}
-{% endwith %}
+            <!-- Actions on the right: Download and Edit buttons -->
+            <div class="file-actions">
+                <!-- Indicate visibility status -->
+                {% if user_role == 'teacher' %}
+                {% if file.visible_to_students %}
+                <a style="color:green;"><i class="fa-solid fa-eye"></i></a>
+                {% else %}
+                <a style="color:red;"><i class="fa-solid fa-eye-slash"></i></a>
+                {% endif %}
+                <!-- Edit Icon -->
+                <a href="{% url 'file_edit' classroom.room_code file.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                {% endif %}
+                <!-- Download Icon -->
+                <a href="{% url 'file_download' classroom.room_code file.id %}" class="download-btn"><i class="fa-solid fa-download"></i></a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
 {% else %}
 <p class="list-group-item text-center">No files uploaded yet.</p>
 {% endif %}

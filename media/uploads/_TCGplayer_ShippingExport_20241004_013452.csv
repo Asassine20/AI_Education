@@ -1,0 +1,6 @@
+Order #,FirstName,LastName,Address1,Address2,City,State,PostalCode,Country,Order Date,Product Weight,Shipping Method,Item Count,Value of Products,Shipping Fee Paid,Tracking #
+"C488D2D6-F7B1FF-8531C","Justin","Deggendorf","1611 HICKSON AVE","","DUBUQUE","IA","52001-5456","US","9/30/2024 9:30:58 PM","0.2100","Standard","3","$1.08"
+"C488D2D6-A106BA-DF86B","Thomas","Kennish","26624 SUDBURY DR","","NORTH OLMSTED","OH","44070-1844","US","9/30/2024 10:01:23 PM","0.7000","Standard","10","$6.73"
+"C488D2D6-2C8364-2EE17","zhu","chen","37 Rowe Street","","Milton","MA","02186","US","10/1/2024 8:35:40 AM","0.1400","Standard","2","$9.15"
+"C488D2D6-DAB5BE-5BE33","Ecade","Owner","1511 15th St E","","Glencoe","MN","55336-1710","US","10/1/2024 12:36:11 PM","0.2800","Standard","4","$35.25"
+"C488D2D6-3FA96B-781C1","Jacob","Butler","30 Cincinnati Branch","Apt. 2","Morehead","KY","40351","US","10/3/2024 4:29:55 PM","0.2800","Standard","4","$3.64"
