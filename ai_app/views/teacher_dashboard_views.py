@@ -32,7 +32,7 @@ def dashboard(request):
         return redirect('dashboard')
 
     classes = profile.classes.all()
-    return render(request, 'ai_app/dashboards/teacher/teacher_dashboard.html', {
+    return render(request, 'ai_app/dashboards/teacher/dashboard/teacher_dashboard.html', {
         'classes': classes,
         'university': university,
         'profile_image': profile_image,
@@ -75,7 +75,7 @@ def add_class(request):
         profile.classes.add(new_class)
         return redirect('dashboard')
 
-    return render(request, 'ai_app/dashboards/teacher/add_class.html')
+    return render(request, 'ai_app/dashboards/teacher/dashboard/add_class.html')
 
 @login_required
 def course_page(request, room_code):
@@ -96,20 +96,13 @@ def course_page(request, room_code):
 def students_enrolled(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     students = SchoolUserProfile.objects.filter(classes=classroom, role='student')
-    return render(request, 'ai_app/dashboards/teacher/students_enrolled.html', {'classroom': classroom, 'students': students})
-
-
-@login_required
-def student_questions(request, room_code):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    questions = Question.objects.filter(user__schooluserprofile__classes=classroom)
-    return render(request, 'ai_app/dashboards/teacher/student_questions.html', {'classroom': classroom, 'questions': questions})
+    return render(request, 'ai_app/dashboards/teacher/students/students_enrolled.html', {'classroom': classroom, 'students': students})
 
 @login_required
 def messages_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     messages = Messages.objects.filter(classroom=classroom).select_related('user__schooluserprofile')
-    return render(request, 'ai_app/dashboards/teacher/messages_list.html', {
+    return render(request, 'ai_app/dashboards/teacher/messages/messages_list.html', {
         'classroom': classroom, 
         'messages': messages,
         })
@@ -136,7 +129,7 @@ def create_message(request, room_code):
             return redirect('messages_list', room_code=room_code)
     else:
         form = MessageUploadForm()
-    return render(request, 'ai_app/dashboards/teacher/create_message.html', {
+    return render(request, 'ai_app/dashboards/teacher/messages/create_message.html', {
         'form': form, 
         'classroom': classroom
     })
@@ -173,7 +166,7 @@ def assignment_create(request, room_code):
             return redirect('assignment_detail', pk=assignment.pk)
     else:
         form = AssignmentForm()
-    return render(request, 'ai_app/dashboards/teacher/assignment_form.html', {
+    return render(request, 'ai_app/dashboards/teacher/assignments/assignment_form.html', {
         'form': form,
         'classroom': classroom
     })
@@ -196,7 +189,7 @@ def question_create(request, room_code, assignment_id):
     else:
         form = QuestionForm()
         formset = ChoiceFormSet()
-    return render(request, 'ai_app/dashboards/teacher/question_form.html', {
+    return render(request, 'ai_app/dashboards/teacher/assignments/question_form.html', {
         'form': form,
         'formset': formset,
         'assignment': assignment,
@@ -224,7 +217,7 @@ def assignment_detail(request, pk):
         form = QuestionForm()
         formset = ChoiceFormSet()
 
-    return render(request, 'ai_app/dashboards/teacher/assignment_detail.html', {
+    return render(request, 'ai_app/dashboards/teacher/assignments/assignment_detail.html', {
         'assignment': assignment,
         'questions': questions,
         'form': form,
@@ -236,7 +229,7 @@ def assignment_detail(request, pk):
 def assignments_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignments = Assignments.objects.filter(classroom=classroom)
-    return render(request, 'ai_app/dashboards/teacher/assignments_list.html', {
+    return render(request, 'ai_app/dashboards/teacher/assignments/assignments_list.html', {
         'classroom': classroom, 
         'assignments': assignments
     })
@@ -248,7 +241,7 @@ def assignment_page(request, room_code, assignment_id):
     questions = Questions.objects.filter(assignment_id=assignment_id)
     #choices = Choices.objects.filter(question_id=question_id)
     #print(choices)
-    return render(request, 'ai_app/dashboards/teacher/assignment_page.html',{
+    return render(request, 'ai_app/dashboards/teacher/assignments/assignment_page.html',{
         'classroom': classroom,
         'assignment': assignment,
         'questions': questions,

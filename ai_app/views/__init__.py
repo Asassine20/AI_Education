@@ -10,7 +10,6 @@ from .teacher_dashboard_views import (
     add_class, 
     course_page, 
     students_enrolled, 
-    student_questions, 
     messages_list, 
     delete_message, 
     create_message, 

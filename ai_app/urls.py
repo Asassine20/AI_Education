@@ -17,7 +17,6 @@ urlpatterns = [
     path('dashboard/course/<str:room_code>//download/<int:file_id>/', download_syllabus, name='download_syllabus'),
     path('dashboard/course/<str:room_code>/preview-syllabus/<int:file_id>/', preview_syllabus, name='preview_syllabus'),
     path('dashboard/course/<str:room_code>/students-enrolled/', students_enrolled, name='students_enrolled'),
-    path('dashboard/course/<str:room_code>/student-questions/', student_questions, name='student_questions'),
     path('dashboard/course/<str:room_code>/messages/', messages_list, name='messages_list'),
     path('dashboard/course/<str:room_code>/assignments_list/', assignments_list, name='assignments_list'),
     path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/', assignment_page, name='assignment_page'),
