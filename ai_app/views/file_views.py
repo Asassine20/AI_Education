@@ -58,7 +58,6 @@ def file_list_view(request, room_code):
         files = CourseMaterial.objects.filter(classroom=classroom)
     else:
         files = CourseMaterial.objects.filter(classroom=classroom, visible_to_students=True)
-    print(files)
     files_by_category = defaultdict(list)
     for file in files:
         category = file.category if file.category else 'Uncategorized'

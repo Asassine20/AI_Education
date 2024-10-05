@@ -12,7 +12,6 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.views.decorators.clickjacking import xframe_options_exempt
 import os
-import pprint
 
 @login_required
 def dashboard(request):
@@ -245,7 +244,6 @@ def assignments_list(request, room_code):
 def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
-    questions = Questions.objects.filter(assignment_id=assignment_id)
     current_time = timezone.now()
     before_start = current_time < assignment.start_date
     after_due = current_time > assignment.due_date
@@ -253,8 +251,35 @@ def assignment_page(request, room_code, assignment_id):
     return render(request, 'ai_app/dashboards/teacher/assignments/assignment_page.html',{
         'classroom': classroom,
         'assignment': assignment,
-        'questions': questions,
         'show_questions': show_questions,
         'after_due': after_due,
         'before_start': before_start,
     })
+
+@login_required
+def question_page(request, room_code, assignment_id):
+    if not request.session.get(f'can_access_question_page_{assignment_id}', False):
+        return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
+    
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
+    questions = Questions.objects.filter(assignment_id=assignment_id)
+    start_time = request.session.get(f'assignment_start_time_{assignment_id}', None)
+
+    return render(request, 'ai_app/dashboards/teacher/assignments/question_page.html',{
+        'classroom': classroom,
+        'assignment': assignment,
+        'questions': questions,
+        'start_time': start_time,
+        'time_limit': assignment.time_limit
+    })
+
+@login_required
+def set_access(request, room_code, assignment_id):
+    if request.method == "POST":
+        # Allow access to question page
+        request.session[f'can_access_question_page_{assignment_id}'] = True
+        # Start timer by storing current time in the session
+        request.session[f'assignment_start_time_{assignment_id}'] = str(timezone.now())
+        return redirect('question_page', room_code=room_code, assignment_id=assignment_id)
+    return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)

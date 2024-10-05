@@ -9,7 +9,6 @@ def admin_dashboard(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='admin')
     university = profile.university
     profile_image = profile.profile_image
-    print(university.logo)
     return render(request, 'ai_app/dashboards/admin/admin_dashboard.html', {
         'university': university,
         'profile_image': profile_image

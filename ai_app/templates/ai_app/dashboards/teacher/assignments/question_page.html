@@ -1,0 +1,116 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+{{ assignment.title }} - Questions Page
+{% endblock %}
+
+{% block header %}
+{{ assignment.title }}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        color: #434443;
+    }
+
+    .upload-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #434443;
+    }
+
+    .upload-button {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 8px;
+    }
+
+    .upload-button a {
+        text-decoration: none;
+        font-size: 16px;
+        color: var(--secondary-color);
+    }
+
+    .upload-button:hover {
+        filter: brightness(1.5);
+    }
+
+    .assignment-details img {
+        width: 750px;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="upload-header">
+    {% if user_role == 'student' %}
+    <div class="upload-button">
+        <a href="{}">Submit <i class="fa-solid fa-pen-to-square" style="font-size: 16px; margin-left: 5px;"></i></a>
+    </div>
+    {% endif %}
+</div>
+<div class="assignment-details">
+    <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
+    <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
+    <p><strong>Points:</strong> {{ assignment.points }}</p>
+    <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
+    <hr>
+<!-- Display the time elapsed or a countdown -->
+<p>Assignment Time Limit: {{ assignment.time_limit }} minutes</p>
+<div id="timer">60:00</div>
+    {% for question in questions %}
+    <p>
+        <strong>Question {{ forloop.counter }}:
+            <small style="font-weight: normal;">({{question.points |floatformat:0}} Points)</small>
+        </strong> {{ question.question.html|safe }}
+    </p>
+    <ul>
+        {% for choice in question.question_choices.all %}
+        <li>{{ choice.choice_text }}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+    <div class="upload-header">
+        <div class="upload-button">
+            <a href="{}">Submit Assignment</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const timeLimit = '{{ assignment.time_limit }}' * 60; // Time limit in seconds
+    const startTime = new Date('{{ start_time }}').getTime(); // Assignment start time from the server
+
+    // Calculate the time remaining
+    function calculateRemainingTime() {
+        const currentTime = new Date().getTime();
+        const elapsedTime = Math.floor((currentTime - startTime) / 1000); // Time passed in seconds
+        const timeRemaining = timeLimit - elapsedTime; // Time remaining in seconds
+
+        // If time has run out, submit the assignment
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval); // Stop the timer
+            document.getElementById('timer').textContent = '00:00';
+            alert("Time's up! Submitting the assignment...");
+            // TODO: Automatically submit the assignment here
+            return;
+        }
+
+        // Convert time remaining to minutes and seconds
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+
+        // Display the countdown timer (format MM:SS)
+        document.getElementById('timer').textContent = 
+            String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    }
+
+    // Update the timer every second
+    const timerInterval = setInterval(calculateRemainingTime, 1000);
+</script>
+
+{% endblock %}

@@ -83,7 +83,8 @@ class Assignments(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classroom_assignments')
-
+    time_limit = models.PositiveIntegerField(default=60)
+    attempts = models.PositiveIntegerField(default=1)
     def __str__(self):
         return self.title
 
