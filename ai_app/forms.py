@@ -105,16 +105,26 @@ class StudentAnswerForm(forms.Form):
 
         for question in questions:
             field_name = f"question_{question.id}"
+
+            # Check for the type of question and add the corresponding form field
             if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
+                # Prepare choices for multiple-choice or dropdown questions
                 choices = [(choice.id, choice.choice_text) for choice in question.question_choices.all()]
+                widget = forms.RadioSelect if question.question_type == 'MULTIPLE_CHOICE' else forms.Select
+                # Using .html attribute for QuillField content if available
+                label = question.question.html if hasattr(question.question, 'html') else question.question
+
                 self.fields[field_name] = forms.ChoiceField(
                     choices=choices,
-                    widget=forms.RadioSelect if question.question_type == 'MULTIPLE_CHOICE' else forms.Select,
-                    label=question.question,  # Question as label for reference only
+                    widget=widget,
+                    label=label
                 )
             elif question.question_type == 'SHORT_ANSWER':
+                # Use a Textarea widget for short-answer questions
+                label = question.question.html if hasattr(question.question, 'html') else question.question
+
                 self.fields[field_name] = forms.CharField(
                     widget=forms.Textarea,
-                    label=question.question,  # Question as label for reference only
+                    label=label,
                     required=False
                 )

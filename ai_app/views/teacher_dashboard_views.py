@@ -288,7 +288,7 @@ def submit_assignment(request, room_code, assignment_id):
                     question=question,
                     short_answer=answer_data
                 )
-        return redirect('assignment_submitted')
+        return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
 
     return render(request, 'ai_app/dashboards/teacher/assignments/submit_assignment.html', {
         'assignment': assignment,

@@ -122,7 +122,7 @@ class Messages(models.Model):
 
 class StudentAnswers(models.Model):
     student_profile = models.ForeignKey(SchoolUserProfile, on_delete=models.CASCADE, related_name='answers')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question_answers')
+    question = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name='question_answers')
     choice = models.ForeignKey(Choices, on_delete=models.SET_NULL, null=True, blank=True)
     short_answer = models.TextField(null=True, blank=True)
 
