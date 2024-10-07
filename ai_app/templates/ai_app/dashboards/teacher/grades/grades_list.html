@@ -1,0 +1,32 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+    Graded Assignments - {{ classroom.room_name }}
+{% endblock %}
+
+{% block content %}
+    <h2>Graded Assignments for {{ classroom.room_name }}</h2>
+
+    {% if graded_assignments %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Assignment</th>
+                    <th>Grade</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in graded_assignments %}
+                    <tr>
+                        <td>{{ grade.assignment.title }}</td>
+                        <td>{{ grade.grade_value }}</td>
+                        <td>{{ grade.assignment.points }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No graded assignments found.</p>
+    {% endif %}
+{% endblock %}

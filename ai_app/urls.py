@@ -26,6 +26,7 @@ urlpatterns = [
     path('classroom/<str:room_code>/assignment/<int:assignment_id>/question/create/', question_create, name='question_create'),
     path('dashboard/course/<str:room_code>/messages/create-message/', create_message, name='create_message'),
     path('dashboard/course/<str:room_code>/messages/<int:message_id>/delete', delete_message, name='delete_message'),
+    path('dashboard/course/<str:room_code>/grades/', grades_list, name='grades_list'),
     path('dashboard/course/<str:room_code>/upload-materials/', upload_materials, name='upload_materials'),
     path('dashboard/course/<str:room_code>/upload/', file_upload_view, name='file_upload'),
     path('dashboard/course/<str:room_code>/files/', file_list_view, name='file_list'),
@@ -35,6 +36,6 @@ urlpatterns = [
     path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin-dashboard/image-upload/<str:code>/', university_logo_upload_view, name='university_logo_upload'),
     path('admin-dashboard/display-logo/<str:code>/', display_logo, name='display_logo'),
-    path('dashboard/profile-image-upload/', profile_image_upload_view, name='profile_image_upload')
+    path('dashboard/profile-image-upload/', profile_image_upload_view, name='profile_image_upload'),
     ]
 

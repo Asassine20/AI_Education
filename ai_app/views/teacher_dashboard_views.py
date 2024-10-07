@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions
+from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions, Grades
 from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm
 from django.urls import reverse
 from django.utils import timezone
@@ -330,4 +330,26 @@ def view_submissions(request, room_code, assignment_id):
         'assignment': assignment,
         'classroom': classroom,
         'student_submission_status': student_submission_status,
+    })
+
+
+@login_required
+def grades_list(request, room_code):
+    print("Room code:", room_code)
+    # Fetch the classroom based on room_code
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    
+    # Fetch the student's profile for the logged-in user
+    student_profile = get_object_or_404(SchoolUserProfile, user=request.user)
+
+    # Filter grades by student profile and classroom, including assignment details for easy access in the template
+    graded_assignments = Grades.objects.filter(
+        student_profile=student_profile,
+        classroom=classroom
+    ).select_related('assignment', 'submission')
+
+    # Render the template with the context data
+    return render(request, 'ai_app/dashboards/teacher/grades/grades_list.html', {
+        'classroom': classroom,
+        'graded_assignments': graded_assignments,
     })

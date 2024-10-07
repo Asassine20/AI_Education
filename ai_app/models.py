@@ -127,6 +127,18 @@ class Submissions(models.Model):
     def __str__(self):
         return f"{self.student_profile.user.username} - {self.assignment.title} - {self.submitted_at}"
     
+class Grades(models.Model):
+    student_profile = models.ForeignKey(SchoolUserProfile, on_delete=models.CASCADE, related_name='student_grades')
+    assignment = models.ForeignKey(Assignments, on_delete=models.CASCADE, related_name='assignment_grades')
+    submission = models.ForeignKey(Submissions, on_delete=models.CASCADE, related_name='submission_grades')
+    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classroom_grades')  # New ForeignKey
+    grade_value = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    feedback = models.TextField(null=True, blank=True)
+    graded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student_profile.user.username} - {self.assignment.title} - Grade: {self.grade_value}"
+
 class Messages(models.Model):
     title = models.CharField(max_length=255)
     text = QuillField()

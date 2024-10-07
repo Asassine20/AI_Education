@@ -160,7 +160,7 @@
     <a href="{% url 'course_page' classroom.room_code %}" class="sidebar-links">Home</a>
     <a href="{% url 'file_list' classroom.room_code %}">Files</a>
     <a href="{% url 'assignments_list' classroom.room_code %}">Assignments</a>
-    <a href="#">Grades</a>
+    <a href="{% url 'grades_list' classroom.room_code %}">Grades</a>
     <a href="{% url 'students_enrolled' classroom.room_code %}">People</a>
     <a href="{% url 'messages_list' classroom.room_code %}">Messages</a>
 </div>
