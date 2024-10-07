@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Question, Assignments, Messages, CourseMaterial, Questions, Choices
-from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm
+from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers
+from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
@@ -9,6 +9,7 @@ from django.http import FileResponse, JsonResponse, HttpResponseServerError
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.files.storage import FileSystemStorage
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.views.decorators.clickjacking import xframe_options_exempt
 import os
@@ -257,29 +258,40 @@ def assignment_page(request, room_code, assignment_id):
     })
 
 @login_required
-def question_page(request, room_code, assignment_id):
-    if not request.session.get(f'can_access_question_page_{assignment_id}', False):
-        return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
-    
+def submit_assignment(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
-    assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
-    questions = Questions.objects.filter(assignment_id=assignment_id)
-    start_time = request.session.get(f'assignment_start_time_{assignment_id}', None)
+    assignment = get_object_or_404(Assignments, id=assignment_id, classroom=classroom)
+    user_profile = get_object_or_404(SchoolUserProfile, user=request.user, role=SchoolUserProfile.STUDENT)
+    #profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
 
-    return render(request, 'ai_app/dashboards/teacher/assignments/question_page.html',{
-        'classroom': classroom,
+    questions = assignment.assignment_questions.all()
+    form = StudentAnswerForm(request.POST or None, questions=questions)
+
+    # Zip questions and form fields together
+    question_form_pairs = zip(questions, form)
+
+    if request.method == 'POST' and form.is_valid():
+        for question in questions:
+            field_name = f"question_{question.id}"
+            answer_data = form.cleaned_data.get(field_name)
+
+            if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
+                selected_choice = Choices.objects.get(id=answer_data)
+                StudentAnswers.objects.create(
+                    student_profile=user_profile,
+                    question=question,
+                    choice=selected_choice
+                )
+            elif question.question_type == 'SHORT_ANSWER':
+                StudentAnswers.objects.create(
+                    student_profile=user_profile,
+                    question=question,
+                    short_answer=answer_data
+                )
+        return redirect('assignment_submitted')
+
+    return render(request, 'ai_app/dashboards/teacher/assignments/submit_assignment.html', {
         'assignment': assignment,
-        'questions': questions,
-        'start_time': start_time,
-        'time_limit': assignment.time_limit
+        'classroom': classroom,
+        'question_form_pairs': question_form_pairs  # Pass the zipped pairs
     })
-
-@login_required
-def set_access(request, room_code, assignment_id):
-    if request.method == "POST":
-        # Allow access to question page
-        request.session[f'can_access_question_page_{assignment_id}'] = True
-        # Start timer by storing current time in the session
-        request.session[f'assignment_start_time_{assignment_id}'] = str(timezone.now())
-        return redirect('question_page', room_code=room_code, assignment_id=assignment_id)
-    return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)

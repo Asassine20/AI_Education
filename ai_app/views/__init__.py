@@ -20,8 +20,7 @@ from .teacher_dashboard_views import (
     assignment_detail,
     assignment_create,
     question_create,
-    question_page,
-    set_access
+    submit_assignment
 )
 
 from .question_views import (

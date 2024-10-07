@@ -1,13 +1,12 @@
 {% extends 'ai_app/dashboards/teacher/course_base.html' %}
 
 {% block title %}
-{{ assignment.title }} - Assignment Page
+{{ assignment.title }} - Questions Page
 {% endblock %}
 
 {% block header %}
 {{ assignment.title }}
 {% endblock %}
-
 {% block extra_css %}
 <style>
     body {
@@ -21,17 +20,19 @@
         color: #434443;
     }
 
-    .upload-button button {
+    .upload-button {
         background-color: var(--primary-color);
-        color: var(--secondary-color);
         border-radius: 4px;
-        border: none;
         padding: 8px;
-        font-size: 16px;
     }
 
-    .upload-button button:hover {
-        cursor: pointer;
+    .upload-button a {
+        text-decoration: none;
+        font-size: 16px;
+        color: var(--secondary-color);
+    }
+
+    .upload-button:hover {
         filter: brightness(1.5);
     }
 
@@ -39,9 +40,7 @@
         width: 750px;
     }
 </style>
-
 {% endblock %}
-
 {% block content %}
 <div class="assignment-details">
     <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
@@ -50,22 +49,18 @@
     <p><strong>Time Limit:</strong> {{ assignment.time_limit }} minutes</p>
     <p><strong>Number of attempts:</strong> {{ assignment.attempts }}</p>
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
-
-    {% if show_questions %}
-    <div class="upload-header">
-        <div class="upload-button">
-            <form method="POST" action="{% url 'submit_assignment' classroom.room_code assignment.id %}">
-                {% csrf_token %}
-                <button type="submit">Start Assignment</button>
-            </form>            
+    <hr>
+<form method="post">
+    {% csrf_token %}
+    
+    {% for question, field in question_form_pairs %}
+        <div class="question-block">
+            <h3>Question {{ forloop.counter }}</h3>
+            <div class="question-content">{{ question.question.html|safe }}</div> <!-- Render question content as safe HTML -->
+            <div class="question-input">{{ field }}</div> <!-- Render the associated input field -->
         </div>
-    </div>
-    {% elif before_start %}
-    <p>Questions will be available after {{ assignment.start_date }}</p>
-    {% elif after_due %}
-    <p>The due date for this assignment has passed.</p>
-    {% endif %}
-
-</div>
-
+    {% endfor %}
+    
+    <button type="submit">Submit Assignment</button>
+</form>
 {% endblock %}

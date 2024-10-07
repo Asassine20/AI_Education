@@ -119,4 +119,12 @@ class Messages(models.Model):
     
     def __str__(self):
         return self.title
-    
+
+class StudentAnswers(models.Model):
+    student_profile = models.ForeignKey(SchoolUserProfile, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question_answers')
+    choice = models.ForeignKey(Choices, on_delete=models.SET_NULL, null=True, blank=True)
+    short_answer = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.student_profile.user.username} - {self.question}"

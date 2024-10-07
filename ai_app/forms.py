@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category
+from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category, StudentAnswers
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -89,8 +89,6 @@ class ChoiceForm(forms.ModelForm):
         model = Choices
         fields = ['choice_text', 'is_correct']
 
-# Inline formsets
-# QuestionFormSet = inlineformset_factory(Assignments, Questions, form=QuestionForm, extra=1, can_delete=True)
 ChoiceFormSet = inlineformset_factory(
     Questions, Choices, form=ChoiceForm, 
     fields=['choice_text', 'is_correct'], extra=4, can_delete=True)
@@ -99,3 +97,24 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['category_name', 'points']
+
+class StudentAnswerForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        questions = kwargs.pop('questions', [])
+        super().__init__(*args, **kwargs)
+
+        for question in questions:
+            field_name = f"question_{question.id}"
+            if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
+                choices = [(choice.id, choice.choice_text) for choice in question.question_choices.all()]
+                self.fields[field_name] = forms.ChoiceField(
+                    choices=choices,
+                    widget=forms.RadioSelect if question.question_type == 'MULTIPLE_CHOICE' else forms.Select,
+                    label=question.question,  # Question as label for reference only
+                )
+            elif question.question_type == 'SHORT_ANSWER':
+                self.fields[field_name] = forms.CharField(
+                    widget=forms.Textarea,
+                    label=question.question,  # Question as label for reference only
+                    required=False
+                )
