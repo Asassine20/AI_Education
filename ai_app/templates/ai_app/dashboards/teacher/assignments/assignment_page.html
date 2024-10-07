@@ -38,11 +38,42 @@
     .assignment-details img {
         width: 750px;
     }
-</style>
 
+    .submitted-message {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: green;
+        font-weight: bold;
+    }
+
+    .submitted-message .checkmark {
+        margin-left: 8px;
+        color: green;
+        font-size: 20px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
+{% if submission %}
+<div class="submitted-message">
+    Submitted <span class="checkmark">&#10003;</span>
+</div>
+{% elif show_questions and user_role == 'student' %}
+<div class="upload-header">
+    <div class="upload-button">
+        <form method="POST" action="{% url 'submit_assignment' classroom.room_code assignment.id %}">
+            {% csrf_token %}
+            <button type="submit">Start Assignment</button>
+        </form>            
+    </div>
+</div>
+{% elif before_start %}
+<p>Questions will be available after {{ assignment.start_date }}</p>
+{% elif after_due %}
+<p>The due date for this assignment has passed.</p>
+{% endif %}
 <div class="assignment-details">
     <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
     <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
@@ -51,21 +82,7 @@
     <p><strong>Number of attempts:</strong> {{ assignment.attempts }}</p>
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
 
-    {% if show_questions %}
-    <div class="upload-header">
-        <div class="upload-button">
-            <form method="POST" action="{% url 'submit_assignment' classroom.room_code assignment.id %}">
-                {% csrf_token %}
-                <button type="submit">Start Assignment</button>
-            </form>            
-        </div>
-    </div>
-    {% elif before_start %}
-    <p>Questions will be available after {{ assignment.start_date }}</p>
-    {% elif after_due %}
-    <p>The due date for this assignment has passed.</p>
-    {% endif %}
+
 
 </div>
-
 {% endblock %}

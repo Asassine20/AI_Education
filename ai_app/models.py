@@ -125,7 +125,7 @@ class Submissions(models.Model):
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student_profile.user.username} - {self.assignment.title}"
+        return f"{self.student_profile.user.username} - {self.assignment.title} - {self.submitted_at}"
     
 class Messages(models.Model):
     title = models.CharField(max_length=255)

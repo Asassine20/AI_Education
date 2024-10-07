@@ -244,7 +244,12 @@ def assignments_list(request, room_code):
 @login_required
 def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    profile = get_object_or_404(SchoolUserProfile, user=request.user)
     assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
+    try:
+        submission = Submissions.objects.get(assignment=assignment, student_profile=profile)
+    except Submissions.DoesNotExist:
+        submission = None
     current_time = timezone.now()
     before_start = current_time < assignment.start_date
     after_due = current_time > assignment.due_date
@@ -255,6 +260,7 @@ def assignment_page(request, room_code, assignment_id):
         'show_questions': show_questions,
         'after_due': after_due,
         'before_start': before_start,
+        'submission': submission
     })
 
 @login_required
