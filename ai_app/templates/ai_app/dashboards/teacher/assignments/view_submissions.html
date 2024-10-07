@@ -1,0 +1,32 @@
+<!-- view_submissions.html -->
+<h2>{{ assignment.title }} - Submissions</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Submitted At</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in student_submission_status %}
+        <tr>
+            <td>{{ entry.student.username }}</td>
+            <td>
+                {% if entry.submission %}
+                    {{ entry.submission.submitted_at }}
+                {% else %}
+                    Not Submitted
+                {% endif %}
+            </td>
+            <td>
+                {% if entry.submission %}
+                    {% endif %}
+                {% else %}
+                    Not Submitted
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

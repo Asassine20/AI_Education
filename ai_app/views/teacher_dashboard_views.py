@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers
+from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions
 from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm
 from django.urls import reverse
 from django.utils import timezone
@@ -288,10 +288,40 @@ def submit_assignment(request, room_code, assignment_id):
                     question=question,
                     short_answer=answer_data
                 )
+
+        # Create a submission record
+        Submissions.objects.create(student_profile=user_profile, assignment=assignment)
+
         return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
 
     return render(request, 'ai_app/dashboards/teacher/assignments/submit_assignment.html', {
         'assignment': assignment,
         'classroom': classroom,
         'question_form_pairs': question_form_pairs  # Pass the zipped pairs
+    })
+
+@login_required
+def view_submissions(request, room_code, assignment_id):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    assignment = get_object_or_404(Assignments, id=assignment_id, classroom=classroom)
+    submissions = Submissions.objects.filter(assignment=assignment)
+
+    students_with_submissions = {
+        submission.student_profile: submission for submission in submissions
+    }
+
+    # List all students in the class, check if they have submitted or not
+    all_students = classroom.students.all()
+    student_submission_status = [
+        {
+            'student': student,
+            'submission': students_with_submissions.get(student.schooluserprofile, None)
+        }
+        for student in all_students
+    ]
+
+    return render(request, 'ai_app/dashboards/teacher/assignments/view_submissions.html', {
+        'assignment': assignment,
+        'classroom': classroom,
+        'student_submission_status': student_submission_status,
     })

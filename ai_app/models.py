@@ -110,6 +110,23 @@ class Choices(models.Model):
     def __str__(self):
         return self.question
 
+class StudentAnswers(models.Model):
+    student_profile = models.ForeignKey(SchoolUserProfile, on_delete=models.CASCADE, related_name='student_answers')
+    question = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name='question_answers')
+    choice = models.ForeignKey(Choices, on_delete=models.SET_NULL, null=True, blank=True)
+    short_answer = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.student_profile.user.username} - {self.question}"
+
+class Submissions(models.Model):
+    student_profile = models.ForeignKey(SchoolUserProfile, on_delete=models.CASCADE, related_name='student_submission')
+    assignment = models.ForeignKey(Assignments, on_delete=models.CASCADE, related_name='submission_answers')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student_profile.user.username} - {self.assignment.title}"
+    
 class Messages(models.Model):
     title = models.CharField(max_length=255)
     text = QuillField()
@@ -119,12 +136,3 @@ class Messages(models.Model):
     
     def __str__(self):
         return self.title
-
-class StudentAnswers(models.Model):
-    student_profile = models.ForeignKey(SchoolUserProfile, on_delete=models.CASCADE, related_name='answers')
-    question = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name='question_answers')
-    choice = models.ForeignKey(Choices, on_delete=models.SET_NULL, null=True, blank=True)
-    short_answer = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.student_profile.user.username} - {self.question}"

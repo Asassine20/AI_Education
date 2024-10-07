@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category, StudentAnswers
+from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -106,7 +106,8 @@ class StudentAnswerForm(forms.Form):
         for question in questions:
             field_name = f"question_{question.id}"
 
-            # Check for the type of question and add the corresponding form field
+            # Check for the type of 
+            #  and add the corresponding form field
             if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
                 # Prepare choices for multiple-choice or dropdown questions
                 choices = [(choice.id, choice.choice_text) for choice in question.question_choices.all()]
