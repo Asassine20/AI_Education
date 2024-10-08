@@ -141,17 +141,22 @@
     {% endif %}
 </div>
 
+<h3>Upcoming Assignments</h3>
 {% if upcoming_assignments %}
     <ul>
         {% for assignment in upcoming_assignments %}
         <li class="assignment-item">
-            <!-- Header containing the title, uploaded_at, chevron, and delete button -->
             <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
                 <div class="assignment-header">
                     <div class="assignment-left">
                         <span class="assignment-title">{{ assignment.title }}</span>
                         <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
                         <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
+                        {% if assignment.submitted %}
+                        <span class="submitted-indicator" style="color: green;">Submitted &#10003;</span>
+                        {% else %}
+                        <span class="not-submitted-indicator" style="color: red;">Not Submitted</span>
+                        {% endif %}
                     </div>
                 </div>
             </a>
@@ -159,7 +164,7 @@
         {% endfor %}
     </ul>
 {% else %}
-<p class="list-group-item text-center">No assignments available.</p>
+<p class="list-group-item text-center">No upcoming assignments available.</p>
 {% endif %}
 
 <hr>
@@ -168,13 +173,17 @@
     <ul>
         {% for assignment in past_assignments %}
         <li class="assignment-item">
-            <!-- Header containing the title, uploaded_at, chevron, and delete button -->
             <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
                 <div class="assignment-header">
                     <div class="assignment-left">
                         <span class="assignment-title">{{ assignment.title }}</span>
                         <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
                         <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
+                        {% if assignment.submitted %}
+                        <span class="submitted-indicator" style="color: green;">Submitted &#10003;</span>
+                        {% else %}
+                        <span class="not-submitted-indicator" style="color: red;">Not Submitted</span>
+                        {% endif %}
                     </div>
                 </div>
             </a>
@@ -182,6 +191,6 @@
         {% endfor %}
     </ul>
 {% else %}
-<p>No past assignments</p>
+<p class="list-group-item text-center">No past assignments available.</p>
 {% endif %}
 {% endblock %}

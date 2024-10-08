@@ -229,17 +229,29 @@ def assignment_detail(request, pk):
 @login_required
 def assignments_list(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    profile = get_object_or_404(SchoolUserProfile, user=request.user)
+    
+    # Get all assignments for the classroom, ordered by due date
     assignments = Assignments.objects.filter(classroom=classroom).order_by('due_date')
+    
+    # Get the list of submitted assignments for the user in the current classroom
+    submitted_assignments = Submissions.objects.filter(assignment__in=assignments, student_profile=profile).values_list('assignment_id', flat=True)
 
+    # Annotate each assignment with a submitted flag
+    for assignment in assignments:
+        assignment.submitted = assignment.id in submitted_assignments
+
+    # Separate upcoming and past assignments
     current_time = timezone.now()
-    upcoming_assignments = assignments.filter(due_date__gte=current_time)
-    past_assignments = assignments.filter(due_date__lt=current_time)
+    upcoming_assignments = [assignment for assignment in assignments if assignment.due_date >= current_time]
+    past_assignments = [assignment for assignment in assignments if assignment.due_date < current_time]
 
     return render(request, 'ai_app/dashboards/teacher/assignments/assignments_list.html', {
         'classroom': classroom, 
         'upcoming_assignments': upcoming_assignments,
         'past_assignments': past_assignments,
     })
+
 
 @login_required
 def assignment_page(request, room_code, assignment_id):
