@@ -3,7 +3,13 @@
 {% block title %}
     Graded Assignments - {{ classroom.room_name }}
 {% endblock %}
-
+{% block extra_css %}
+<style>
+    body {
+        color: #434443;
+    }
+</style>
+{% endblock %}
 {% block content %}
     <h2>Graded Assignments for {{ classroom.room_name }}</h2>
 
