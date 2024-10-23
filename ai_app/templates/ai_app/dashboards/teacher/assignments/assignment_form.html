@@ -9,6 +9,11 @@ Create Assignment in {{ classroom.room_name}}
 {% endblock %}
 {% block extra_css %}
 <style>
+    :root {
+        --font-family: '{{ font_family }}', sans-serif;
+        --primary-color: {{ primary_color }};
+        --secondary-color: {{ secondary_color }};
+    }
     body {
         color: #434443;
     }
@@ -54,6 +59,26 @@ Create Assignment in {{ classroom.room_name}}
     .post-button:hover {
         filter: brightness(1.5);
         cursor: pointer;
+    }
+
+    .add-new-category {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 5px;
+        border: none;
+        margin-top: 10px;
+        width: 8%;
+        font-size: 12px;
+    }
+
+    .add-new-category:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+
+    .link-text {
+        color: var(--secondary-color);
+        text-decoration: none;
     }
 
     /* Customizing Flatpickr to use primary and secondary colors */
@@ -103,6 +128,11 @@ Create Assignment in {{ classroom.room_name}}
         {{ form.description.label_tag }}<br>
         {{ form.description }}
     </div>
+    <div class="add-new-category">
+        <a href="{% url 'add_category' classroom.room_code %}" class="link-text">
+            Add New Category
+        </a>
+    </div>
     <div class="category">
         {{ form.category.label_tag }}<br>
         {{ form.category }}
@@ -119,7 +149,7 @@ Create Assignment in {{ classroom.room_name}}
         {{ form.points.label_tag }}<br>
         {{ form.points }}
     </div>
-    <input type="submit" class="post-button" value="Next ->">
+    <input type="submit" class="post-button" value="Continue">
 </form>
 <script>
     // Initialize Flatpickr for the date-time fields

@@ -360,7 +360,6 @@ def view_submissions(request, room_code, assignment_id):
 
 @login_required
 def grades_list(request, room_code):
-    print("Room code:", room_code)
     # Fetch the classroom based on room_code
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     
@@ -377,4 +376,23 @@ def grades_list(request, room_code):
     return render(request, 'ai_app/dashboards/teacher/grades/grades_list.html', {
         'classroom': classroom,
         'graded_assignments': graded_assignments,
+    })
+
+@login_required
+def add_category(request, room_code):
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
+    profile = get_object_or_404(SchoolUserProfile, user=request.user)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.classroom = classroom
+            category.save()
+            return redirect('assignment_create', room_code=room_code)
+    else:
+        form = CategoryForm()
+    return render(request, 'ai_app/dashboards/teacher/assignments/add_category.html', {
+        'form': form,
+        'classroom': classroom
     })

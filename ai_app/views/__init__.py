@@ -22,7 +22,8 @@ from .teacher_dashboard_views import (
     assignment_create,
     question_create,
     submit_assignment,
-    grades_list
+    grades_list,
+    add_category,
 )
 
 from .question_views import (

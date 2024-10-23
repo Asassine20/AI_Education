@@ -1,0 +1,72 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+{{ classroom.room_name }} - Add Category
+{% endblock %}
+
+{% block header %}
+    {{ classroom.room_name }} - Add Category
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    :root {
+        --primary-color: var(--primary-color);
+        --secondary-color: var(--secondary-color);
+    }
+
+    body {
+        color: #434443;
+    }
+
+    .title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .text {
+        font-weight: bold;
+    }
+
+    input {
+        padding: 10px;
+        margin-bottom: 10px;
+        margin-top: 5px;
+        font-size: 16px;
+        width: 50%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+
+    }
+
+    /* General button styles */
+    button {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        border: none;
+        border-radius: 4px;
+        padding: 8px 12px;
+        font-size: 16px;
+    }
+
+    button:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+
+    .submit-button {
+        margin-top: 10px;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <p>Enter points as a percentage.</p>
+    <button type="submit" class="post-button">Add Category</button>
+</form>
+{% endblock %}

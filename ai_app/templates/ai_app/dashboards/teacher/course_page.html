@@ -49,6 +49,22 @@
     .syllabus-preview embed {
         margin-top: 10px;
     }
+
+    .upload-btn {
+        padding: 0.8rem 1.1rem;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+    }
+
+    .upload-btn:hover {
+        filter: brightness(1.5);
+    }
 </style>
 {% endblock %}
 
@@ -72,10 +88,6 @@
     <label>Room Number:</label>
     <span>{{ classroom.room_number }}</span>
 </div>
-<div class="class-info">
-    <label>Class Code:</label>
-    <span>{{ classroom.id }}</span>
-</div>
 
 <!-- Class Times -->
 <div class="class-times">
@@ -96,6 +108,9 @@
     {% if syllabus %}
     <embed src="{% url 'preview_syllabus' classroom.room_code syllabus.id %}" width="100%" height="600px"
         type="application/pdf">
+    {% elif user_role == 'teacher' %}
+    <p>No syllabus uploaded yet</p>
+    <a href="{% url 'file_upload' classroom.room_code %}" class="upload-btn">Upload Syllabus</a>
     {% else %}
     <p>No syllabus uploaded yet.</p>
     {% endif %}

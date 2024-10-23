@@ -23,6 +23,7 @@ urlpatterns = [
     path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/', assignment_page, name='assignment_page'),
     path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/submit/', submit_assignment, name='submit_assignment'),
     path('classroom/<str:room_code>/assignment/create/', assignment_create, name='assignment_create'),
+    path('dashboard/course/<str:room_code>/assignment/add-category/', add_category, name='add_category'),
     path('assignment/<int:pk>/', assignment_detail, name='assignment_detail'),
     path('classroom/<str:room_code>/assignment/<int:assignment_id>/question/create/', question_create, name='question_create'),
     path('dashboard/course/<str:room_code>/messages/create-message/', create_message, name='create_message'),
