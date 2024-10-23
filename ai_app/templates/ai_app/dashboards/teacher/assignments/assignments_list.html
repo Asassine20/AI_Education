@@ -159,6 +159,14 @@
                             <span class="not-submitted-indicator" style="color: red;">Not Submitted Yet</span>
                             {% endif %}
                         {% endif %}
+                        <div class="assignment-actions">
+                            {% if user_role == 'teacher' %}
+                            <form action="{% url 'delete_assignment' room_code=room_code assignment_id=assignment.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" class="delete-btn" value="delete">
+                            </form>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </a>
@@ -188,6 +196,14 @@
                             <span class="not-submitted-indicator" style="color: red;">Not Submitted Yet</span>
                             {% endif %}
                         {% endif %}
+                        <div class="assignment-actions">
+                            {% if user_role == 'teacher' %}
+                            <form action="{% url 'delete_assignment' room_code=room_code assignment_id=assignment.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" class="delete-btn" value="delete">
+                            </form>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </a>

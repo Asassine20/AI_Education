@@ -263,8 +263,18 @@ def assignments_list(request, room_code):
         'classroom': classroom, 
         'upcoming_assignments': upcoming_assignments,
         'past_assignments': past_assignments,
+        'room_code': room_code,
     })
 
+@login_required
+def delete_assignment(request, room_code, assignment_id):
+    assignment = get_object_or_404(Assignments, id=assignment_id)
+    if request.method == 'POST':
+        assignment.delete()
+        return redirect('assignments_list', room_code=room_code)
+    return render(request, 'ai_app/dashboards/teacher/assignments/assignments_list.html',{
+        'assignment': assignment,
+    })
 
 @login_required
 def assignment_page(request, room_code, assignment_id):

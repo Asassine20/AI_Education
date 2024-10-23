@@ -24,6 +24,7 @@ from .teacher_dashboard_views import (
     submit_assignment,
     grades_list,
     add_category,
+    delete_assignment
 )
 
 from .question_views import (
