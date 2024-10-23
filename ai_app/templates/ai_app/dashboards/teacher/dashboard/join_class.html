@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family={{ font_family|urlencode }}:wght@400;700&display=swap" rel="stylesheet">
+    <title>Add a Class</title>
+    <style>
+        :root {
+            --font-family: '{{ font_family }}', sans-serif;
+            --primary-color: {{ primary_color }};
+            --secondary-color: {{ secondary_color }};
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: #f4f7f9;
+            padding-top: 100px; /* To adjust for fixed navbar */
+        }
+
+        .container {
+            max-width: 90%;
+            margin: 0 auto;
+            margin-top: 20px;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 95%;
+        }
+
+        .day-dropdown {
+            width: 33%;
+        }
+
+        .time-input input {
+            width: 20%;
+        }
+
+        button {
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            filter: brightness(1.5);
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            margin-left: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .class-time-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .time-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .time-input select {
+            width: 75px;
+        }
+
+        .am-pm-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.5rem;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .am-pm-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .am-pm {
+            width: 48px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Include Navbar -->
+{% include 'includes/navbar.html' %}
+
+<div class="container">
+    <h1>Join Class</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="room_code">Room Code:</label>
+        <input type="text" id="room_code" name="room_code" required>
+        <button type="submit">Join Class</button>
+    </form>
+</div>
+
+</body>
+</html>

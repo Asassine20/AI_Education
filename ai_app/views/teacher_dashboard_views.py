@@ -79,6 +79,22 @@ def add_class(request):
     return render(request, 'ai_app/dashboards/teacher/dashboard/add_class.html')
 
 @login_required
+def join_class(request):
+    profile = get_object_or_404(SchoolUserProfile, user=request.user, role='student')
+    if request.method == 'POST':
+        room_code = request.POST['room_code']
+        try:
+            classroom = ClassRoom.objects.get(room_code=room_code)
+            profile.classes.add(classroom)
+            return redirect('dashboard')
+        except ClassRoom.DoesNotExist:
+            return render(request, 'ai_app/dashboards/teacher/dashboard/teacher_dashboard.html', {
+                'error': 'Invalid class code',
+            })
+    
+    return render(request, 'ai_app/dashboards/teacher/dashboard/join_class.html')
+    
+@login_required
 def course_page(request, room_code):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     syllabus = CourseMaterial.objects.filter(classroom=classroom, is_syllabus=True).first()
@@ -88,10 +104,7 @@ def course_page(request, room_code):
         'classroom': classroom,
         'students': students,
         'syllabus': syllabus,
-
     })
-
-
 
 @login_required
 def students_enrolled(request, room_code):

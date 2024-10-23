@@ -8,6 +8,7 @@ from .auth_views import (
 from .teacher_dashboard_views import (
     dashboard, 
     add_class, 
+    join_class,
     course_page, 
     students_enrolled, 
     messages_list, 

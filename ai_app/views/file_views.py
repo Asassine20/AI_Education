@@ -75,7 +75,7 @@ def file_download_view(request, room_code, file_id):
     return FileResponse(open(file_path, 'rb'), as_attachment=True)
 
 def file_preview_view(request, room_code, display_name):
-    classroom = get_object_or_404(ClassRoom, room_code=room_code, teacher=request.user)
+    classroom = get_object_or_404(ClassRoom, room_code=room_code)
     decoded_display_name = unquote(display_name)
     file = get_object_or_404(CourseMaterial, display_name=decoded_display_name, classroom=classroom)
     file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
