@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions, Grades
 from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
 from django.http import FileResponse, JsonResponse, HttpResponseServerError
@@ -12,6 +12,8 @@ from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.views.generic import UpdateView
+from django import forms
 import os
 
 @login_required
@@ -275,6 +277,20 @@ def delete_assignment(request, room_code, assignment_id):
     return render(request, 'ai_app/dashboards/teacher/assignments/assignments_list.html',{
         'assignment': assignment,
     })
+
+class EditAssignment(UpdateView):
+    model = Assignments
+    template_name = 'ai_app/dashboards/teacher/assignments/edit_assignment.html'
+    fields = ['title', 'start_date', 'due_date', 'points', 'category', 'time_limit', 'attempts']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['classroom'] = ClassRoom.objects.get(room_code=self.kwargs['room_code'])
+        return context
+    
+    # Define the success URL to redirect after form submission
+    def get_success_url(self):
+        return reverse_lazy('assignments_list', kwargs={'room_code': self.kwargs['room_code']})
 
 @login_required
 def assignment_page(request, room_code, assignment_id):

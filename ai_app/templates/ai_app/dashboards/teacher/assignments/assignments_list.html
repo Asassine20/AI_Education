@@ -25,6 +25,7 @@
         background-color: var(--primary-color);
         border-radius: 4px;
         padding: 8px;
+        margin-top: 10px;
     }
 
     .upload-button a {
@@ -37,7 +38,6 @@
         filter: brightness(1.5);
     }
 
-    /* Style for the message list as a UL */
     ul {
         list-style: none;
         padding: 0;
@@ -45,7 +45,8 @@
 
     ul li {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
         padding: 10px;
         margin-bottom: 10px;
         background-color: #f9f9f9;
@@ -61,24 +62,13 @@
     .clickable-card {
         color: #434443;
         text-decoration: none;
-    }
-
-    /* Header section: Title, uploaded time, chevron, and delete button */
-    .assignment-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        cursor: pointer;
-        /* Make the entire header clickable */
+        flex-grow: 1;
     }
 
     .assignment-left {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        flex-grow: 1;
-        /* Ensure it takes up available space */
     }
 
     .assignment-title {
@@ -92,40 +82,40 @@
         text-align: left;
     }
 
-    /* Message text aligned to the left */
-    .assignment-text {
-        display: none;
-        margin-top: 10px;
-        padding: 0;
-        background-color: #f9f9f9;
-        text-align: left;
-        cursor: default;
-        width: 100%;
-        /* Ensure message-text takes up full width */
+    .assignment-actions {
+        display: flex;
+        align-items: center;
     }
 
-    .assignment-text p {
-        margin: 0;
-        text-align: left;
-    }
-
-    /* Delete button aligned to the right */
-    .delete-btn {
-        background-color: #ff4d4d;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 4px;
-        cursor: pointer;
+    .edit-btn {
         margin-left: 10px;
-    }
-
-    .delete-btn:hover {
-        background-color: #cc0000;
-    }
-
-    .list-group-item {
+        font-size: 1.2rem;
         color: #434443;
+    }
+
+    .edit-btn:hover {
+        filter: brightness(1.5);
+    }
+
+    .delete-btn {
+        background-color: transparent;  
+        color: #ff4d4d;                 
+        border: none;                 
+        cursor: pointer;              
+        font-size: 1.2rem;             
+        margin-right: 5px;             
+    }
+    
+    .delete-btn i {
+        color: #ff4d4d;                
+    }
+    
+    .delete-btn:hover i {
+        color: #cc0000;                
+    }
+    
+    .delete-btn:hover {
+        background-color: transparent;  
     }
 </style>
 {% endblock %}
@@ -147,29 +137,25 @@
         {% for assignment in upcoming_assignments %}
         <li class="assignment-item">
             <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
-                <div class="assignment-header">
-                    <div class="assignment-left">
-                        <span class="assignment-title">{{ assignment.title }}</span>
-                        <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
-                        <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
-                        {% if user_role == 'student' %}
-                            {% if assignment.submitted %}
-                            <span class="submitted-indicator" style="color: green;">Submitted &#10003;</span>
-                            {% else %}
-                            <span class="not-submitted-indicator" style="color: red;">Not Submitted Yet</span>
-                            {% endif %}
-                        {% endif %}
-                        <div class="assignment-actions">
-                            {% if user_role == 'teacher' %}
-                            <form action="{% url 'delete_assignment' room_code=room_code assignment_id=assignment.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="submit" class="delete-btn" value="delete">
-                            </form>
-                            {% endif %}
-                        </div>
-                    </div>
+                <div class="assignment-left">
+                    <span class="assignment-title">{{ assignment.title }}</span>
+                    <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
+                    <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
                 </div>
             </a>
+            <div class="assignment-actions">
+                {% if user_role == 'teacher' %}
+                <form action="{% url 'delete_assignment' room_code=room_code assignment_id=assignment.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </form>
+                <a href="{% url 'edit_assignment' room_code assignment.id %}" class="edit-btn">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                {% endif %}
+            </div>
         </li>
         {% endfor %}
     </ul>
@@ -184,27 +170,10 @@
         {% for assignment in past_assignments %}
         <li class="assignment-item">
             <a href="{% url 'assignment_page' classroom.room_code assignment.id %}" class="clickable-card">
-                <div class="assignment-header">
-                    <div class="assignment-left">
-                        <span class="assignment-title">{{ assignment.title }}</span>
-                        <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
-                        <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
-                        {% if user_role == 'student' %}
-                            {% if assignment.submitted %}
-                            <span class="submitted-indicator" style="color: green;">Submitted &#10003;</span>
-                            {% else %}
-                            <span class="not-submitted-indicator" style="color: red;">Not Submitted Yet</span>
-                            {% endif %}
-                        {% endif %}
-                        <div class="assignment-actions">
-                            {% if user_role == 'teacher' %}
-                            <form action="{% url 'delete_assignment' room_code=room_code assignment_id=assignment.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="submit" class="delete-btn" value="delete">
-                            </form>
-                            {% endif %}
-                        </div>
-                    </div>
+                <div class="assignment-left">
+                    <span class="assignment-title">{{ assignment.title }}</span>
+                    <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
+                    <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
                 </div>
             </a>
         </li>

@@ -1,0 +1,123 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+Edit Assignment
+{% endblock %}
+
+{% block header %}
+Edit Assignment
+{% endblock %}
+{% block extra_css %}
+<style>
+    :root {
+        --font-family: '{{ font_family }}', sans-serif;
+        --primary-color: {{ primary_color }};
+        --secondary-color: {{ secondary_color }};
+    }
+    body {
+        color: #434443;
+    }
+
+    .title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .title input {
+        font-size: 18px;
+    }
+
+    /* Apply width to specific fields like title, start and due date, points, category, and description */
+    input[type="text"], 
+    input[type="number"], 
+    input[type="datetime-local"], 
+    textarea, 
+    select {
+        width: 95%;
+        font-size: 16px;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .category {
+        margin-top: 10px;
+        width: 200px;
+    }
+
+    .post-button {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 12px;
+        color: var(--secondary-color);
+        border: none;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .post-button:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+
+    .add-new-category {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 5px;
+        border: none;
+        margin-top: 10px;
+        width: 8%;
+        font-size: 12px;
+    }
+
+    .add-new-category:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+
+    .link-text {
+        color: var(--secondary-color);
+        text-decoration: none;
+    }
+
+    /* Customizing Flatpickr to use primary and secondary colors */
+    .flatpickr-calendar {
+        background-color: var(--secondary-color);
+    }
+
+    .flatpickr-months {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+    }
+
+    .flatpickr-weekdays,
+    .flatpickr-days,
+    .flatpickr-time,
+    .flatpickr-hour,
+    .flatpickr-minute {
+        color: var(--primary-color);
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange,
+    .flatpickr-current-month,
+    .flatpickr-current-month span {
+        background-color: var(--primary-color) !important;
+        color: var(--secondary-color) !important;
+    }
+
+    .flatpickr-day:hover {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+    }
+</style>
+{% endblock %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+<button class="post-button">Update</button>
+
+{% endblock %}

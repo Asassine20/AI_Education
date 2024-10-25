@@ -21,6 +21,7 @@ urlpatterns = [
     path('dashboard/course/<str:room_code>/messages/', messages_list, name='messages_list'),
     path('dashboard/course/<str:room_code>/assignments-list/', assignments_list, name='assignments_list'),
     path('dashboard/course/<str:room_code>/assignments-list/delete-assignment/<int:assignment_id>/', delete_assignment, name='delete_assignment'),
+    path('dashboard/course/<str:room_code>/assignments-list/edit-assignment/<int:pk>/', EditAssignment.as_view(), name='edit_assignment'),
     path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/', assignment_page, name='assignment_page'),
     path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/submit/', submit_assignment, name='submit_assignment'),
     path('classroom/<str:room_code>/assignment/create/', assignment_create, name='assignment_create'),
