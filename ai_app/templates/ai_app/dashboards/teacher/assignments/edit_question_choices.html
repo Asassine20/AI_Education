@@ -1,0 +1,164 @@
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+{% block title %}
+{{ assignment.title }}
+{% endblock %}
+
+{% block header %}
+{{ assignment.title }}
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    :root {
+        --primary-color: var(--primary-color);
+        --secondary-color: var(--secondary-color);
+    }
+
+    body {
+        color: #434443;
+    }
+
+    .title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .text {
+        font-weight: bold;
+    }
+
+    /* General button styles */
+    button {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        border: none;
+        border-radius: 4px;
+        padding: 8px 12px;
+        font-size: 16px;
+    }
+
+    button:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+
+    .submit-button {
+        margin-top: 10px;
+    }
+
+    .choice-form {
+        padding: 10px;
+    }
+
+    #choice-formset {
+        margin-top: 20px;
+    }
+
+    .add-choice-button {
+        float: right;
+    }
+
+    /* Choice line styles */
+    .choice-line {
+        display: flex;
+        align-items: center;
+    }
+
+    .choice-line input[type="text"] {
+        flex-grow: 1;
+        margin-right: 10px;
+        padding: 8px;
+        font-size: 16px;
+        width: 50%;
+    }
+
+    .choice-line label {
+        margin-right: 10px;
+    }
+
+    /* Remove Choice Button Styles */
+    .remove-choice {
+        background: none;
+        color: #ff0000;
+        /* Optional: Set a color for the trash icon */
+        font-size: 16px;
+        /* Increase the size of the icon */
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .remove-choice:hover {
+        filter: brightness(1.2);
+    }
+
+    /* Adjust icon size inside the button */
+    .remove-choice i {
+        font-size: 20px;
+    }
+
+    /* Error message styles */
+    .error-message {
+        color: #a94442;
+    }
+
+    .field-error {
+        border-color: #a94442;
+    }
+
+    .errorlist {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .errorlist li {
+        color: #a94442;
+        background-color: rgba(254, 176, 189, 1);
+        border: 1px solid #a94442;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+
+    }
+</style>
+{% endblock %}
+{% block content %}
+<h2>Edit Choices for Question: {{ form.instance.question.html|safe }}</h2>
+
+<form method="post" id="edit-form">
+    {% csrf_token %}
+
+    <!-- Hide the main question form if you don't need to display its fields -->
+    <div style="display:none;">
+        {{ form.as_p }}  <!-- Hide the question form fields if they are not needed -->
+    </div>
+
+    {{ form.non_field_errors }}  <!-- Display any form-wide errors -->
+    {{ form.errors }}  <!-- Display field-specific errors for the main form -->
+
+    <h3>Choices</h3>
+    {{ choice_formset.management_form }}  <!-- Required management form for formset -->
+
+    {% for choice_form in choice_formset %}
+        {{ choice_form.errors }}  <!-- Display errors for each choice form -->
+        {{ choice_form.as_p }}  <!-- Render the choices -->
+    {% endfor %}
+    
+    <button type="submit">Save Changes</button>
+</form>
+
+<a href="{% url 'assignment_questions' room_code=classroom.room_code assignment_id=form.instance.assignment.id %}">Back to Questions</a>
+
+<script>
+    // Disable 'required' attribute for hidden fields to prevent focus errors
+    document.addEventListener('DOMContentLoaded', function() {
+        let hiddenFields = document.querySelectorAll('input[style="display:none;"], textarea[style="display:none;"]');
+        hiddenFields.forEach(function(field) {
+            field.removeAttribute('required');
+        });
+    });
+</script>
+
+{% endblock %}

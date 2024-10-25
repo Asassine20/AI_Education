@@ -12,7 +12,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, ListView
 from django import forms
 import os
 
@@ -285,13 +285,82 @@ class EditAssignment(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Add classroom and assignment object to the context
         context['classroom'] = ClassRoom.objects.get(room_code=self.kwargs['room_code'])
+        context['assignment'] = self.object  # The current assignment object (self.object is the assignment being edited)
         return context
-    
+
     # Define the success URL to redirect after form submission
     def get_success_url(self):
         return reverse_lazy('assignments_list', kwargs={'room_code': self.kwargs['room_code']})
 
+class AssignmentQuestionsListView(ListView):
+    model = Questions
+    template_name = 'ai_app/dashboards/teacher/assignments/edit_questions_list.html'
+    context_object_name = 'questions'
+
+    def get_queryset(self):
+        assignment = get_object_or_404(Assignments, pk=self.kwargs['assignment_id'])
+        return Questions.objects.filter(assignment=assignment)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['assignment'] = get_object_or_404(Assignments, pk=self.kwargs['assignment_id'])
+        context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
+        return context
+
+class EditQuestionChoicesView(UpdateView):
+    model = Questions
+    template_name = 'ai_app/dashboards/teacher/assignments/edit_question_choices.html'
+    form_class = ChoiceForm
+
+    def get_object(self, queryset=None):
+        question_id = self.kwargs.get('question_id')
+        return get_object_or_404(Questions, pk=question_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question = self.get_object()
+
+        # Inline formset for choices
+        ChoiceFormSet = inlineformset_factory(
+            Questions, Choices, form=ChoiceForm, extra=0
+        )
+
+        if self.request.POST:
+            context['choice_formset'] = ChoiceFormSet(self.request.POST, instance=question)
+        else:
+            context['choice_formset'] = ChoiceFormSet(instance=question)
+
+        print("Number of forms in the formset:", len(context['choice_formset'].forms))
+
+        context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
+
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        choice_formset = context['choice_formset']
+
+        if form.is_valid() and choice_formset.is_valid():
+            print("Form and formset are valid.")  # Debug message
+            self.object = form.save()  # Save the question form
+            choice_formset.instance = self.object  # Link the choices to the question
+            choice_formset.save()  # Save the choices
+            return super().form_valid(form)
+        else:
+            print("Form or formset is not valid.")  # Debug message
+            print(form.errors)  # Output form errors to terminal
+            print(choice_formset.errors)  # Output formset errors to terminal
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('assignment_questions', kwargs={
+            'room_code': self.kwargs['room_code'],
+            'assignment_id': self.kwargs['assignment_id']
+        })
+
+    
 @login_required
 def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)

@@ -25,7 +25,9 @@ from .teacher_dashboard_views import (
     grades_list,
     add_category,
     delete_assignment,
-    EditAssignment
+    EditAssignment,
+    AssignmentQuestionsListView,
+    EditQuestionChoicesView,
 )
 
 from .question_views import (

@@ -120,4 +120,8 @@ Edit Assignment
     {{ form.as_p }}
 <button class="post-button">Update</button>
 
+<a href="{% url 'assignment_questions' room_code=classroom.room_code assignment_id=assignment.id %}">
+    Edit Questions
+</a>
+
 {% endblock %}

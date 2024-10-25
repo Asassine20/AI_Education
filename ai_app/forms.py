@@ -85,6 +85,7 @@ class QuestionForm(forms.ModelForm):
         fields = ['question_type', 'question', 'points']
 
 class ChoiceForm(forms.ModelForm):
+    choice_text = forms.CharField(required=False)
     class Meta:
         model = Choices
         fields = ['choice_text', 'is_correct']
