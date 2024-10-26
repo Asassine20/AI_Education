@@ -14,6 +14,8 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import UpdateView, ListView
 from django import forms
+from datetime import timedelta
+
 import os
 
 @login_required
@@ -383,20 +385,23 @@ def assignment_page(request, room_code, assignment_id):
         'submission': submission
     })
 
+  
+
 @login_required
 def submit_assignment(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     assignment = get_object_or_404(Assignments, id=assignment_id, classroom=classroom)
     user_profile = get_object_or_404(SchoolUserProfile, user=request.user, role=SchoolUserProfile.STUDENT)
-    #profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
-
+    
     questions = assignment.assignment_questions.all()
     form = StudentAnswerForm(request.POST or None, questions=questions)
 
-    # Zip questions and form fields together
-    question_form_pairs = zip(questions, form)
+    # Calculate the time limit in seconds
+    time_limit_seconds = assignment.time_limit * 60  # Convert time_limit from minutes to seconds
 
+    # Handle form submission (POST request)
     if request.method == 'POST' and form.is_valid():
+        # Save student answers and create submission record
         for question in questions:
             field_name = f"question_{question.id}"
             answer_data = form.cleaned_data.get(field_name)
@@ -423,7 +428,8 @@ def submit_assignment(request, room_code, assignment_id):
     return render(request, 'ai_app/dashboards/teacher/assignments/submit_assignment.html', {
         'assignment': assignment,
         'classroom': classroom,
-        'question_form_pairs': question_form_pairs  # Pass the zipped pairs
+        'question_form_pairs': zip(questions, form),
+        'time_limit_seconds': time_limit_seconds  # Pass the time limit in seconds to the template
     })
 
 @login_required

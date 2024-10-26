@@ -50,17 +50,58 @@
     <p><strong>Number of attempts:</strong> {{ assignment.attempts }}</p>
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
     <hr>
-<form method="post">
-    {% csrf_token %}
-    
-    {% for question, field in question_form_pairs %}
-        <div class="question-block">
-            <h3>Question {{ forloop.counter }}</h3>
-            <div class="question-content">{{ question.question.html|safe }}</div> <!-- Render question content as safe HTML -->
-            <div class="question-input">{{ field }}</div> <!-- Render the associated input field -->
-        </div>
-    {% endfor %}
-    
-    <button type="submit">Submit Assignment</button>
-</form>
+
+    <!-- Display the Timer -->
+    <div id="timer">Time Remaining: <span id="countdown"></span></div>
+
+    <!-- Ensure the form has an ID and submit button -->
+    <form method="post" id="assignmentForm">
+        {% csrf_token %}
+        
+        {% for question, field in question_form_pairs %}
+            <div class="question-block">
+                <h3>Question {{ forloop.counter }}</h3>
+                <div class="question-content">{{ question.question.html|safe }}</div> <!-- Render question content as safe HTML -->
+                <div class="question-input">{{ field }}</div> <!-- Render the associated input field -->
+            </div>
+        {% endfor %}
+        
+        <!-- Add an ID to the submit button -->
+        <button type="submit" id="submitButton">Submit Assignment</button>
+    </form>
+</div>
+
+<!-- Countdown Timer Script -->
+<script>
+    let timeRemaining = {{ time_limit_seconds|default:3600 }};  // Time limit in seconds (defaults to 60 minutes if not provided)
+
+    function startTimer(duration, display) {
+        let timer = duration, minutes, seconds;
+        let interval = setInterval(function () {
+            minutes = Math.floor(timer / 60);
+            seconds = timer % 60;
+
+            // Display the time with leading zero if needed
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                alert("Time's up! Submitting your assignment.");
+                
+                // Trigger the form submission by clicking the submit button
+                document.getElementById('submitButton').click();
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        let display = document.getElementById('countdown');
+        startTimer(timeRemaining, display);
+    };
+</script>
 {% endblock %}
+
+
