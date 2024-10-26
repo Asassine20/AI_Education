@@ -23,7 +23,6 @@
 
     .upload-button button {
         background-color: var(--primary-color);
-        color: var(--secondary-color);
         border-radius: 4px;
         border: none;
         padding: 8px;
@@ -33,6 +32,11 @@
     .upload-button button:hover {
         cursor: pointer;
         filter: brightness(1.5);
+    }
+
+    .upload-button a{
+        color: var(--secondary-color);
+        text-decoration: none;
     }
 
     .assignment-details img {
@@ -63,17 +67,17 @@
 {% elif show_questions and user_role == 'student' %}
 <div class="upload-header">
     <div class="upload-button">
-        <form method="POST" action="{% url 'submit_assignment' classroom.room_code assignment.id %}">
-            {% csrf_token %}
-            <button type="submit">Start Assignment</button>
-        </form>            
-    </div>
+        <button class="upload-button">
+            <a href="{% url 'submit_assignment' classroom.room_code assignment.id %}" class="btn btn-primary">Start Assignment</a>
+        </button>
+        </div>
 </div>
 {% elif before_start %}
 <p>Questions will be available after {{ assignment.start_date }}</p>
 {% elif after_due %}
 <p>The due date for this assignment has passed.</p>
 {% endif %}
+
 <div class="assignment-details">
     <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
     <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
@@ -83,3 +87,4 @@
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
 </div>
 {% endblock %}
+

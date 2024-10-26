@@ -107,8 +107,7 @@ class StudentAnswerForm(forms.Form):
         for question in questions:
             field_name = f"question_{question.id}"
 
-            # Check for the type of 
-            #  and add the corresponding form field
+            # Check for the type of question and add the corresponding form field
             if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
                 # Prepare choices for multiple-choice or dropdown questions
                 choices = [(choice.id, choice.choice_text) for choice in question.question_choices.all()]
@@ -116,10 +115,12 @@ class StudentAnswerForm(forms.Form):
                 # Using .html attribute for QuillField content if available
                 label = question.question.html if hasattr(question.question, 'html') else question.question
 
+                # Allow the question to be optional by setting required=False
                 self.fields[field_name] = forms.ChoiceField(
                     choices=choices,
                     widget=widget,
-                    label=label
+                    label=label,
+                    required=False  # Make the field optional
                 )
             elif question.question_type == 'SHORT_ANSWER':
                 # Use a Textarea widget for short-answer questions
@@ -128,5 +129,5 @@ class StudentAnswerForm(forms.Form):
                 self.fields[field_name] = forms.CharField(
                     widget=forms.Textarea,
                     label=label,
-                    required=False
+                    required=False  # Make short-answer questions optional as well
                 )

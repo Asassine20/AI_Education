@@ -386,7 +386,6 @@ def assignment_page(request, room_code, assignment_id):
     })
 
   
-
 @login_required
 def submit_assignment(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
@@ -396,10 +395,9 @@ def submit_assignment(request, room_code, assignment_id):
     questions = assignment.assignment_questions.all()
     form = StudentAnswerForm(request.POST or None, questions=questions)
 
-    # Calculate the time limit in seconds
-    time_limit_seconds = assignment.time_limit * 60  # Convert time_limit from minutes to seconds
+    # Convert time_limit (minutes) to time_limit_seconds
+    time_limit_seconds = assignment.time_limit * 60  # Convert the time limit to seconds
 
-    # Handle form submission (POST request)
     if request.method == 'POST' and form.is_valid():
         # Save student answers and create submission record
         for question in questions:
@@ -407,30 +405,38 @@ def submit_assignment(request, room_code, assignment_id):
             answer_data = form.cleaned_data.get(field_name)
 
             if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
-                selected_choice = Choices.objects.get(id=answer_data)
-                StudentAnswers.objects.create(
-                    student_profile=user_profile,
-                    question=question,
-                    choice=selected_choice
-                )
+                # Skip if no choice was made (empty answer_data)
+                if answer_data:  # Ensure it's not an empty string or None
+                    selected_choice = Choices.objects.filter(id=answer_data).first()  # Use .filter().first() to avoid errors
+                    if selected_choice:
+                        StudentAnswers.objects.create(
+                            student_profile=user_profile,
+                            question=question,
+                            choice=selected_choice
+                        )
             elif question.question_type == 'SHORT_ANSWER':
-                StudentAnswers.objects.create(
-                    student_profile=user_profile,
-                    question=question,
-                    short_answer=answer_data
-                )
+                # Handle short answer question
+                if answer_data:  # Only save if the student provided an answer
+                    StudentAnswers.objects.create(
+                        student_profile=user_profile,
+                        question=question,
+                        short_answer=answer_data
+                    )
 
         # Create a submission record
         Submissions.objects.create(student_profile=user_profile, assignment=assignment)
 
         return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
 
+    # Pass time_limit_seconds to the template
     return render(request, 'ai_app/dashboards/teacher/assignments/submit_assignment.html', {
         'assignment': assignment,
         'classroom': classroom,
         'question_form_pairs': zip(questions, form),
-        'time_limit_seconds': time_limit_seconds  # Pass the time limit in seconds to the template
+        'time_limit_seconds': time_limit_seconds,  # Pass the calculated time limit in seconds
     })
+
+
 
 @login_required
 def view_submissions(request, room_code, assignment_id):
