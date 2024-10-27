@@ -296,6 +296,7 @@ class EditAssignment(UpdateView):
     def get_success_url(self):
         return reverse_lazy('assignments_list', kwargs={'room_code': self.kwargs['room_code']})
 
+# list questions out to edit them
 class AssignmentQuestionsListView(ListView):
     model = Questions
     template_name = 'ai_app/dashboards/teacher/assignments/edit_questions_list.html'
@@ -362,6 +363,16 @@ class EditQuestionChoicesView(UpdateView):
             'assignment_id': self.kwargs['assignment_id']
         })
 
+
+class SubmissionsListView(ListView):
+    model = Submissions
+    template_name = 'ai_app/dashboards/teacher/assignments/assignment_submissions_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['assignment'] = get_object_or_404(Assignments, pk=self.kwargs['assignment_id'])
+        context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
+        return context
     
 @login_required
 def assignment_page(request, room_code, assignment_id):

@@ -145,6 +145,9 @@
             </a>
             <div class="assignment-actions">
                 {% if user_role == 'teacher' %}
+                <a href="{% url 'assignment_submissions' room_code assignment.id %}" class="edit-btn">
+                    View Submissions
+                </a>
                 <form action="{% url 'delete_assignment' room_code=room_code assignment_id=assignment.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="delete-btn">

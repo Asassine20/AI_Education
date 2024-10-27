@@ -28,6 +28,7 @@ from .teacher_dashboard_views import (
     EditAssignment,
     AssignmentQuestionsListView,
     EditQuestionChoicesView,
+    SubmissionsListView,
 )
 
 from .question_views import (
