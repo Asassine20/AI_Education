@@ -61,6 +61,11 @@ Edit Assignment
         cursor: pointer;
     }
 
+    .post-button a {
+        color: var(--secondary-color);
+        text-decoration: none;
+    }
+
     .add-new-category {
         background-color: var(--primary-color);
         border-radius: 4px;
@@ -120,8 +125,11 @@ Edit Assignment
     {{ form.as_p }}
 <button class="post-button">Update</button>
 
-<a href="{% url 'assignment_questions' room_code=classroom.room_code assignment_id=assignment.id %}">
-    Edit Questions
-</a>
+<button class="post-button">
+    <a href="{% url 'assignment_questions' room_code=classroom.room_code assignment_id=assignment.id %}">
+        Edit Questions
+    </a>
+</button>
+
 
 {% endblock %}

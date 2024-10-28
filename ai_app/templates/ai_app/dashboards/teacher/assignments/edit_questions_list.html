@@ -120,7 +120,27 @@
         padding: 10px;
         margin-bottom: 10px;
         border-radius: 4px;
+    }
 
+    .back-button {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 8px;
+        border: none;
+        margin-top: 10px;
+        width: 200px;
+        text-align: center;
+
+    }
+
+    .back-button:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+
+    .back-button a {
+        color: var(--secondary-color);
+        text-decoration: none;
     }
 </style>
 {% endblock %}
@@ -136,7 +156,7 @@
     </li>
     {% endfor %}
 </ul>
-
-<a href="{% url 'edit_assignment' room_code=classroom.room_code pk=assignment.id %}">Back to Assignment</a>
-
+<div class="back-button">
+    <a href="{% url 'edit_assignment' room_code=classroom.room_code pk=assignment.id %}">Back to Assignment</a>
+</div>
 {% endblock %}
