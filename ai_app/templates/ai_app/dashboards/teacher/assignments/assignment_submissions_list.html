@@ -119,10 +119,25 @@
 </style>
 {% endblock %}
 {% block content %}
-<h1>Articles</h1>
+<div class="assignment-details">
+    <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
+    <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
+    <p><strong>Points:</strong> {{ assignment.points }}</p>
+    <p><strong>Time Limit:</strong> {{ assignment.time_limit }} minutes</p>
+    <p><strong>Number of attempts:</strong> {{ assignment.attempts }}</p>
+    <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
+</div>
 <ul>
 {% for assignment in object_list %}
-    <li>Student ID: {{ assignment.student_profile_id }} - {{ assignment.assignment_id }}</li>
+    <li>
+        {{ assignment.student_profile.user.first_name }} {{ assignment.student_profile.user.last_name }}
+        <small>Submitted at: {{ assignment.submitted_at }}</small>
+        <span>
+            <a href="{% url 'student_submission' room_code=classroom.room_code assignment_id=assignment.id student_id=student.id %}">
+                View Submission
+            </a>
+        </span>
+    </li>
 {% empty %}
     <li>No submissions yet.</li>
 {% endfor %}
