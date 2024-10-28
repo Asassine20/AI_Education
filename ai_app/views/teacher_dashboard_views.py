@@ -12,7 +12,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.generic import UpdateView, ListView
+from django.views.generic import UpdateView, ListView, DetailView
 from django import forms
 from datetime import timedelta
 
@@ -364,7 +364,7 @@ class EditQuestionChoicesView(UpdateView):
 class SubmissionsListView(ListView):
     model = Submissions
     template_name = 'ai_app/dashboards/teacher/assignments/assignment_submissions_list.html'
-
+    
     def get_queryset(self):
         assignment_id = self.kwargs['assignment_id']  # Get assignment_id from URL
         return Submissions.objects.filter(assignment_id=assignment_id).select_related('student_profile__user')
@@ -374,8 +374,13 @@ class SubmissionsListView(ListView):
         context['assignment'] = get_object_or_404(Assignments, pk=self.kwargs['assignment_id'])
         context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
         return context
-
     
+class StudentSubmissionDetailView(DetailView):
+    model = Submissions 
+    template_name = 'ai_app/dashboards/teacher/assignments/student_submission_detail.html'
+    context_object_name ='submission'
+
+
 @login_required
 def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)

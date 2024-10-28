@@ -128,12 +128,12 @@
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
 </div>
 <ul>
-{% for assignment in object_list %}
+{% for submission in object_list %}
     <li>
-        {{ assignment.student_profile.user.first_name }} {{ assignment.student_profile.user.last_name }}
-        <small>Submitted at: {{ assignment.submitted_at }}</small>
+        {{ submission.student_profile.user.first_name }} {{ submission.student_profile.user.last_name }}
+        <small>Submitted at: {{ submission.submitted_at }}</small>
         <span>
-            <a href="{% url 'student_submission' room_code=classroom.room_code assignment_id=assignment.id student_id=student.id %}">
+            <a href="{% url 'student_submission_detail' room_code=classroom.room_code assignment_id=assignment.id pk=submission.id %}">
                 View Submission
             </a>
         </span>
