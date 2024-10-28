@@ -335,8 +335,6 @@ class EditQuestionChoicesView(UpdateView):
         else:
             context['choice_formset'] = ChoiceFormSet(instance=question)
 
-        print("Number of forms in the formset:", len(context['choice_formset'].forms))
-
         context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
 
         return context
@@ -346,7 +344,6 @@ class EditQuestionChoicesView(UpdateView):
         choice_formset = context['choice_formset']
 
         if form.is_valid() and choice_formset.is_valid():
-            print("Form and formset are valid.")  # Debug message
             self.object = form.save()  # Save the question form
             choice_formset.instance = self.object  # Link the choices to the question
             choice_formset.save()  # Save the choices
@@ -368,11 +365,16 @@ class SubmissionsListView(ListView):
     model = Submissions
     template_name = 'ai_app/dashboards/teacher/assignments/assignment_submissions_list.html'
 
+    def get_queryset(self):
+        assignment_id = self.kwargs['assignment_id']  # Get assignment_id from URL
+        return Submissions.objects.filter(assignment_id=assignment_id)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['assignment'] = get_object_or_404(Assignments, pk=self.kwargs['assignment_id'])
         context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
         return context
+
     
 @login_required
 def assignment_page(request, room_code, assignment_id):

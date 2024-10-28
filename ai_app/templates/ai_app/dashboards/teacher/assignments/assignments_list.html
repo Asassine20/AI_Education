@@ -179,6 +179,13 @@
                     <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
                 </div>
             </a>
+            <div class="assignment-actions">
+                {% if user_role == 'teacher' %}
+                <a href="{% url 'assignment_submissions' room_code assignment.id %}" class="edit-btn">
+                    View Submissions
+                </a>
+                {% endif %}
+            </div>
         </li>
         {% endfor %}
     </ul>
