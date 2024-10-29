@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions, Grades
-from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm
+from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm, StudentAnswerGradeFormSet
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
@@ -382,6 +382,7 @@ class StudentSubmissionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         # get submission instance
         submission = self.get_object()
 
@@ -395,13 +396,54 @@ class StudentSubmissionDetailView(DetailView):
         student_answers = StudentAnswers.objects.filter(
             student_profile=submission.student_profile,
             question__assignment=assignment
-        ).select_related('choice')
-        
+        )
+
+        # Create a formset for the student's answers
+        formset = StudentAnswerGradeFormSet(queryset=student_answers)
+
+        combined_data = zip(formset.forms, questions)
         context['assignment'] = assignment
         context['questions'] = questions
         context['student_answers'] = student_answers        
+        context['formset'] = formset
+        context['combined_data'] = combined_data
         context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
         return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()  # Ensure self.object is populated
+        submission = self.object
+        student_profile = submission.student_profile
+        assignment = submission.assignment
+
+        # Get the formset data
+        formset = StudentAnswerGradeFormSet(request.POST)
+
+        if formset.is_valid():
+            total_grade = 0
+            for form in formset:
+                answer = form.save(commit=False)
+                total_grade += answer.points_earned or 0
+                answer.save()
+
+            # Save the overall grade to the Grades model
+            grade, created = Grades.objects.get_or_create(
+                student_profile=student_profile,
+                assignment=assignment,
+                submission=submission,
+                classroom=submission.assignment.classroom
+            )
+            grade.grade_value = total_grade
+            grade.save()
+
+            return redirect('assignment_submissions', room_code=self.kwargs['room_code'], assignment_id=assignment.id)
+
+        else:
+            # Display formset errors if invalid
+            print(formset.errors)  # Debugging - print formset errors to console
+
+        # If invalid, re-render the formset with errors
+        return self.render_to_response(self.get_context_data(formset=formset))
 
 @login_required
 def assignment_page(request, room_code, assignment_id):

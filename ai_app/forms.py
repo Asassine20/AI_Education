@@ -1,8 +1,8 @@
 # ai_app/forms.py
 from django import forms
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category
+from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category, StudentAnswers
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -131,3 +131,14 @@ class StudentAnswerForm(forms.Form):
                     label=label,
                     required=False  # Make short-answer questions optional as well
                 )
+
+class StudentAnswerGradeForm(forms.ModelForm):
+    class Meta:
+        model = StudentAnswers
+        fields = ['points_earned']
+
+StudentAnswerGradeFormSet = modelformset_factory(
+    StudentAnswers,
+    form=StudentAnswerGradeForm,
+    extra=0,
+)

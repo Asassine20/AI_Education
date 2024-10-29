@@ -78,43 +78,88 @@
 </div>
 
 <h3>Questions and Student Answers</h3>
-<ul>
-    {% for question in questions %}
-        <li>
-            <div class="question-title">Question {{ forloop.counter }}: {{ question.question|safe }}</div>
-            <div class="question-type"><small>Type: {{ question.get_question_type_display }}</small></div>
-            
-            {% if question.question_type == 'MULTIPLE_CHOICE' or question.question_type == 'DROPDOWN' %}
-                <ul>
-                    <li><strong>Choices:</strong></li>
-                    <ul>
-                        {% for choice in question.question_choices.all %}
-                            <li class="{% if choice.is_correct %}correct-answer{% elif answer.choice.id == choice.id %}incorrect-answer{% endif %}">
-                                {{ choice.choice_text }} 
-                                {% if choice.is_correct %}(Correct Answer){% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </ul>
-            {% endif %}
+<p id="total-grade">Total Grade: 0</p>
+<form method="POST">
+    {% csrf_token %}
+    {{ formset.management_form }}  <!-- Necessary for formset management -->
 
-            <span class="answer-label">Student's Answer:</span>
-            {% for answer in student_answers %}
-                {% if answer.question.id == question.id %}
-                    {% if question.question_type == 'MULTIPLE_CHOICE' or question.question_type == 'DROPDOWN' %}
-                        <span class="{% if answer.choice and answer.choice.is_correct %}correct-answer{% else %}incorrect-answer{% endif %}">
-                            {% if answer.choice %}
-                                {{ answer.choice.choice_text }}
-                            {% else %}
-                                No Answer
-                            {% endif %}
-                        </span>
-                    {% elif question.question_type == 'SHORT_ANSWER' %}
-                        {{ answer.short_answer }}
-                    {% endif %}
+    <ul>
+        {% for form, question in combined_data %}
+            <li>
+                <div class="question-title">Question {{ forloop.counter }}: {{ question.question|safe }}</div>
+                <div class="question-type"><small>Type: {{ question.get_question_type_display }}</small></div>
+                
+                {% if question.question_type == 'MULTIPLE_CHOICE' or question.question_type == 'DROPDOWN' %}
+                    <ul>
+                        <li><strong>Choices:</strong></li>
+                        <ul>
+                            {% for choice in question.question_choices.all %}
+                                <li class="{% if choice.is_correct %}correct-answer{% elif answer.choice.id == choice.id %}incorrect-answer{% endif %}">
+                                    {{ choice.choice_text }} 
+                                    {% if choice.is_correct %}(Correct Answer){% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </ul>
                 {% endif %}
-            {% endfor %}
-        </li>
-    {% endfor %}
-</ul>
+
+                <span class="answer-label">Student's Answer:</span>
+                {% for answer in student_answers %}
+                    {% if answer.question.id == question.id %}
+                        {% if question.question_type == 'MULTIPLE_CHOICE' or question.question_type == 'DROPDOWN' %}
+                            <span class="{% if answer.choice and answer.choice.is_correct %}correct-answer{% else %}incorrect-answer{% endif %}">
+                                {% if answer.choice %}
+                                    {{ answer.choice.choice_text }}
+                                {% else %}
+                                    No Answer
+                                {% endif %}
+                            </span>
+                        {% elif question.question_type == 'SHORT_ANSWER' %}
+                            {{ answer.short_answer }}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {{ form.id }}  <!-- Ensure the ID field is included in the form -->
+
+                
+                <!-- Use the form field from the formset -->
+                {{ form.points_earned.label_tag }} {{ form.points_earned }}
+                {% if form.errors %}
+                    <div class="error">{{ form.errors }}</div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <button type="submit" class="submit-button">Submit Grade</button>
+
+</form>
+
+<script>
+    const pointInputs = document.querySelectorAll('input[name*="points_earned"]');
+    const totalGradeElement = document.getElementById('total-grade');  <!-- Ensure this element is found -->
+
+    function updateTotalGrade() {
+        if (!totalGradeElement) {
+            console.error("Total grade element not found");
+            return;
+        }
+        let total = 0;
+        pointInputs.forEach(input => {
+            const value = parseFloat(input.value) || 0;
+            total += value;
+        });
+        totalGradeElement.textContent = `Total Grade: ${total}`;
+    }
+
+    pointInputs.forEach(input => {
+        input.addEventListener('input', updateTotalGrade);
+    });
+
+    // Initial total grade calculation
+    updateTotalGrade();
+</script>
 {% endblock %}
+
+
