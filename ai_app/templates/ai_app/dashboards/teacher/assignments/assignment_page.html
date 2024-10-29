@@ -21,22 +21,19 @@
         color: #434443;
     }
 
-    .upload-button button {
+    .upload-button {
         background-color: var(--primary-color);
+        color: var(--secondary-color);
+        text-decoration: none;
         border-radius: 4px;
         border: none;
         padding: 8px;
         font-size: 16px;
     }
 
-    .upload-button button:hover {
+    .upload-button:hover {
         cursor: pointer;
         filter: brightness(1.5);
-    }
-
-    .upload-button a{
-        color: var(--secondary-color);
-        text-decoration: none;
     }
 
     .assignment-details img {
@@ -79,7 +76,9 @@
     {% elif user_role == 'teacher' %}
     {% else %}
     <!-- Start Assignment button, initially visible for students who have not submitted -->
-    <button id="start-assignment-btn" class="btn btn-primary">Start Assignment</button>
+    <button id="start-assignment-btn" class="upload-button">
+        Start Assignment
+    </button>
 
     <!-- Assignment form, initially hidden -->
     <div id="assignment-form" style="display: none;">

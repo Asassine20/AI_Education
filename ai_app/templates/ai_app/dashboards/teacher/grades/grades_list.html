@@ -8,31 +8,135 @@
     body {
         color: #434443;
     }
+
+    .upload-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #434443;
+    }
+
+    .upload-button {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        padding: 8px;
+        margin-top: 10px;
+    }
+
+    .upload-button a {
+        text-decoration: none;
+        font-size: 16px;
+        color: var(--secondary-color);
+    }
+
+    .upload-button:hover {
+        filter: brightness(1.5);
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li:hover {
+        background-color: #f0f0f0;
+    }
+
+    .clickable-card {
+        color: #434443;
+        text-decoration: none;
+        flex-grow: 1;
+    }
+
+    .assignment-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .assignment-title {
+        font-size: 1.2rem;
+        text-align: left;
+    }
+
+    .uploaded-at {
+        font-size: 0.875rem;
+        color: #777;
+        text-align: left;
+    }
+
+    .assignment-actions {
+        display: flex;
+        align-items: center;
+    }
+
+    .edit-btn {
+        margin-left: 10px;
+        font-size: 1.2rem;
+        color: #434443;
+    }
+
+    .edit-btn:hover {
+        filter: brightness(1.5);
+    }
+
+    .delete-btn {
+        background-color: transparent;  
+        color: #ff4d4d;                 
+        border: none;                 
+        cursor: pointer;              
+        font-size: 1.2rem;             
+        margin-right: 5px; 
+        margin-left: 5px;            
+    }
+    
+    .delete-btn i {
+        color: #ff4d4d;                
+    }
+    
+    .delete-btn:hover i {
+        color: #cc0000;                
+    }
+    
+    .delete-btn:hover {
+        background-color: transparent;  
+    }
 </style>
 {% endblock %}
-{% block content %}
-    <h2>Graded Assignments for {{ classroom.room_name }}</h2>
 
-    {% if graded_assignments %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Assignment</th>
-                    <th>Grade</th>
-                    <th>Points</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for grade in graded_assignments %}
-                    <tr>
-                        <td>{{ grade.assignment.title }}</td>
-                        <td>{{ grade.grade_value }}</td>
-                        <td>{{ grade.assignment.points }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No graded assignments found.</p>
-    {% endif %}
+{% block content %}
+<h2>Graded Assignments for {{ classroom.room_name }}</h2>
+
+{% if graded_assignments %}
+    <ul>
+        {% for grade in graded_assignments %}
+        <li>
+            <div class="assignment-left">
+                <span class="assignment-title">{{ grade.assignment.title }}</span>
+                <small class="uploaded-at">
+                    Grade: {{ grade.grade_value }} / {{ grade.assignment.points }} 
+                    ({{ grade.percentage|floatformat:1 }}%)
+                </small>
+            </div>
+            <div class="assignment-actions">
+                <!-- Optionally add actions like "View Details" or "Edit Grade" if needed -->
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No graded assignments found.</p>
+{% endif %}
 {% endblock %}

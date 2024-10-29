@@ -615,11 +615,19 @@ def grades_list(request, room_code):
         classroom=classroom
     ).select_related('assignment', 'submission')
 
+    # Calculate percentage for each grade and add it to the context
+    for grade in graded_assignments:
+        if grade.assignment.points > 0:
+            grade.percentage = (grade.grade_value / grade.assignment.points) * 100
+        else:
+            grade.percentage = 0  # Avoid division by zero
+
     # Render the template with the context data
     return render(request, 'ai_app/dashboards/teacher/grades/grades_list.html', {
         'classroom': classroom,
         'graded_assignments': graded_assignments,
     })
+
 
 @login_required
 def add_category(request, room_code):
