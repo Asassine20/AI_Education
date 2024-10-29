@@ -115,6 +115,7 @@ class StudentAnswers(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name='question_answers')
     choice = models.ForeignKey(Choices, on_delete=models.SET_NULL, null=True, blank=True)
     short_answer = models.TextField(null=True, blank=True)
+    points_earned = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"{self.student_profile.user.username} - {self.question}"

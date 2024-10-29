@@ -1,1 +1,120 @@
-<h1>{{submission.id}}</h1>
+{% extends 'ai_app/dashboards/teacher/course_base.html' %}
+
+{% block title %}
+{{ assignment.title }} Submission: {{ submission.student_profile.user.first_name }} {{ submission.student_profile.user.last_name }}
+{% endblock %}
+
+{% block header %}
+{{ assignment.title }} Submission: {{ submission.student_profile.user.first_name }} {{ submission.student_profile.user.last_name }}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        color: #434443;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li:hover {
+        background-color: #f0f0f0;
+    }
+
+    .correct-answer {
+        color: green;
+        font-weight: bold;
+    }
+
+    .incorrect-answer {
+        color: red;
+        font-weight: bold;
+    }
+
+    .assignment-details {
+        margin-bottom: 20px;
+    }
+
+    .assignment-details p {
+        margin: 5px 0;
+    }
+
+    .question-title {
+        font-weight: bold;
+    }
+
+    .question-type {
+        font-style: italic;
+        color: #555;
+    }
+
+    .answer-label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="assignment-details">
+    <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
+    <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
+    <p><strong>Points:</strong> {{ assignment.points }}</p>
+    <p><strong>Time Limit:</strong> {{ assignment.time_limit }} minutes</p>
+    <p><strong>Number of attempts:</strong> {{ assignment.attempts }}</p>
+    <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
+</div>
+
+<h3>Questions and Student Answers</h3>
+<ul>
+    {% for question in questions %}
+        <li>
+            <div class="question-title">Question {{ forloop.counter }}: {{ question.question|safe }}</div>
+            <div class="question-type"><small>Type: {{ question.get_question_type_display }}</small></div>
+            
+            {% if question.question_type == 'MULTIPLE_CHOICE' or question.question_type == 'DROPDOWN' %}
+                <ul>
+                    <li><strong>Choices:</strong></li>
+                    <ul>
+                        {% for choice in question.question_choices.all %}
+                            <li class="{% if choice.is_correct %}correct-answer{% elif answer.choice.id == choice.id %}incorrect-answer{% endif %}">
+                                {{ choice.choice_text }} 
+                                {% if choice.is_correct %}(Correct Answer){% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </ul>
+            {% endif %}
+
+            <span class="answer-label">Student's Answer:</span>
+            {% for answer in student_answers %}
+                {% if answer.question.id == question.id %}
+                    {% if question.question_type == 'MULTIPLE_CHOICE' or question.question_type == 'DROPDOWN' %}
+                        <span class="{% if answer.choice and answer.choice.is_correct %}correct-answer{% else %}incorrect-answer{% endif %}">
+                            {% if answer.choice %}
+                                {{ answer.choice.choice_text }}
+                            {% else %}
+                                No Answer
+                            {% endif %}
+                        </span>
+                    {% elif question.question_type == 'SHORT_ANSWER' %}
+                        {{ answer.short_answer }}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

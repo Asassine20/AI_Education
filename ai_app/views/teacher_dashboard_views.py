@@ -380,6 +380,28 @@ class StudentSubmissionDetailView(DetailView):
     template_name = 'ai_app/dashboards/teacher/assignments/student_submission_detail.html'
     context_object_name ='submission'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # get submission instance
+        submission = self.get_object()
+
+        # get related assignment
+        assignment = submission.assignment
+
+        # get all questions related to assignment
+        questions = Questions.objects.filter(assignment=assignment).prefetch_related('question_choices')
+
+        # get student answers for current submission
+        student_answers = StudentAnswers.objects.filter(
+            student_profile=submission.student_profile,
+            question__assignment=assignment
+        ).select_related('choice')
+        
+        context['assignment'] = assignment
+        context['questions'] = questions
+        context['student_answers'] = student_answers        
+        context['classroom'] = get_object_or_404(ClassRoom, room_code=self.kwargs['room_code'])
+        return context
 
 @login_required
 def assignment_page(request, room_code, assignment_id):
