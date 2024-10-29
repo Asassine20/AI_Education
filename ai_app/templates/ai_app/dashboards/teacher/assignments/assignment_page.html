@@ -60,24 +60,6 @@
 {% endblock %}
 
 {% block content %}
-{% if submission %}
-<div class="submitted-message">
-    Submitted <span class="checkmark">&#10003;</span>
-</div>
-{% elif show_questions and user_role == 'student' %}
-<div class="upload-header">
-    <div class="upload-button">
-        <button class="upload-button">
-            <a href="{% url 'submit_assignment' classroom.room_code assignment.id %}" class="btn btn-primary">Start Assignment</a>
-        </button>
-        </div>
-</div>
-{% elif before_start %}
-<p>Questions will be available after {{ assignment.start_date }}</p>
-{% elif after_due %}
-<p>The due date for this assignment has passed.</p>
-{% endif %}
-
 <div class="assignment-details">
     <p><strong>Start Date:</strong> {{ assignment.start_date }}</p>
     <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
@@ -85,6 +67,78 @@
     <p><strong>Time Limit:</strong> {{ assignment.time_limit }} minutes</p>
     <p><strong>Number of attempts:</strong> {{ assignment.attempts }}</p>
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
+    <hr>
+
+    <!-- Timer will be displayed once the assignment starts -->
+    <div id="timer" style="display: none;">Time Remaining: <span id="countdown"></span></div>
+
+    {% if submission %}
+    <!-- If the assignment is already submitted -->
+    <p class="submitted-message">Submitted <span class="checkmark"><i class="fa-solid fa-check"></i></span></p>
+    
+    {% elif user_role == 'teacher' %}
+    {% else %}
+    <!-- Start Assignment button, initially visible for students who have not submitted -->
+    <button id="start-assignment-btn" class="btn btn-primary">Start Assignment</button>
+
+    <!-- Assignment form, initially hidden -->
+    <div id="assignment-form" style="display: none;">
+        <form method="post" id="assignmentForm" action="">
+            {% csrf_token %}
+            
+            {% for question, field in question_form_pairs %}
+                <div class="question-block">
+                    <h3>Question {{ forloop.counter }}</h3>
+                    <div class="question-content">{{ question.question.html|safe }}</div> <!-- Render question content as safe HTML -->
+                    <div class="question-input">{{ field }}</div> <!-- Render the associated input field -->
+                </div>
+            {% endfor %}
+            
+            <!-- Add an ID to the submit button -->
+            <button type="submit" id="submitButton" class="btn btn-primary">Submit Assignment</button>
+        </form>
+    </div>
+    {% endif %}
 </div>
+
+<!-- JavaScript for handling button click and timer -->
+<script>
+    let timeRemaining = {{ time_limit_seconds }};  // Use the time limit passed from the view (in seconds)
+
+    // Timer logic
+    function startTimer(duration, display) {
+        let timer = duration, minutes, seconds;
+        let interval = setInterval(function () {
+            minutes = Math.floor(timer / 60);
+            seconds = timer % 60;
+
+            // Display the time with leading zero if needed
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            // Check if timer reaches zero
+            if (--timer < 0) {
+                clearInterval(interval);
+                alert("Time's up! Submitting your assignment.");
+                document.getElementById('assignmentForm').submit();  // Submit the form when time runs out
+            }
+        }, 1000);
+    }
+
+    // Event handler for "Start Assignment" button click
+    document.getElementById('start-assignment-btn')?.addEventListener('click', function() {
+        // Show the form and timer, hide the Start Assignment button
+        document.getElementById('assignment-form').style.display = 'block';
+        document.getElementById('timer').style.display = 'block';  // Show the timer
+        this.style.display = 'none';  // Hide the Start Assignment button
+
+        // Start the countdown timer
+        let display = document.getElementById('countdown');
+        startTimer(timeRemaining, display);
+    });
+</script>
 {% endblock %}
+
 

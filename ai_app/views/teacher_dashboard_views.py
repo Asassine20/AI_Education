@@ -268,6 +268,7 @@ def assignments_list(request, room_code):
         'upcoming_assignments': upcoming_assignments,
         'past_assignments': past_assignments,
         'room_code': room_code,
+        'user_role': profile.role,  # Pass user role to template
     })
 
 @login_required
@@ -450,24 +451,77 @@ def assignment_page(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)
     profile = get_object_or_404(SchoolUserProfile, user=request.user)
     assignment = get_object_or_404(Assignments, classroom=classroom, id=assignment_id)
+
+    # Fetch questions related to this assignment
+    questions = assignment.assignment_questions.all()
+
+    # Check if there is an existing submission
     try:
         submission = Submissions.objects.get(assignment=assignment, student_profile=profile)
     except Submissions.DoesNotExist:
         submission = None
+
+    # Current time and assignment status checks
     current_time = timezone.now()
     before_start = current_time < assignment.start_date
     after_due = current_time > assignment.due_date
     show_questions = assignment.start_date <= current_time <= assignment.due_date
-    return render(request, 'ai_app/dashboards/teacher/assignments/assignment_page.html',{
+
+    # Determine the user's role (student or teacher)
+    user_role = profile.role  # Assuming 'role' field in SchoolUserProfile contains 'student' or 'teacher'
+
+    # Initialize form with the questions
+    form = StudentAnswerForm(request.POST or None, questions=questions)
+
+    # Handle form submission
+    if request.method == 'POST' and form.is_valid():
+        # Process student answers
+        for question in questions:
+            field_name = f"question_{question.id}"
+            answer_data = form.cleaned_data.get(field_name)
+
+            if question.question_type in ['MULTIPLE_CHOICE', 'DROPDOWN']:
+                if answer_data:
+                    selected_choice = Choices.objects.filter(id=answer_data).first()
+                    if selected_choice:
+                        StudentAnswers.objects.create(
+                            student_profile=profile,
+                            question=question,
+                            choice=selected_choice
+                        )
+            elif question.question_type == 'SHORT_ANSWER':
+                if answer_data:
+                    StudentAnswers.objects.create(
+                        student_profile=profile,
+                        question=question,
+                        short_answer=answer_data
+                    )
+
+        # Create submission record
+        Submissions.objects.create(student_profile=profile, assignment=assignment)
+
+        # Redirect to the same page after successful submission
+        return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
+
+    # Time limit for the assignment
+    time_limit_seconds = assignment.time_limit * 60
+
+    # Zip questions and form fields together to pass to the template
+    question_form_pairs = zip(questions, form)
+
+    return render(request, 'ai_app/dashboards/teacher/assignments/assignment_page.html', {
         'classroom': classroom,
         'assignment': assignment,
         'show_questions': show_questions,
-        'after_due': after_due,
         'before_start': before_start,
-        'submission': submission
+        'after_due': after_due,
+        'submission': submission,
+        'form': form,
+        'question_form_pairs': question_form_pairs,
+        'time_limit_seconds': time_limit_seconds,
+        'user_role': user_role,  # Pass the user role to the template
     })
 
-  
 @login_required
 def submit_assignment(request, room_code, assignment_id):
     classroom = get_object_or_404(ClassRoom, room_code=room_code)

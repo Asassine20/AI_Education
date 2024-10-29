@@ -142,6 +142,11 @@
                     <span class="assignment-title">{{ assignment.title }}</span>
                     <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
                     <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
+                    
+                    <!-- Show "Submitted" if the assignment has been submitted -->
+                    {% if assignment.submitted %}
+                    <small class="submitted-status" style="color: green;">Submitted <i class="fa-solid fa-check"></i></small>
+                    {% endif %}
                 </div>
             </a>
             <div class="assignment-actions">
@@ -178,6 +183,11 @@
                     <span class="assignment-title">{{ assignment.title }}</span>
                     <small class="uploaded-at">Start Date: {{ assignment.start_date }}</small>
                     <small class="uploaded-at">Due Date: {{ assignment.due_date }}</small>
+                    
+                    <!-- Show "Submitted" if the assignment has been submitted -->
+                    {% if assignment.submitted %}
+                    <small class="submitted-status" style="color: green;">Submitted <i class="fa-solid fa-check"></i></small>
+                    {% endif %}
                 </div>
             </a>
             <div class="assignment-actions">
@@ -194,3 +204,4 @@
 <p class="list-group-item text-center">No past assignments available.</p>
 {% endif %}
 {% endblock %}
+
