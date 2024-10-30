@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions, Grades
-from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm, StudentAnswerGradeFormSet
+from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm, StudentAnswerGradeFormSet, JoinClassForm
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
@@ -43,8 +43,6 @@ def dashboard(request):
         'profile_image': profile_image,
     })
 
-
-
 @login_required
 def add_class(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')
@@ -54,6 +52,7 @@ def add_class(request):
         description = request.POST['description']
         room_code = request.POST['room_code']
         room_number = request.POST['room_number']
+        room_password = request.POST['room_password']
 
         # Get the class times
         days = request.POST.getlist('days[]')
@@ -74,6 +73,7 @@ def add_class(request):
             university=profile.university,
             teacher=request.user,
             room_number=room_number,
+            room_password=room_password,
             class_times=class_times 
         )
 
@@ -84,19 +84,36 @@ def add_class(request):
 
 @login_required
 def join_class(request):
-    profile = get_object_or_404(SchoolUserProfile, user=request.user, role='student')
-    if request.method == 'POST':
-        room_code = request.POST['room_code']
-        try:
-            classroom = ClassRoom.objects.get(room_code=room_code)
-            profile.classes.add(classroom)
-            return redirect('dashboard')
-        except ClassRoom.DoesNotExist:
-            return render(request, 'ai_app/dashboards/teacher/dashboard/teacher_dashboard.html', {
-                'error': 'Invalid class code',
-            })
+    profile = get_object_or_404(SchoolUserProfile, user=request.user, role=SchoolUserProfile.STUDENT)  # Get the student's profile
     
-    return render(request, 'ai_app/dashboards/teacher/dashboard/join_class.html')
+    if request.method == 'POST':
+        form = JoinClassForm(request.POST)
+        if form.is_valid():
+            room_code = form.cleaned_data['room_code']
+            
+            # Get the classroom after successful validation
+            classroom = ClassRoom.objects.get(room_code=room_code)
+            
+            # Add the user to the classroom's students field
+            classroom.students.add(request.user)
+            classroom.save()
+            
+            # Add the classroom to the student's classes in the SchoolUserProfile
+            profile.classes.add(classroom)
+            profile.save()
+            
+            messages.success(request, 'You have successfully joined the class!')
+            return redirect('dashboard')
+        
+        else:
+            messages.error(request, 'There was a problem with the form submission. Please try again.')
+    
+    else:
+        form = JoinClassForm()
+
+    return render(request, 'ai_app/dashboards/teacher/dashboard/join_class.html', {
+        'form': form,
+    })
     
 @login_required
 def course_page(request, room_code):

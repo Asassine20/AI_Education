@@ -65,6 +65,37 @@
         button:hover {
             filter: brightness(1.5);
         }
+
+        /* Styles for messages */
+        .messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        .messages li {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .messages .success {
+            background-color: #4CAF50;
+        }
+
+        .messages .error {
+            background-color: #F44336;
+        }
+
+        .messages .warning {
+            background-color: #FF9800;
+        }
+
+        .messages .info {
+            background-color: #2196F3;
+        }
     </style>
 </head>
 <body>
@@ -74,10 +105,10 @@
 
 <div class="container">
     <h1>Join Class</h1>
-    <form method="POST">
+
+    <form method="post">
         {% csrf_token %}
-        <label for="room_code">Room Code:</label>
-        <input type="text" id="room_code" name="room_code" required>
+        {{ form.as_p }}
         <button type="submit">Join Class</button>
     </form>
 </div>

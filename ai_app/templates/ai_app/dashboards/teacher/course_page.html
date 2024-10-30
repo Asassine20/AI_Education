@@ -88,6 +88,12 @@
     <label>Room Number:</label>
     <span>{{ classroom.room_number }}</span>
 </div>
+{% if user_role == 'teacher' %}
+<div class="class-info">
+    <label>Room Password:</label>
+    <span>{{ classroom.room_password }}</span>
+</div>
+{% endif %}
 
 <!-- Class Times -->
 <div class="class-times">

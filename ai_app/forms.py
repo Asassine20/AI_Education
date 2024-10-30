@@ -2,7 +2,8 @@
 from django import forms
 from django.forms import inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
-from .models import CourseMaterial, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category, StudentAnswers
+from django.core.exceptions import ValidationError
+from .models import CourseMaterial, ClassRoom, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category, StudentAnswers
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -12,6 +13,29 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+
+class JoinClassForm(forms.Form):
+    room_code = forms.CharField(max_length=50)
+    room_password = forms.CharField(widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        room_code = cleaned_data.get('room_code')
+        room_password = cleaned_data.get('room_password')
+
+        if room_code and room_password:
+            # Try to find a classroom with the provided room code
+            try:
+                classroom = ClassRoom.objects.get(room_code=room_code)
+                
+                # If the room code is correct, check the password
+                if classroom.room_password != room_password:
+                    raise ValidationError('Incorrect password for the classroom.')
+            
+            except ClassRoom.DoesNotExist:
+                raise ValidationError('Classroom with this room code does not exist.')
+
+        return cleaned_data
 
 class FileUploadForm(forms.ModelForm):
     category = forms.ChoiceField(choices=[], required=False, label="Select Category")

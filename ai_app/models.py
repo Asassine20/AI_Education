@@ -31,6 +31,7 @@ class University(models.Model):
 class ClassRoom(models.Model):
     room_name = models.CharField(max_length=255)
     room_code = models.CharField(max_length=50, unique=True)
+    room_password = models.CharField(max_length=100)
     description = models.TextField(blank=True) 
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='classes_teaching')
