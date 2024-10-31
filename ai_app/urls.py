@@ -27,7 +27,6 @@ urlpatterns = [
     path('dashboard/course/<str:room_code>/assignments-list/<int:assignment_id>/submissions', SubmissionsListView.as_view(), name='assignment_submissions'),
     path('dashboard/course/<str:room_code>/assignments-list/<int:assignment_id>/submission/<int:pk>', StudentSubmissionDetailView.as_view(), name='student_submission_detail'),
     path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/', assignment_page, name='assignment_page'),
-    path('dashboard/course/<str:room_code>/assignment/<int:assignment_id>/submit/', submit_assignment, name='submit_assignment'),
     path('classroom/<str:room_code>/assignment/create/', assignment_create, name='assignment_create'),
     path('dashboard/course/<str:room_code>/assignment/add-category/', add_category, name='add_category'),
     path('assignment/<int:pk>/', assignment_detail, name='assignment_detail'),
