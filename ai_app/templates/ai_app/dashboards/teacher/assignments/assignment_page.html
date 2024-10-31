@@ -1,57 +1,152 @@
 {% extends 'ai_app/dashboards/teacher/course_base.html' %}
 
 {% block title %}
-{{ assignment.title }} - Assignment Page
+    {{ assignment.title }} - Assignment Page
 {% endblock %}
 
 {% block header %}
-{{ assignment.title }}
+    {{ assignment.title }}
 {% endblock %}
 
 {% block extra_css %}
 <style>
     body {
         color: #434443;
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        padding: 20px;
     }
 
-    .upload-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: #434443;
-    }
-
+    /* Upload button style */
     .upload-button {
         background-color: var(--primary-color);
         color: var(--secondary-color);
-        text-decoration: none;
-        border-radius: 4px;
         border: none;
-        padding: 8px;
+        border-radius: 4px;
+        padding: 10px 20px;
         font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
     }
 
     .upload-button:hover {
-        cursor: pointer;
         filter: brightness(1.5);
     }
 
-    .assignment-details img {
-        width: 750px;
+    /* Assignment details styling */
+    .assignment-details {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     }
 
+    .assignment-details p {
+        margin: 8px 0;
+    }
+
+    /* Submitted message styling */
     .submitted-message {
+        font-size: 18px;
+        font-weight: bold;
+        color: #4CAF50;
         display: flex;
         align-items: center;
-        font-size: 16px;
-        color: green;
-        font-weight: bold;
     }
 
     .submitted-message .checkmark {
         margin-left: 8px;
-        color: green;
-        font-size: 20px;
+        font-size: 24px;
+    }
+
+    /* Timer styling */
+    #timer {
+        font-size: 18px;
+        color: #D9534F;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    /* Question form styling */
+    .question-block {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f8f8f8;
+    }
+
+    .question-block h3 {
+        color: var(--primary-color);
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    /* Input field styling */
+    .question-input input[type="text"],
+    .question-input textarea,
+    .question-input select {
+        width: 96%; /* Slightly narrower width for better fit */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 15px;
+        margin-top: 5px;
+        color: #434443;
+        background-color: #fff;
+        transition: border-color 0.3s ease;
+    }
+
+    .question-input input[type="text"]:focus,
+    .question-input textarea:focus,
+    .question-input select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+    }
+
+    /* Styling for radio buttons and checkboxes */
+    .question-input input[type="radio"],
+    .question-input input[type="checkbox"] {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .question-input label {
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        position: relative;
+        cursor: pointer;
+        color: #434443;
+        user-select: none;
+        padding: 8px 10px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Highlighting selected choice */
+    .question-input input[type="radio"]:checked + label,
+    .question-input input[type="checkbox"]:checked + label {
+        background-color: #e0f0ff;
+        border-color: var(--primary-color);
+    }
+
+    /* Custom checkmark (optional, if you'd like to use a custom look) */
+    .question-input input[type="radio"] + label .custom-check,
+    .question-input input[type="checkbox"] + label .custom-check {
+        display: none; /* Remove custom check for simplicity */
+    }
+
+    /* Styling for the submit button */
+    #submitButton {
+        margin-top: 20px;
+        display: inline-block;
     }
 </style>
 {% endblock %}
@@ -81,11 +176,22 @@
                         <div class="question-block">
                             <h3>Question {{ forloop.counter }}</h3>
                             <div class="question-content">{{ question.question.html|safe }}</div>
-                            <div class="question-input">{{ field }}</div>
+                            <div class="question-input">
+                                {% if field.widget.input_type == "radio" or field.widget.input_type == "checkbox" %}
+                                    {% for subwidget in field %}
+                                        <input type="{{ field.widget.input_type }}" id="{{ subwidget.id_for_label }}" name="{{ field.html_name }}" value="{{ subwidget.choice_value }}" {% if subwidget.choice_value == field.value %}checked{% endif %}>
+                                        <label for="{{ subwidget.id_for_label }}">
+                                            {{ subwidget.choice_label }}
+                                        </label>
+                                    {% endfor %}
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                            </div>
                         </div>
                     {% endfor %}
                     
-                    <button type="submit" id="submitButton" class="btn btn-primary">Submit Assignment</button>
+                    <button type="submit" id="submitButton" class="upload-button">Submit Assignment</button>
                 </form>
             </div>
         {% else %}
@@ -96,12 +202,14 @@
         <!-- Teacher view can be handled here -->
     {% else %}
         <!-- Start Assignment button -->
+        {% if not after_due %}
         <form method="post">
             {% csrf_token %}
             <button type="submit" name="start_assignment" id="start-assignment-btn" class="upload-button">
                 Start Assignment
             </button>
         </form>
+    {% endif %}
     {% endif %}
 </div>
 
