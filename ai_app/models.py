@@ -124,7 +124,8 @@ class StudentAnswers(models.Model):
 class Submissions(models.Model):
     student_profile = models.ForeignKey(SchoolUserProfile, on_delete=models.CASCADE, related_name='student_submission')
     assignment = models.ForeignKey(Assignments, on_delete=models.CASCADE, related_name='submission_answers')
-    submitted_at = models.DateTimeField(auto_now_add=True)
+    submitted_at = models.DateTimeField(null=True, blank=True)  # Field to store when the assignment is submitted
+    start_time = models.DateTimeField(null=True, blank=True)  # New field to store the start time
 
     def __str__(self):
         return f"{self.student_profile.user.username} - {self.assignment.title} - {self.submitted_at}"

@@ -66,78 +66,70 @@
     <p><strong>Description:</strong> {{ assignment.description.html|safe }}</p>
     <hr>
 
-    <!-- Timer will be displayed once the assignment starts -->
-    <div id="timer" style="display: none;">Time Remaining: <span id="countdown"></span></div>
-
-    {% if submission %}
-    <!-- If the assignment is already submitted -->
-    <p class="submitted-message">Submitted <span class="checkmark"><i class="fa-solid fa-check"></i></span></p>
-    
+    {% if submission and submission.submitted_at %}
+        <!-- Assignment is already submitted -->
+        <p class="submitted-message">Submitted <span class="checkmark"><i class="fa-solid fa-check"></i></span></p>
+    {% elif submission and submission.start_time %}
+        {% if time_remaining > 0 %}
+            <!-- Assignment form and timer -->
+            <div id="timer">Time Remaining: <span id="countdown"></span></div>
+            <div id="assignment-form">
+                <form method="post" id="assignmentForm" action="">
+                    {% csrf_token %}
+                    
+                    {% for question, field in question_form_pairs %}
+                        <div class="question-block">
+                            <h3>Question {{ forloop.counter }}</h3>
+                            <div class="question-content">{{ question.question.html|safe }}</div>
+                            <div class="question-input">{{ field }}</div>
+                        </div>
+                    {% endfor %}
+                    
+                    <button type="submit" id="submitButton" class="btn btn-primary">Submit Assignment</button>
+                </form>
+            </div>
+        {% else %}
+            <!-- Time's up message -->
+            <p>Time's up! Your assignment has been automatically submitted.</p>
+        {% endif %}
     {% elif user_role == 'teacher' %}
+        <!-- Teacher view can be handled here -->
     {% else %}
-    <!-- Start Assignment button, initially visible for students who have not submitted -->
-    <button id="start-assignment-btn" class="upload-button">
-        Start Assignment
-    </button>
-
-    <!-- Assignment form, initially hidden -->
-    <div id="assignment-form" style="display: none;">
-        <form method="post" id="assignmentForm" action="">
+        <!-- Start Assignment button -->
+        <form method="post">
             {% csrf_token %}
-            
-            {% for question, field in question_form_pairs %}
-                <div class="question-block">
-                    <h3>Question {{ forloop.counter }}</h3>
-                    <div class="question-content">{{ question.question.html|safe }}</div> <!-- Render question content as safe HTML -->
-                    <div class="question-input">{{ field }}</div> <!-- Render the associated input field -->
-                </div>
-            {% endfor %}
-            
-            <!-- Add an ID to the submit button -->
-            <button type="submit" id="submitButton" class="btn btn-primary">Submit Assignment</button>
+            <button type="submit" name="start_assignment" id="start-assignment-btn" class="upload-button">
+                Start Assignment
+            </button>
         </form>
-    </div>
     {% endif %}
 </div>
 
-<!-- JavaScript for handling button click and timer -->
+<!-- JavaScript for the timer -->
 <script>
-    let timeRemaining = {{ time_limit_seconds }};  // Use the time limit passed from the view (in seconds)
-
-    // Timer logic
-    function startTimer(duration, display) {
-        let timer = duration, minutes, seconds;
-        let interval = setInterval(function () {
-            minutes = Math.floor(timer / 60);
-            seconds = timer % 60;
-
-            // Display the time with leading zero if needed
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-
-            display.textContent = minutes + ":" + seconds;
-
-            // Check if timer reaches zero
-            if (--timer < 0) {
-                clearInterval(interval);
-                alert("Time's up! Submitting your assignment.");
-                document.getElementById('assignmentForm').submit();  // Submit the form when time runs out
-            }
-        }, 1000);
-    }
-
-    // Event handler for "Start Assignment" button click
-    document.getElementById('start-assignment-btn')?.addEventListener('click', function() {
-        // Show the form and timer, hide the Start Assignment button
-        document.getElementById('assignment-form').style.display = 'block';
-        document.getElementById('timer').style.display = 'block';  // Show the timer
-        this.style.display = 'none';  // Hide the Start Assignment button
-
-        // Start the countdown timer
+    {% if submission and submission.start_time and time_remaining > 0 %}
+        let timeRemaining = {{ time_remaining }};  // Remaining time in seconds
         let display = document.getElementById('countdown');
         startTimer(timeRemaining, display);
-    });
+
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            let interval = setInterval(function () {
+                minutes = Math.floor(timer / 60);
+                seconds = timer % 60;
+
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    alert("Time's up! Submitting your assignment.");
+                    document.getElementById('assignmentForm').submit();
+                }
+            }, 1000);
+        }
+    {% endif %}
 </script>
 {% endblock %}
-
-

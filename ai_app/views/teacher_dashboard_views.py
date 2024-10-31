@@ -478,7 +478,6 @@ def assignment_page(request, room_code, assignment_id):
     except Submissions.DoesNotExist:
         submission = None
 
-    # Current time and assignment status checks
     current_time = timezone.now()
     before_start = current_time < assignment.start_date
     after_due = current_time > assignment.due_date
@@ -490,8 +489,32 @@ def assignment_page(request, room_code, assignment_id):
     # Initialize form with the questions
     form = StudentAnswerForm(request.POST or None, questions=questions)
 
+    # Handle 'Start Assignment' POST
+    if request.method == 'POST' and 'start_assignment' in request.POST:
+        # Create a new submission with start_time
+        if not submission:
+            submission = Submissions.objects.create(student_profile=profile, assignment=assignment, start_time=timezone.now())
+        else:
+            # If submission exists but no start_time, update it
+            if not submission.start_time:
+                submission.start_time = timezone.now()
+                submission.save()
+        return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
+
     # Handle form submission
-    if request.method == 'POST' and form.is_valid():
+    elif request.method == 'POST' and form.is_valid():
+        # Recalculate time_remaining
+        if submission and submission.start_time:
+            time_limit_seconds = assignment.time_limit * 60
+            time_elapsed = (current_time - submission.start_time).total_seconds()
+            time_remaining = max(0, time_limit_seconds - time_elapsed)
+            if time_remaining <= 0:
+                # Time's up, but still process the submission
+                messages.info(request, "Time's up! Your assignment has been automatically submitted.")
+        else:
+            messages.error(request, "You must start the assignment first.")
+            return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
+
         # Process student answers
         for question in questions:
             field_name = f"question_{question.id}"
@@ -514,16 +537,28 @@ def assignment_page(request, room_code, assignment_id):
                         short_answer=answer_data
                     )
 
-        # Create submission record
-        Submissions.objects.create(student_profile=profile, assignment=assignment)
+        # Update submission record with submitted_at
+        submission.submitted_at = timezone.now()
+        submission.save()
 
-        # Redirect to the same page after successful submission
+        # Redirect after successful submission
         return redirect('assignment_page', room_code=room_code, assignment_id=assignment_id)
 
-    # Time limit for the assignment
-    time_limit_seconds = assignment.time_limit * 60
+    # Calculate time remaining
+    if submission and submission.start_time:
+        time_limit_seconds = assignment.time_limit * 60
+        time_elapsed = (current_time - submission.start_time).total_seconds()
+        time_remaining = max(0, time_limit_seconds - time_elapsed)
+    else:
+        time_remaining = assignment.time_limit * 60  # Full time limit
 
-    # Zip questions and form fields together to pass to the template
+    # If time is up and assignment not yet submitted, auto-submit
+    if submission and not submission.submitted_at and time_remaining <= 0:
+        # Auto-submit the assignment
+        submission.submitted_at = submission.start_time + timezone.timedelta(seconds=time_limit_seconds)
+        submission.save()
+        messages.info(request, "Time's up! Your assignment has been automatically submitted.")
+
     question_form_pairs = zip(questions, form)
 
     return render(request, 'ai_app/dashboards/teacher/assignments/assignment_page.html', {
@@ -535,8 +570,8 @@ def assignment_page(request, room_code, assignment_id):
         'submission': submission,
         'form': form,
         'question_form_pairs': question_form_pairs,
-        'time_limit_seconds': time_limit_seconds,
-        'user_role': user_role,  # Pass the user role to the template
+        'time_remaining': int(time_remaining),
+        'user_role': user_role,
     })
 
 @login_required
