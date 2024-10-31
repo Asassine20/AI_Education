@@ -94,6 +94,7 @@
 
 <h3>Questions and Student Answers</h3>
 <p id="total-grade">Total Grade: 0</p>
+
 <form method="POST">
     {% csrf_token %}
     {{ formset.management_form }}  <!-- Necessary for formset management -->
@@ -101,12 +102,13 @@
     <ul>
         {% for form, question in combined_data %}
             <li>
-                <div class="question-title">Question {{ forloop.counter }}: {{ question.question|safe }}</div>
+                <div class="question-title">Question {{ forloop.counter }}: {{ question.question.html|safe }}Points: {{ question.points }}</div>
                 <div class="question-type"><small>Type: {{ question.get_question_type_display }}</small></div>
-                
+                <div class="question-type"></div>
+
                 {% if question.question_type == 'MULTIPLE_CHOICE' or question.question_type == 'DROPDOWN' %}
                     <ul>
-                        <li><strong>Choices:</strong></li>
+                        <h4><strong>Choices:</strong></h4>
                         <ul>
                             {% for choice in question.question_choices.all %}
                                 <li class="{% if choice.is_correct %}correct-answer{% elif answer.choice.id == choice.id %}incorrect-answer{% endif %}">
@@ -129,8 +131,10 @@
                                     No Answer
                                 {% endif %}
                             </span>
+                            <br>
                         {% elif question.question_type == 'SHORT_ANSWER' %}
                             {{ answer.short_answer }}
+                            <br>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
@@ -165,7 +169,7 @@
             const value = parseFloat(input.value) || 0;
             total += value;
         });
-        totalGradeElement.textContent = `Total Grade: ${total}`;
+        totalGradeElement.textContent = `Total Grade: ${total} / {{ assignment.points }}`;
     }
 
     pointInputs.forEach(input => {
