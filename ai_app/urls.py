@@ -7,6 +7,7 @@ urlpatterns = [
     path("ask/", ask_question, name="ask_question"),
     path('view-questions/', view_questions, name='view_questions'),
     path('signup/', signup_view, name='signup'),
+    path('parent-signup/', parent_signup, name='parent_signup'),
     path('school-signup/', school_signup_view, name='school_signup'),  # Added school-specific sign-up route
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),

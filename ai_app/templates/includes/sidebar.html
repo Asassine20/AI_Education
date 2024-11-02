@@ -131,9 +131,7 @@
 <div class="navbar">
     {% if user_role == 'admin' %}
     <a href="{% url 'admin_dashboard' %}">
-    {% elif user_role == 'teacher' %}
-    <a href="{% url 'dashboard' %}">
-    {% elif user_role == 'student' %}
+    {% elif user_role == 'teacher' or user_role == 'student' or user_role == 'parent' %}
     <a href="{% url 'dashboard' %}">
     {% endif %}
         <img class="logo" src="{{ logo.url }}" alt="University Logo">
@@ -160,7 +158,7 @@
     <a href="{% url 'course_page' classroom.room_code %}" class="sidebar-links">Home</a>
     <a href="{% url 'file_list' classroom.room_code %}">Files</a>
     <a href="{% url 'assignments_list' classroom.room_code %}">Assignments</a>
-    {% if user_role == 'student' %}
+    {% if user_role == 'student' or user_role == 'parent' %}
     <a href="{% url 'grades_list' classroom.room_code %}">Grades</a>
     {% endif %}
     <a href="{% url 'students_enrolled' classroom.room_code %}">People</a>

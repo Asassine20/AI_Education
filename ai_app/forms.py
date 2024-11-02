@@ -3,7 +3,7 @@ from django import forms
 from django.forms import inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from .models import CourseMaterial, ClassRoom, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category, StudentAnswers
+from .models import CourseMaterial, ClassRoom, Messages, University, SchoolUserProfile, Assignments, Questions, Choices, Category, StudentAnswers, PairingCode
 from django.contrib.auth.forms import UserCreationForm
 from django_quill.forms import QuillFormField
 
@@ -14,6 +14,33 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
+class ParentSignupForm(forms.ModelForm):
+    username = forms.CharField(max_length=150)
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+    pairing_code = forms.CharField(max_length=10, help_text="Enter your student's pairing code.")
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def clean_pairing_code(self):
+        code = self.cleaned_data.get('pairing_code')
+        try:
+            pairing_code = PairingCode.objects.get(code=code)
+        except PairingCode.DoesNotExist:
+            raise forms.ValidationError("Invalid pairing code.")
+        return pairing_code
+
+    def clean_pairing_code(self):
+        code = self.cleaned_data.get('pairing_code')
+        try:
+            # Retrieve the PairingCode instance if it exists
+            pairing_code = PairingCode.objects.get(code=code)
+        except PairingCode.DoesNotExist:
+            raise forms.ValidationError("Invalid pairing code.")
+        return pairing_code
+    
 class JoinClassForm(forms.Form):
     room_code = forms.CharField(max_length=50)
     room_password = forms.CharField(widget=forms.PasswordInput)

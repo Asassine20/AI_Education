@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions, Grades
+from ai_app.models import SchoolUserProfile, ClassRoom, Assignments, Messages, CourseMaterial, Questions, Choices, StudentAnswers, Submissions, Grades, PairingCode
 from ai_app.forms import inlineformset_factory, MessageUploadForm, AssignmentForm, ChoiceFormSet, ChoiceForm, QuestionForm, CategoryForm, StudentAnswerForm, StudentAnswerGradeFormSet, JoinClassForm
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -23,26 +23,37 @@ def dashboard(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user)
     university = profile.university
     profile_image = profile.profile_image
+    pairing_code = PairingCode.objects.select_related('student').first()
+
+    # If the user is a parent, get classes linked to their connected student(s)
+    if profile.role == SchoolUserProfile.PARENT:
+        # Retrieve all classes linked to each student associated with this parent
+        students = profile.students.all()
+        classes = ClassRoom.objects.filter(school_profiles__in=students).distinct()
+    else:
+        # For non-parents, retrieve the classes directly linked to the profile
+        classes = profile.classes.all()
+
     if request.method == 'POST':
-        room_name = request.POST['room_name']
-        room_code = request.POST['room_code']
-        university = profile.university
-        new_class = ClassRoom.objects.create(
-            room_name=room_name,
-            room_code=room_code,
-            university=university,
-            teacher=request.user
-        )
-        profile.classes.add(new_class)
+        # Only allow class creation if the user is not a parent
+        if profile.role != SchoolUserProfile.PARENT:
+            room_name = request.POST['room_name']
+            room_code = request.POST['room_code']
+            new_class = ClassRoom.objects.create(
+                room_name=room_name,
+                room_code=room_code,
+                university=university,
+                teacher=request.user
+            )
+            profile.classes.add(new_class)
         return redirect('dashboard')
 
-    classes = profile.classes.all()
     return render(request, 'ai_app/dashboards/teacher/dashboard/teacher_dashboard.html', {
         'classes': classes,
         'university': university,
         'profile_image': profile_image,
+        'pairing_code': pairing_code,
     })
-
 @login_required
 def add_class(request):
     profile = get_object_or_404(SchoolUserProfile, user=request.user, role='teacher')

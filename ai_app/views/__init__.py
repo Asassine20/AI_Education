@@ -2,7 +2,8 @@ from .auth_views import (
     login_view, 
     logout_view, 
     signup_view, 
-    school_signup_view
+    school_signup_view,
+    parent_signup
 )
 
 from .teacher_dashboard_views import (

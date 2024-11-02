@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_quill.fields import QuillField 
+import random
+import string
 
 class CourseMaterial(models.Model):
     professor = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -52,10 +54,12 @@ class SchoolUserProfile(models.Model):
     STUDENT = 'student'
     TEACHER = 'teacher'
     ADMIN = 'admin'
+    PARENT = 'parent'
     ROLE_CHOICES = [
         (STUDENT, 'Student'),
         (TEACHER, 'Teacher'),
         (ADMIN, 'Admin'),
+        (PARENT, 'Parent'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -63,10 +67,31 @@ class SchoolUserProfile(models.Model):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     classes = models.ManyToManyField(ClassRoom, related_name='school_profiles', blank=True)  # Updated related_name to avoid conflict
+    students = models.ManyToManyField('self', related_name='parents', symmetrical=False, blank=True, limit_choices_to={'role': 'student'})
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
+
+class PairingCode(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    student = models.OneToOneField('SchoolUserProfile', on_delete=models.CASCADE, related_name='pairing_code', limit_choices_to={'role': 'student'})
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = self.generate_unique_code()
+        super().save(*args, **kwargs)
+
+    def generate_unique_code(self):
+        while True:
+            # Generate a random 10-character code consisting of uppercase letters and digits
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+            if not PairingCode.objects.filter(code=code).exists():
+                return code
+
+    def __str__(self):
+        return f"Pairing Code for {self.student.user.username}: {self.code}"
+    
 class Category(models.Model):
     points = models.CharField(max_length=20)
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, related_name='classrooms')
@@ -151,3 +176,4 @@ class Messages(models.Model):
     
     def __str__(self):
         return self.title
+    

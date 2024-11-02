@@ -168,24 +168,22 @@
 
     <div class="header">
         <h1>
-            {% if user_role == 'student' %}
-                Dashboard
-            {% elif user_role == 'teacher' %}
+            {% if user_role == 'student' or user_role == 'teacher' or user_role == 'parent' %}
                 Dashboard
             {% endif %}
         </h1>
-    
+
+        <!-- Only show add/join class button for teachers and students -->
         {% if user_role == 'teacher' %}
             <a href="{% url 'add_class' %}" class="add-class-btn">Add a class</a>
         {% elif user_role == 'student' %}
             <a href="{% url 'join_class' %}" class="add-class-btn">Join class</a>
         {% endif %}
     </div>
-    
 
-    <!-- Display teacher's classes in a grid -->
+    <!-- Display classes in a grid format -->
     <div class="class-grid">
-        {% for class in classes%}
+        {% for class in classes %}
         <div class="class-card">
             <!-- Clickable area to navigate to course page -->
             <a href="{% url 'course_page' class.room_code %}" class="clickable-card"></a>
@@ -226,5 +224,6 @@
         {% endfor %}
     </div>
 </body>
+
 
 </html>

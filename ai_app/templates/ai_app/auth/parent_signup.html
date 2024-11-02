@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent SignUp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+        }
+
+        /* Center the container */
+        .container-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 80px); /* Adjust height to subtract navbar height */
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        input.error-border {
+            border-color: red;
+        }
+
+        button {
+            padding: 1rem;
+            background-color: #307351;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            filter: brightness(1.5);
+        }
+
+        .navbar {
+            background-color: #307351;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .logo-container img {
+            width: 100px;
+            border-radius: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'includes/homeNav.html' %}
+
+    <div class="container-wrapper">
+        <div class="container">
+            <h1>Parent Sign Up</h1>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <!-- Username -->
+                <label for="id_username">Username:</label>
+                <input type="text" id="id_username" name="username" required
+                    class="{% if form.username.errors %}error-border{% endif %}">
+                {% if form.username.errors %}
+                    <p class="error">{{ form.username.errors.0 }}</p>
+                {% endif %}
+
+                <!-- Email -->
+                <label for="id_email">Email:</label>
+                <input type="email" id="id_email" name="email" required
+                    class="{% if form.email.errors %}error-border{% endif %}">
+                {% if form.email.errors %}
+                    <p class="error">{{ form.email.errors.0 }}</p>
+                {% endif %}
+
+                <!-- Password -->
+                <label for="id_password">Password:</label>
+                <input type="password" id="id_password" name="password" required
+                    class="{% if form.password.errors %}error-border{% endif %}">
+                {% if form.password.errors %}
+                    <p class="error">{{ form.password.errors.0 }}</p>
+                {% endif %}
+
+                <!-- Pairing Code -->
+                <label for="id_pairing_code">Pairing Code:</label>
+                <input type="text" id="id_pairing_code" name="pairing_code" required
+                    class="{% if form.pairing_code.errors %}error-border{% endif %}">
+                {% if form.pairing_code.errors %}
+                    <p class="error">{{ form.pairing_code.errors.0 }}</p>
+                {% endif %}
+
+                <!-- Submit Button -->
+                <button type="submit">Sign Up</button>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>

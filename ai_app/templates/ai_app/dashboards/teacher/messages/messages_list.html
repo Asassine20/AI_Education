@@ -156,13 +156,14 @@
 {% endblock %}
 
 {% block content %}
+{% if user_role == 'teacher' or user_role == 'student' %}
 <div class="upload-header">
     <div class="upload-button">
         <a href="{% url 'create_message' classroom.room_code %}">Create Post <i class="fa-solid fa-pen-to-square"
                 style="font-size: 16px; margin-left: 5px;"></i></a>
     </div>
 </div>
-
+{% endif %}
 {% if messages %}
 <ul>
     {% for message in messages %}

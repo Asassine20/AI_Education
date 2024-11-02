@@ -200,7 +200,7 @@
         {% endif %}
     {% elif user_role == 'teacher' %}
         <!-- Teacher view can be handled here -->
-    {% else %}
+    {% elif user_role == 'student' %}
         <!-- Start Assignment button -->
         {% if not after_due %}
         <form method="post">

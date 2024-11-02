@@ -1,9 +1,10 @@
-from ai_app.models import SchoolUserProfile
+from ai_app.models import SchoolUserProfile, PairingCode
 
 def user_role(request):
     user = request.user
     if user.is_authenticated:  
         profile = SchoolUserProfile.objects.filter(user=request.user).first()
+
         if profile:
             university = profile.university
             return {

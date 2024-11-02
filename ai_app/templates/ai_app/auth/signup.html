@@ -134,6 +134,9 @@
             if (type === 'school') {
                 window.location.href = "{% url 'school_signup' %}";  // Redirect to the school sign-up
             }
+            else if (type === 'parent') {
+                window.location.href = "{% url 'parent_signup' %}";  // Redirect to the parent sign-up
+            }
         }
     </script>
 
@@ -150,7 +153,11 @@
             <div class="option-box">
                 <div class="box" onclick="selectUserType('school')">
                     <i class="school-icon"></i>
-                    <h2>School / University</h2>
+                    <h2>Student / Teacher</h2>
+                </div>
+                <div class="box" onclick="selectUserType('parent')">
+                    <i class="school-icon"></i>
+                    <h2>Parent</h2>
                 </div>
             </div>
 
@@ -158,7 +165,7 @@
             <div class="contact-box">
                 <p>Are you looking to set up <strong>{AIEDU}</strong> for your university? <a href="/contact/">Request a
                         quote now!</a></p>
-                <a href="/contact/" class="cta-button">Contact Sales</a>
+                <a href="mailto:andrewsassine30@gmail.com" class="cta-button">Contact Us</a>
             </div>
         </div>
     </div>

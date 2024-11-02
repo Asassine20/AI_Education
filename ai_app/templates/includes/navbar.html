@@ -82,9 +82,7 @@
     <div class="logo-container">
         {% if user_role == 'admin' %}
         <a href="{% url 'admin_dashboard' %}">
-        {% elif user_role == 'teacher' %}
-        <a href="{% url 'dashboard' %}">
-        {% elif user_role == 'student' %}
+        {% elif user_role == 'teacher' or user_role == 'student' or user_role == 'parent' %}
         <a href="{% url 'dashboard' %}">
         {% endif %}
             {% if logo %}
@@ -105,6 +103,9 @@
 
         <!-- Profile Dropdown Menu -->
         <div class="profile-menu" id="profile-menu">
+            {% if user_role == 'student' %}
+            <p>Pairing Code: {{ pairing_code.code }} </p>
+            {% endif %}
             <a href="{% url 'profile_image_upload' %}">Profile Image</a>
             <a href="{% url 'logout' %}">Logout</a>
         </div>
