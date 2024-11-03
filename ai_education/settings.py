@@ -36,7 +36,15 @@ LOGOUT_REDIRECT_URL = 'login'  # Redirect to login after logout
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '18.117.18.96',
+    '18.221.151.81',
+    'ec2-18-221-151-81.us-east-2.compute.amazonaws.com',  # EC2 Public DNS
+    'localhost',  # Optional, for local testing
+    '127.0.0.1',   # Optional, for local testing
+    'zenolearn.com',
+    'www.zenolearn.com',
+]
 # for debug toolbar
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -94,8 +102,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ai_education',     # Name of the MySQL database you created
         'USER': 'root',        # Your MySQL username
-        'PASSWORD': 'Summer99', # Your MySQL password
-        'HOST': '127.0.0.1',              # Or your MySQL host
+        'PASSWORD': 'Noobtuber1224!', # Your MySQL password
+        'HOST': 'zenolearn.c5ee8s4ocfz2.us-east-2.rds.amazonaws.com',  # Your RDS endpoint
         'PORT': '3306',                   # Default MySQL port
     }
 }
