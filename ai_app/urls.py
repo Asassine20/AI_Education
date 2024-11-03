@@ -4,8 +4,6 @@ from .views import *
 urlpatterns = [
     path("", landing_page, name="landing_page"),  # Landing page route
     path("home/", home, name="home"),  # Home page route after login/signup
-    path("ask/", ask_question, name="ask_question"),
-    path('view-questions/', view_questions, name='view_questions'),
     path('signup/', signup_view, name='signup'),
     path('parent-signup/', parent_signup, name='parent_signup'),
     path('school-signup/', school_signup_view, name='school_signup'),  # Added school-specific sign-up route
@@ -35,7 +33,6 @@ urlpatterns = [
     path('dashboard/course/<str:room_code>/messages/create-message/', create_message, name='create_message'),
     path('dashboard/course/<str:room_code>/messages/<int:message_id>/delete', delete_message, name='delete_message'),
     path('dashboard/course/<str:room_code>/grades/', grades_list, name='grades_list'),
-    path('dashboard/course/<str:room_code>/upload-materials/', upload_materials, name='upload_materials'),
     path('dashboard/course/<str:room_code>/upload/', file_upload_view, name='file_upload'),
     path('dashboard/course/<str:room_code>/files/', file_list_view, name='file_list'),
     path('dashboard/course/<str:room_code>/edit/<int:file_id>/', file_edit_view, name='file_edit'),

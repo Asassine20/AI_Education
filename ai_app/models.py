@@ -44,12 +44,6 @@ class ClassRoom(models.Model):
     def __str__(self):
         return self.room_name
 
-class Question(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    topic = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
-
 class SchoolUserProfile(models.Model):
     STUDENT = 'student'
     TEACHER = 'teacher'
