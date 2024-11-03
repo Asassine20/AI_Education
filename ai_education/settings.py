@@ -94,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ai_education',     # Name of the MySQL database you created
         'USER': 'root',        # Your MySQL username
-        'PASSWORD': 'Summer99', # Your MySQL password
+        'PASSWORD': 'Noobtuber1224!', # Your MySQL password
         'HOST': '127.0.0.1',              # Or your MySQL host
         'PORT': '3306',                   # Default MySQL port
     }
