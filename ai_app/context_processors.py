@@ -1,4 +1,4 @@
-from ai_app.models import SchoolUserProfile, PairingCode
+from ai_app.models import SchoolUserProfile
 
 def user_role(request):
     user = request.user

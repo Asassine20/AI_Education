@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     <title>Sign Up</title>
     <style>
         body {
@@ -59,7 +61,7 @@
         .box i {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: #636cff;
+            color: #3de2e5;
         }
 
         .box h2 {
@@ -68,7 +70,7 @@
         }
 
         .contact-box {
-            background-color: #307351;
+            background-color: #186F65;
             padding: 1.5rem;
             text-align: center;
             border-radius: 8px;
@@ -85,7 +87,7 @@
             display: inline-block;
             margin-top: 1.5rem;
             padding: 0.8rem 1.5rem;
-            background-color: #636cff;
+            background-color: #3de2e5;
             color: white;
             text-transform: uppercase;
             text-decoration: none;
@@ -105,7 +107,7 @@
         }
 
         .navbar {
-            background-color: #307351;
+            background-color: #186F65;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -152,18 +154,18 @@
             <!-- User type selection -->
             <div class="option-box">
                 <div class="box" onclick="selectUserType('school')">
-                    <i class="school-icon"></i>
+                    <i class="fa-solid fa-school"></i>
                     <h2>Student / Teacher</h2>
                 </div>
                 <div class="box" onclick="selectUserType('parent')">
-                    <i class="school-icon"></i>
+                    <i class="fa-solid fa-hands-holding-child"></i>                    
                     <h2>Parent</h2>
                 </div>
             </div>
 
             <!-- Call to Action for universities -->
             <div class="contact-box">
-                <p>Are you looking to set up <strong>{AIEDU}</strong> for your university? <a href="/contact/">Request a
+                <p>Are you looking to set up ZenoLearn for your university? <a href="/contact/">Request a
                         quote now!</a></p>
                 <a href="mailto:andrewsassine30@gmail.com" class="cta-button">Contact Us</a>
             </div>
