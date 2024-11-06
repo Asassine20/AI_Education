@@ -30,8 +30,8 @@ jobs:
         EC2_USER: ubuntu
         EC2_HOST: ec2-18-117-18-96.us-east-2.compute.amazonaws.com
       run: |
-        echo "Testing SSH connection..."
-        ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "echo 'SSH connection successful'"
+        echo "Testing SSH connection with verbose output..."
+        ssh -vvv -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "echo 'SSH connection successful'"
 
     - name: Deploy to EC2
       env:
