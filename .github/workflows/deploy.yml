@@ -20,14 +20,18 @@ jobs:
         mkdir -p ~/.ssh
         echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        # Debugging step: Display the SSH key file to confirm it's correctly formatted
+        # Debugging steps
+        echo "Checking SSH directory contents:"
         ls -la ~/.ssh/
-        ssh-keygen -lf ~/.ssh/id_rsa  # Show the key's fingerprint to verify it's loaded
+        echo "Verifying SSH key with ssh-keygen:"
+        ssh-keygen -lf ~/.ssh/id_rsa
+        echo "Testing SSH connection to host:"
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@ec2-18-117-18-96.us-east-2.compute.amazonaws.com "echo 'SSH connection successful'"
         ssh-keyscan -H "ec2-18-117-18-96.us-east-2.compute.amazonaws.com" >> ~/.ssh/known_hosts
 
     - name: Deploy to EC2
       env:
-        EC2_USER: ubuntu  
+        EC2_USER: ubuntu
         EC2_HOST: ec2-18-117-18-96.us-east-2.compute.amazonaws.com
       run: |
         ssh $EC2_USER@$EC2_HOST << 'EOF'
@@ -47,5 +51,5 @@ jobs:
           python manage.py collectstatic --noinput
 
           # Restart Gunicorn or Django server
-          sudo systemctl restart gunicorn  # or restart your specific service
+          sudo systemctl restart gunicorn
         EOF
