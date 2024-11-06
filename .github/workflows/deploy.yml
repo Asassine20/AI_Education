@@ -20,7 +20,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H "your-ec2-ip" >> ~/.ssh/known_hosts
+        ssh-keyscan -H "18.117.18.96" >> ~/.ssh/known_hosts
 
     - name: Deploy to EC2
       env:
