@@ -1,0 +1,48 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # deploy only on pushes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      env:
+        SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H "your-ec2-ip" >> ~/.ssh/known_hosts
+
+    - name: Deploy to EC2
+      env:
+        EC2_USER: ubuntu  
+        EC2_IP: 18.117.18.96
+      run: |
+        ssh $EC2_USER@$EC2_IP << 'EOF'
+          cd AI_Education
+
+          # Pull latest code
+          git pull origin main
+
+          # Activate virtual environment
+          source venv/bin/activate
+
+          # Install dependencies
+          pip install -r requirements.txt
+
+          # Apply migrations and collect static files
+          python manage.py migrate
+          python manage.py collectstatic --noinput
+
+          # Restart Gunicorn or Django server
+          sudo systemctl restart gunicorn  # or restart your specific service
+        EOF
