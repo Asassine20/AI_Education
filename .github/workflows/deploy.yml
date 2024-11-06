@@ -20,36 +20,41 @@ jobs:
         mkdir -p ~/.ssh
         echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        # Debugging steps
-        echo "Checking SSH directory contents:"
-        ls -la ~/.ssh/
+        echo "Adding host to known_hosts file..."
+        ssh-keyscan -H "ec2-18-117-18-96.us-east-2.compute.amazonaws.com" >> ~/.ssh/known_hosts
         echo "Verifying SSH key with ssh-keygen:"
         ssh-keygen -lf ~/.ssh/id_rsa
-        echo "Testing SSH connection to host:"
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@ec2-18-117-18-96.us-east-2.compute.amazonaws.com "echo 'SSH connection successful'"
-        ssh-keyscan -H "ec2-18-117-18-96.us-east-2.compute.amazonaws.com" >> ~/.ssh/known_hosts
+
+    - name: Test SSH Connection
+      env:
+        EC2_USER: ubuntu
+        EC2_HOST: ec2-18-117-18-96.us-east-2.compute.amazonaws.com
+      run: |
+        echo "Testing SSH connection..."
+        ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "echo 'SSH connection successful'"
 
     - name: Deploy to EC2
       env:
         EC2_USER: ubuntu
         EC2_HOST: ec2-18-117-18-96.us-east-2.compute.amazonaws.com
       run: |
-        ssh $EC2_USER@$EC2_HOST << 'EOF'
-          cd AI_Education
-
-          # Pull latest code
+        ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST << 'EOF'
+          echo "Navigating to project directory..."
+          cd AI_Education || exit 1  # Ensure the directory exists or exit
+          
+          echo "Pulling latest code..."
           git pull origin main
-
-          # Activate virtual environment
+          
+          echo "Activating virtual environment..."
           source venv/bin/activate
-
-          # Install dependencies
+          
+          echo "Installing dependencies..."
           pip install -r requirements.txt
-
-          # Apply migrations and collect static files
+          
+          echo "Applying migrations and collecting static files..."
           python manage.py migrate
           python manage.py collectstatic --noinput
-
-          # Restart Gunicorn or Django server
-          sudo systemctl restart gunicorn
+          
+          echo "Restarting Gunicorn service..."
+          sudo systemctl restart gunicorn  # Ensure ubuntu user has sudo privileges
         EOF
